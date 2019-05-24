@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('subsampling-scale-image-view-3.10.0.aar'))

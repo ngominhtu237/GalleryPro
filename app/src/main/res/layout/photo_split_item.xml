@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ss.gallerypro.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:clickable="true"
+    android:foreground="@drawable/ripple">
+
+    <ImageView
+        android:id="@+id/ivAlbumImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/ivCheckbox"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@mipmap/checked"
+        android:visibility="gone" />
+
+
+    <ImageView
+        android:id="@+id/ivPlayVideo"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/five_dp"
+        android:layout_marginRight="@dimen/five_dp"
+        android:src="@mipmap/play2"
+        android:visibility="gone" />
+</com.ss.gallerypro.view.SquareRelativeLayout>

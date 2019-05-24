@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        SM-G885F
+    -->
+    <dimen name="album_column">2dp</dimen>
+    <dimen name="album_column_landscape">6dp</dimen>
+</resources>

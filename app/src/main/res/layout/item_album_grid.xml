@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/album_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="0dp"
+    android:foreground="@drawable/ripple"
+    android:clickable="true"
+    app:cardElevation="@dimen/cardview_default_elevation"
+    android:focusable="true">
+
+    <com.ss.gallerypro.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/md_dark_cards">
+
+        <com.ss.gallerypro.view.SquareImageView
+            android:id="@+id/ivThumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/ivCheckbox"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:visibility="gone"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/checked" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradient"
+            android:paddingLeft="4dp"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/tvAlbumName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/md_light_blue_50" />
+
+            <TextView
+                android:id="@+id/tvCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvAlbumName"
+                android:layout_marginBottom="2dp"
+                android:textStyle="italic"
+                android:textColor="@color/md_light_green_A700" />
+        </RelativeLayout>
+
+    </com.ss.gallerypro.view.SquareRelativeLayout>
+</RelativeLayout>

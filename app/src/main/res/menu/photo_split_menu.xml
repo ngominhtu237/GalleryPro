@@ -1,0 +1,43 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/general_photo_split_items">
+        <item
+            android:id="@+id/action_sort"
+            android:orderInCategory="100"
+            android:icon="@drawable/ic_sort_white"
+            android:title="Sort"
+            app:showAsAction="ifRoom" >
+
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/name_sort_mode_photo"
+                        android:title="@string/name"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/date_taken_sort_mode_photo"
+                        android:checked="true"
+                        android:title="@string/date"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/size_sort_mode_photo"
+                        android:title="@string/size"
+                        app:showAsAction="never" />
+                </group>
+                <group android:checkableBehavior="all">
+                    <item
+                        android:id="@+id/ascending_sort_order_photo"
+                        android:title="@string/ascending"
+                        app:showAsAction="never" />
+                </group>
+            </menu>
+        </item>
+
+        <item
+            android:id="@+id/album_details"
+            android:title="@string/album_details"
+            app:showAsAction="never">
+        </item>
+    </group>
+</menu>

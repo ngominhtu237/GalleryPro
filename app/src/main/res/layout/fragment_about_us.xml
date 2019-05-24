@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background_about_us"
+    tools:context=".activity.AboutActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@mipmap/cornieicons"
+        app:civ_border_color="#d1b1b1"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:foregroundGravity="center"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/avatar"
+        android:layout_marginTop="17dp"
+        android:text="Quick View"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/name"
+        android:layout_marginTop="5dp"
+        android:text="@string/about_us"
+        android:textAlignment="center"
+        android:padding="@dimen/twenty_dp"
+        android:textStyle="italic"
+        android:textSize="18sp" />
+</RelativeLayout>

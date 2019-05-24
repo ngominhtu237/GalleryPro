@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:foreground="@drawable/ripple"
+    android:clickable="true"
+    android:background="@color/md_black_1000_transparent">
+
+    <ImageView
+        android:id="@+id/ivThumbnail"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@color/md_dark_cards"
+        android:scaleType="center" />
+
+    <ImageView
+        android:id="@+id/ivCheckbox"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:visibility="visible"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@mipmap/checked" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivThumbnail"
+        android:layout_marginLeft="8dp"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/tvAlbumName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/md_grey_200"
+            android:text="Album name" />
+
+        <TextView
+            android:id="@+id/tvCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tvAlbumName"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/md_light_green_300"
+            android:textStyle="italic"
+            android:text="72" />
+
+        <TextView
+            android:id="@+id/tvDirectory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvAlbumName"
+            android:textColor="@color/md_grey_500"
+            android:textStyle="italic"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="2dp"
+            android:visibility="gone"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="http://google.com.vn" />
+    </RelativeLayout>
+</RelativeLayout>

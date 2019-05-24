@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:transitionName="custom_trans"
+    android:background="@color/colorPrimary"
+    tools:context=".activity.PicturePreview">
+
+    <fragment
+        android:id="@+id/slideshowFrag"
+        android:name="com.ss.gallerypro.fragments.viewer.SlideShowFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</RelativeLayout>

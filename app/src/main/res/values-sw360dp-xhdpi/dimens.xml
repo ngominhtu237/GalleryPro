@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        SM-J415FN
+    -->
+    <dimen name="album_column">2dp</dimen>
+    <dimen name="album_column_landscape">6dp</dimen>
+
+    <dimen name="video_column">3dp</dimen>
+    <dimen name="video_column_landscape">5dp</dimen>
+</resources>
