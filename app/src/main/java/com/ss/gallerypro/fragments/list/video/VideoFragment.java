@@ -1,4 +1,4 @@
-package com.ss.gallerypro.fragments.list;
+package com.ss.gallerypro.fragments.list.video;
 
 
 import android.os.AsyncTask;

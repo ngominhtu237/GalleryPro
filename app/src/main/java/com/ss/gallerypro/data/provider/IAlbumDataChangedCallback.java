@@ -6,4 +6,6 @@ import java.util.ArrayList;
 
 public interface IAlbumDataChangedCallback {
     void processGetDataFinish(ArrayList<Bucket> newBucket);
+
+    void processDeleteFinish();
 }

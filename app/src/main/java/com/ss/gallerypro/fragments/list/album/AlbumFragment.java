@@ -378,7 +378,6 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
 
     @Override
     public void processGetDataFinish(ArrayList<Bucket> newBucket) {
-        mBuckets =  new ArrayList<>(newBucket); // need to change data in current fragment
         albumAdapter.updateData(newBucket);
 
         // se set lai sau
@@ -393,6 +392,13 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
         }
     }
 
+    @Override
+    public void processDeleteFinish() {
+        for(int i=0; i<selectedDeleteAlbum.size(); i++) {
+            removeAlbum(selectedDeleteAlbum.keyAt(i));
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public void deleteAlbums(){
         selectedDeleteAlbum = albumAdapter.getSelectedIds(); // get all selected
@@ -404,7 +410,6 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
                 mDeletedAlbums.add(mBuckets.get(selectedDeleteAlbum.keyAt(i)));
             }
         }
-        DeleteAlbumTask mDeleteAlbumTask = new DeleteAlbumTask();
         final Dialog dialog = new Dialog(Objects.requireNonNull(getContext()));
         dialog.setContentView(R.layout.dialog_custom);
         dialog.show();
@@ -413,7 +418,7 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
         btCancel.setOnClickListener(view -> dialog.dismiss());
         btDelete.setOnClickListener(view -> {
             dialog.dismiss();
-            mDeleteAlbumTask.execute(mDeletedAlbums);
+            mAlbumDataHandler.deleteAlbums(mDeletedAlbums);
             mActionMode.finish();
         });
 

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.ss.gallerypro.fragments.AboutUsFragment;
 import com.ss.gallerypro.fragments.list.album.AlbumFragment;
+import com.ss.gallerypro.fragments.list.video.VideoFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -60,9 +61,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
                 break;
 
+            case R.id.nav_videos:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new VideoFragment())
+                        .commit();
+                break;
+
             case R.id.nav_about_us:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AboutUsFragment())
                         .commit();
+                break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
