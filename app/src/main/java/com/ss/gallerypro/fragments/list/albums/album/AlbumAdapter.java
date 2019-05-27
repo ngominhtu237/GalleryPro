@@ -70,6 +70,7 @@ public class AlbumAdapter extends BaseListViewAdapter<AlbumViewHolder> {
             holder.tvAlbumPath.setVisibility((mLayoutType == LayoutType.LIST) ? View.VISIBLE : View.GONE);
             holder.tvAlbumPath.setText(mBuckets.get(position).getPathToAlbum());
         }
+        super.onBindViewHolder(holder, position);
     }
 
     @Override
@@ -105,9 +106,9 @@ public class AlbumAdapter extends BaseListViewAdapter<AlbumViewHolder> {
     }
 
     // create to use animation
-    public void removeAlbum(int pos) {
-        mBuckets.remove(pos);
-        notifyItemRemoved(pos);
+    public void removeAlbum(int position) {
+        mBuckets.remove(position);
+        notifyItemRemoved(position);
     }
 
     public void setDataAdapterChangeCallback(OnNotifyDataChanged dataAdapterChangeCallback) {

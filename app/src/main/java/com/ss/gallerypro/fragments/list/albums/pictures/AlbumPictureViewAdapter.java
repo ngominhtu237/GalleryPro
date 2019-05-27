@@ -57,6 +57,7 @@ public class AlbumPictureViewAdapter extends BaseListViewAdapter<AlbumPicturesVi
 
         holder.ivCheckbox.setVisibility(mSelectedItemsIds.get(position) ? View.VISIBLE : View.GONE);
         holder.ivPlayIcon.setVisibility(mItem.getMediaType().contains("video") ? View.VISIBLE : View.GONE);
+        super.onBindViewHolder(holder, position);
     }
 
     @Override

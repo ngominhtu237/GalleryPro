@@ -18,8 +18,6 @@ import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
-import com.ss.gallerypro.event.RecyclerClick_Listener;
-import com.ss.gallerypro.event.RecyclerTouchListener;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
@@ -55,32 +53,14 @@ abstract public class BaseListFragment extends Fragment {
         return v;
     }
 
+    protected abstract void implementRecyclerViewClickListeners();
+
     @Override
     public void onResume() {
         if(mLayoutType == LayoutType.GRID) {
             setUpColumns();
         }
         super.onResume();
-    }
-
-    protected void implementRecyclerViewClickListeners() {
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new RecyclerClick_Listener() {
-            @Override
-            public void onClick(View view, final int position) {
-
-                if (mActionMode != null) {
-                    onListItemSelect(position);
-                } else {
-                    handleClickItem(position);
-                }
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                setEnableSwipeRefresh(false);
-                onListItemSelect(position);
-            }
-        }));
     }
 
     public void setUpColumns() {

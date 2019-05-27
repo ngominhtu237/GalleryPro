@@ -2,7 +2,6 @@ package com.ss.gallerypro.fragments.list.albums.album;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -38,6 +37,7 @@ import com.ss.gallerypro.data.provider.IAlbumDataChangedCallback;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Bucket;
+import com.ss.gallerypro.fragments.RecycleViewClickListener;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListFragment;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
 import com.ss.gallerypro.fragments.list.albums.pictures.AlbumPicturesFragment;
@@ -101,6 +101,26 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
             mBuckets = receiveBuckets;
         }
         return v;
+    }
+
+    @Override
+    protected void implementRecyclerViewClickListeners() {
+        albumAdapter.setRecycleViewClickListener(new RecycleViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                if (mActionMode != null) {
+                    onListItemSelect(position);
+                } else {
+                    handleClickItem(position);
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                setEnableSwipeRefresh(false);
+                onListItemSelect(position);
+            }
+        });
     }
 
     @Override
@@ -407,7 +427,7 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
 
     @Override
     public void processDeleteFinish() {
-        for(int i=0; i<selectedDeleteAlbum.size(); i++) {
+        for(int i=selectedDeleteAlbum.size()-1; i>=0; i--) {
             removeAlbum(selectedDeleteAlbum.keyAt(i));
         }
     }
@@ -444,22 +464,5 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
 
     private void removeAlbum(int position) {
         albumAdapter.removeAlbum(position);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_CODE) {
-            if(resultCode == Activity.RESULT_OK){
-                Boolean isEdited = data.getBooleanExtra("isEdited", false);
-                if(isEdited) {
-                    // need to refresh
-                    mSwipeRefreshLayout.post(() -> {
-                        mSwipeRefreshLayout.setRefreshing(true);
-                        mSwipeRefreshListener.onRefresh();
-                    });
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }

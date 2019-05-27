@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
+import com.ss.gallerypro.fragments.RecycleViewClickListener;
 
 public abstract class BaseListViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
@@ -18,6 +19,7 @@ public abstract class BaseListViewAdapter<VH extends RecyclerView.ViewHolder> ex
     protected SortingMode mSortingMode;
     protected LayoutType mLayoutType;
     private CheckedItemInterface mCheckedItemInterface;
+    private RecycleViewClickListener recycleViewClickListener;
 
     public BaseListViewAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder, LayoutType layoutType) {
         this.mContext = context;
@@ -38,6 +40,16 @@ public abstract class BaseListViewAdapter<VH extends RecyclerView.ViewHolder> ex
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         throw new AssertionError("undefined view type : " + viewType);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull VH holder, int position) {
+        holder.itemView.setOnClickListener(view -> recycleViewClickListener.onClick(view, holder.getAdapterPosition()));
+
+        holder.itemView.setOnLongClickListener(view -> {
+            recycleViewClickListener.onLongClick(view, holder.getAdapterPosition());
+            return true;
+        });
     }
 
     public SortingOrder getSortingOrder() {
@@ -61,6 +73,7 @@ public abstract class BaseListViewAdapter<VH extends RecyclerView.ViewHolder> ex
     public void changeSortingMode(SortingMode sortingMode){
         this.mSortingMode = sortingMode;
         sort();
+        notifyDataSetChanged();
     }
 
     public void changeLayoutType(LayoutType layoutType) {
@@ -74,6 +87,10 @@ public abstract class BaseListViewAdapter<VH extends RecyclerView.ViewHolder> ex
 
     public void setItemCheckedInterface(CheckedItemInterface checkedItemInterface) {
         this.mCheckedItemInterface = checkedItemInterface;
+    }
+
+    public void setRecycleViewClickListener(RecycleViewClickListener recycleViewClickListener) {
+        this.recycleViewClickListener = recycleViewClickListener;
     }
 
     /***

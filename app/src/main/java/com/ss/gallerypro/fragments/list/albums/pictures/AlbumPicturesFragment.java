@@ -91,7 +91,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements BaseListV
 
     @Override
     public void processDeleteFinish() {
-        for(int i=0; i<selectedMediaDelete.size(); i++) {
+        for(int i=selectedMediaDelete.size()-1; i>=0; i--) {
             removeImage(selectedMediaDelete.keyAt(i));
         }
         isDeleted = true;
