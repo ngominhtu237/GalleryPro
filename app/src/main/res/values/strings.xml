@@ -464,6 +464,7 @@ and this could make the media inaccessible from other apps. Use the exclude opti
     <string name="use_default_cover">Use default</string>
 
     <!-- Album Fragment -->
+    <string name="album_fragment_tagName">Album Fragment</string>
     <string name="mode_grid">Grid</string>
     <string name="mode_list">List</string>
     <string name="title_activity_splash_screen">SplashScreen</string>

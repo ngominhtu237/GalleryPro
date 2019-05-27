@@ -1,16 +1,17 @@
-package com.ss.gallerypro.fragments.list.album;
+package com.ss.gallerypro.fragments.list.albums.album;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,15 +22,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.activity.PhotoSplitView;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.AlbumHelper;
 import com.ss.gallerypro.data.Bucket;
@@ -42,6 +40,7 @@ import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Bucket;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListFragment;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
+import com.ss.gallerypro.fragments.list.albums.pictures.AlbumPicturesFragment;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
@@ -54,7 +53,7 @@ import java.util.Set;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public class AlbumFragment extends BaseListFragment implements BaseListViewAdapter.CheckedItemInterface, IAlbumDataChangedCallback, OnNotifyDataToView {
+public class AlbumFragment extends BaseListFragment implements BaseListViewAdapter.CheckedItemInterface, IAlbumDataChangedCallback, OnNotifyDataChanged {
 
     static final int REQUEST_CODE = 1;
     private ArrayList<Bucket> mBuckets;
@@ -109,11 +108,25 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
         return R.layout.fragment_album_view;
     }
 
+    @SuppressLint("CommitTransaction")
     @Override
     protected void handleClickItem(int position) {
-        Intent intent = new Intent(getActivity(), PhotoSplitView.class);
-        intent.putExtra("album", mBuckets.get(position));
-        startActivityForResult(intent, REQUEST_CODE);
+
+        // start AlbumPictureFragment
+        FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+        AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) fragmentManager.findFragmentByTag("AlbumPicturesFragment");
+        if(albumPicturesFragment == null) {
+            albumPicturesFragment = new AlbumPicturesFragment();
+            Bundle args = new Bundle();
+            args.putParcelable("album", mBuckets.get(position));
+            albumPicturesFragment.setArguments(args);
+        }
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, albumPicturesFragment, "AlbumPicturesFragment");
+
+        // Add fragment one in back stack. So it will not be destroyed. Press back menu can pop it up from the stack.
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 
@@ -139,7 +152,7 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
 
     @Override
     protected void initRecycleView(View v) {
-        recyclerView = v.findViewById(R.id.albumRecycleView);
+        super.initRecycleView(v);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             NUM_COLUMNS = AlbumHelper.getNumbColumnPort(getActivity());
         } else {
@@ -425,52 +438,8 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
     }
 
     @Override
-    public void updateData(ArrayList<Bucket> newBucket) {
+    public void updateDataToView(ArrayList<Bucket> newBucket) {
         mBuckets = newBucket;
-    }
-
-    private class DeleteAlbumTask extends AsyncTask<ArrayList<Bucket>, Integer, Integer> {
-
-        Dialog dialog;
-        ProgressBar progressBar;
-        ArrayList<Bucket> mDeletedAlbums;
-
-        @Override
-        protected void onPreExecute() {
-            setLockScreenOrientation(true);
-            mDeletedAlbums = new ArrayList<>();
-            dialog = new Dialog(Objects.requireNonNull(getActivity()));
-            dialog.setCancelable(false);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.progressdialog);
-            progressBar = dialog.findViewById(R.id.progressBar1);
-            progressBar.setProgressTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.md_blue_grey_700)));
-            dialog.show();
-            super.onPreExecute();
-        }
-
-        @SafeVarargs
-        @Override
-        protected final Integer doInBackground(ArrayList<Bucket>... buckets) {
-            mDeletedAlbums = buckets[0];
-            for(int i=0; i<mDeletedAlbums.size(); i++) {
-                if(isCancelled()) break;
-                else {
-                    AlbumHelper.deleteAlbum(getActivity(), mDeletedAlbums.get(i).getPathToAlbum());
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
-            for(int i=0; i<selectedDeleteAlbum.size(); i++) {
-                removeAlbum(selectedDeleteAlbum.keyAt(i));
-            }
-            dialog.dismiss();
-            setLockScreenOrientation(false);
-        }
     }
 
     private void removeAlbum(int position) {

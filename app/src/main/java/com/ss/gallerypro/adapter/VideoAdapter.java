@@ -68,9 +68,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.ivVideo = itemView.findViewById(R.id.ivAlbumImage);
+            this.ivVideo = itemView.findViewById(R.id.ivAlbumPictureThumb);
             this.ivTick = itemView.findViewById(R.id.ivCheckbox);
-            this.ivPlay = itemView.findViewById(R.id.ivPlayVideo);
+            this.ivPlay = itemView.findViewById(R.id.ivPlayIcon);
         }
     }
 

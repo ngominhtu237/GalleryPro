@@ -1,0 +1,302 @@
+package com.ss.gallerypro.fragments.list.albums.pictures;
+
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.ss.gallerypro.R;
+import com.ss.gallerypro.activity.PicturePreview;
+import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
+import com.ss.gallerypro.data.Bucket;
+import com.ss.gallerypro.data.LayoutType;
+import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.data.provider.IMediaDataChangeCallback;
+import com.ss.gallerypro.data.provider.MediaDataHandler;
+import com.ss.gallerypro.data.sort.SortingMode;
+import com.ss.gallerypro.data.sort.SortingOrder;
+import com.ss.gallerypro.event.RecyclerClick_Listener;
+import com.ss.gallerypro.event.RecyclerTouchListener;
+import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Photo;
+import com.ss.gallerypro.fragments.list.abstraction.BaseListFragment;
+import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
+import com.ss.gallerypro.utils.Measure;
+import com.ss.gallerypro.view.GridSpacingItemDecoration;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
+
+import static com.ss.gallerypro.data.AlbumHelper.getSizeAlbum;
+import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
+
+public class AlbumPicturesFragment extends BaseListFragment implements BaseListViewAdapter.CheckedItemInterface, IMediaDataChangeCallback, OnNotifyDataChanged {
+
+    private ArrayList<MediaItem> mListMediaItem;
+    private AlbumPictureViewAdapter adapter;
+    private Toolbar_ActionMode_Photo toolbarActionModePhoto;
+    private View rootView;
+    private SparseBooleanArray selectedMediaDelete;
+    private MediaDataHandler mMediaDataHandler;
+
+    private Bucket mReceiveBucket;
+    private boolean isDeleted; // if delete back to album fragment -> need refresh
+
+    public AlbumPicturesFragment() {
+        mListMediaItem = new ArrayList<>();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        if(bundle != null) {
+            mReceiveBucket = bundle.getParcelable("album");
+        }
+
+        // get data -> save to mListMediaItem
+        mMediaDataHandler = new MediaDataHandler(getContext());
+        mMediaDataHandler.setDataChangedCallback(this);
+        mMediaDataHandler.getMedia(mReceiveBucket);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        rootView = super.onCreateView(inflater, container, savedInstanceState);
+        return rootView;
+    }
+
+    @Override
+    public void processGetDataFinish(ArrayList<MediaItem> newMedias) {
+        adapter.updateData(newMedias);
+        adapter.changeSortingMode(getSortingMode());
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void processDeleteFinish() {
+        for(int i=0; i<selectedMediaDelete.size(); i++) {
+            removeImage(selectedMediaDelete.keyAt(i));
+        }
+        isDeleted = true;
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void deleteMedias() {
+        selectedMediaDelete = adapter.getSelectedIds();
+        ArrayList<MediaItem> mDeletedMedias = new ArrayList<>();
+        // Loop all selected ids
+        for (int i = (selectedMediaDelete.size() - 1); i >= 0; i--) {
+            if (selectedMediaDelete.valueAt(i)) {
+                //If current id is selected remove the item via key
+                mDeletedMedias.add(mListMediaItem.get(selectedMediaDelete.keyAt(i)));
+            }
+        }
+        final Dialog dialog = new Dialog(Objects.requireNonNull(getContext()));
+        dialog.setContentView(R.layout.dialog_custom);
+        dialog.show();
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
+        Button btnDelete = dialog.findViewById(R.id.btn_delete);
+        TextView tvTitle = dialog.findViewById(R.id.tv_title);
+        String itemString = (selectedMediaDelete.size()>1) ? " items" : " item";
+        tvTitle.setText("Are you sure you want to delete " + selectedMediaDelete.size() + itemString + " ?");
+        btnCancel.setOnClickListener(view -> dialog.dismiss());
+        btnDelete.setOnClickListener(view -> {
+            dialog.dismiss();
+            mMediaDataHandler.deleteMedias(mDeletedMedias);
+            mActionMode.finish();
+        });
+    }
+
+    @Override
+    protected void handleClickItem(int position) {
+
+    }
+
+    @Override
+    protected void onListItemSelect(int position) {
+        adapter.toggleSelection(position);
+
+        boolean hasCheckedItems = adapter.getSelectedCount() > 0;
+
+        if (hasCheckedItems && mActionMode == null) {
+            toolbarActionModePhoto = new Toolbar_ActionMode_Photo(this, getContext(), mListMediaItem, adapter);
+            mActionMode = ((AppCompatActivity) Objects.requireNonNull(getActivity())).startSupportActionMode(toolbarActionModePhoto);
+        } else if (!hasCheckedItems && mActionMode != null) {
+            mActionMode.finish();
+        }
+
+        if (mActionMode != null) {
+            mActionMode.setTitle(String.valueOf(adapter
+                    .getSelectedCount()) + " selected");
+        }
+    }
+
+    @Override
+    protected void initRecycleView(View v) {
+        super.initRecycleView(v);
+        recyclerView.setItemAnimator(new LandingAnimator());
+        int NUM_COLUMNS = 4;
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, Objects.requireNonNull(getContext())), true));
+        adapter = new AlbumPictureViewAdapter(getContext(), getSortingMode(), getSortingOrder(), mListMediaItem);
+        adapter.setDataAdapterChangeCallback(this);
+        adapter.setItemCheckedInterface(this);
+        GridlayoutManagerFixed gridlayoutManagerFixed = new GridlayoutManagerFixed(getContext(), NUM_COLUMNS);
+        recyclerView.setLayoutManager(gridlayoutManagerFixed);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void implementRecyclerViewClickListeners() {
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerClick_Listener() {
+            @Override
+            public void onClick(View view, final int position) {
+                if (mActionMode != null) {
+                    onListItemSelect(position);
+                } else {
+                    Intent intent = new Intent(getContext(), PicturePreview.class);
+                    intent.putExtra("current_image_position", position);
+                    intent.putExtra("album_path", mReceiveBucket.getPathToAlbum());
+                    intent.putExtra("list_image", mListMediaItem);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                onListItemSelect(position);
+            }
+
+        }));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Objects.requireNonNull(getActivity()).getMenuInflater().inflate(R.menu.photo_split_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    protected LayoutType getLayoutType() {
+        return null;
+    }
+
+    @Override
+    protected SortingMode getSortingMode() {
+        return adapter != null ? adapter.getSortingMode() : SortingMode.DATE;
+    }
+
+    @Override
+    protected SortingOrder getSortingOrder() {
+        return adapter != null ? adapter.getSortingOrder() : SortingOrder.DESCENDING;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        switch (getSortingMode()) {
+            case NAME:
+                menu.findItem(R.id.name_sort_mode_photo).setChecked(true);
+                break;
+            case DATE:
+                menu.findItem(R.id.date_taken_sort_mode_photo).setChecked(true);
+                break;
+            case SIZE:
+            default:
+                menu.findItem(R.id.size_sort_mode_photo).setChecked(true);
+                break;
+        }
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.name_sort_mode_photo:
+                adapter.changeSortingMode(SortingMode.NAME);
+                item.setChecked(true);
+                return true;
+
+            case R.id.size_sort_mode_photo:
+                adapter.changeSortingMode(SortingMode.SIZE);
+                item.setChecked(true);
+                return true;
+
+            case R.id.date_taken_sort_mode_photo:
+                adapter.changeSortingMode(SortingMode.DATE);
+                item.setChecked(true);
+                return true;
+
+            case R.id.ascending_sort_order_photo:
+                item.setChecked(!item.isChecked());
+                SortingOrder sortingOrder = SortingOrder.fromValue(item.isChecked());
+                adapter.changeSortingOrder(sortingOrder);
+                return true;
+
+            case R.id.album_details:
+                ViewGroup viewGroup = rootView.findViewById(android.R.id.content);
+                //then we will inflate the custom alert dialog xml that we created
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_album_details, viewGroup, false);
+                TextView tvAlbumName = dialogView.findViewById(R.id.tvAlbumName);
+                TextView tvAlbumPath = dialogView.findViewById(R.id.tvAlbumPath);
+                TextView tvAlbumSize = dialogView.findViewById(R.id.tvAlbumSize);
+                TextView tvAlbumCount = dialogView.findViewById(R.id.tvAlbumCount);
+                Button btOK = dialogView.findViewById(R.id.buttonOk);
+                tvAlbumName.setText(mReceiveBucket.getName());
+                tvAlbumPath.setText(mReceiveBucket.getPathToAlbum());
+                tvAlbumSize.setText(readableFileSize(getSizeAlbum(mListMediaItem)));
+                tvAlbumCount.setText(String.valueOf(mListMediaItem.size()));
+
+                //Now we need an AlertDialog.Builder object
+                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+
+                //setting the view of the builder to our custom view that we already inflated
+                builder.setView(dialogView);
+
+                //finally creating the alert dialog and displaying it
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                btOK.setOnClickListener((view) -> alertDialog.dismiss());
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_album_pictures;
+    }
+
+    @Override
+    public void change(int numbItemCheck) {
+        if(toolbarActionModePhoto != null) {
+            toolbarActionModePhoto.changeMenu(numbItemCheck);
+        }
+    }
+
+    @Override
+    public void updateDataToView(ArrayList<MediaItem> mImageList) {
+        mListMediaItem = mImageList;
+    }
+
+    private void removeImage(int position) {
+        adapter.removeImage(position);
+    }
+}

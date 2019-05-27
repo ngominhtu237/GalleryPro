@@ -10,7 +10,6 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/subsampling-scale-image-view-3.10.0" />
-            <option value="$PROJECT_DIR$/subsampling-scale-image-view-3.6.1" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
-import com.ss.gallerypro.fragments.list.album.OnNotifyDataToView;
 
 public abstract class BaseListViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
@@ -18,7 +17,6 @@ public abstract class BaseListViewAdapter<VH extends RecyclerView.ViewHolder> ex
     protected SortingOrder mSortingOrder;
     protected SortingMode mSortingMode;
     protected LayoutType mLayoutType;
-    protected OnNotifyDataToView dataAdapterChangeCallback;
     private CheckedItemInterface mCheckedItemInterface;
 
     public BaseListViewAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder, LayoutType layoutType) {
@@ -29,14 +27,17 @@ public abstract class BaseListViewAdapter<VH extends RecyclerView.ViewHolder> ex
         mSelectedItemsIds = new SparseBooleanArray();
     }
 
+    public BaseListViewAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder) {
+        this.mContext = context;
+        this.mSortingMode = sortingMode;
+        this.mSortingOrder = sortingOrder;
+        mSelectedItemsIds = new SparseBooleanArray();
+    }
+
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         throw new AssertionError("undefined view type : " + viewType);
-    }
-
-    public void setDataAdapterChangeCallback(OnNotifyDataToView dataAdapterChangeCallback) {
-        this.dataAdapterChangeCallback = dataAdapterChangeCallback;
     }
 
     public SortingOrder getSortingOrder() {
@@ -54,6 +55,7 @@ public abstract class BaseListViewAdapter<VH extends RecyclerView.ViewHolder> ex
     public void changeSortingOrder(SortingOrder sortingOrder) {
         this.mSortingOrder = sortingOrder;
         reverseDataOrder();
+        notifyDataSetChanged();
     }
 
     public void changeSortingMode(SortingMode sortingMode){

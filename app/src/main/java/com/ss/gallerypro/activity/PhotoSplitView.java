@@ -53,13 +53,8 @@ public class PhotoSplitView extends AppCompatActivity {
     private static int NUM_COLUMNS = 4;
     private ArrayList<MediaItem> mImageList;
     private RecyclerView recyclerView;
-    private Toolbar toolbar;
     private PhotoSplitViewAdapter photoSplitViewAdapter;
     private Bucket mReceiveBucket;
-
-    // Properties dialog album details
-    private TextView tvAlbumName, tvAlbumPath, tvAlbumSize, tvAlbumCount;
-    private Button btOK;
 
     private ActionMode mActionMode;
     private Toolbar_ActionMode_Photo toolbarActionModePhoto;
@@ -80,7 +75,7 @@ public class PhotoSplitView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_split_view);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -135,8 +130,8 @@ public class PhotoSplitView extends AppCompatActivity {
         boolean hasCheckedItems = photoSplitViewAdapter.getSelectedCount() > 0;
 
         if (hasCheckedItems && mActionMode == null) {
-            toolbarActionModePhoto = new Toolbar_ActionMode_Photo(this, mImageList, photoSplitViewAdapter);
-            mActionMode = startSupportActionMode(toolbarActionModePhoto);
+            //toolbarActionModePhoto = new Toolbar_ActionMode_Photo(this, mImageList, photoSplitViewAdapter);
+            //mActionMode = startSupportActionMode(toolbarActionModePhoto);
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
         }
@@ -208,11 +203,11 @@ public class PhotoSplitView extends AppCompatActivity {
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 //then we will inflate the custom alert dialog xml that we created
                 View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_album_details, viewGroup, false);
-                tvAlbumName = dialogView.findViewById(R.id.tvAlbumName);
-                tvAlbumPath = dialogView.findViewById(R.id.tvAlbumPath);
-                tvAlbumSize = dialogView.findViewById(R.id.tvAlbumSize);
-                tvAlbumCount = dialogView.findViewById(R.id.tvAlbumCount);
-                btOK = dialogView.findViewById(R.id.buttonOk);
+                TextView tvAlbumName = dialogView.findViewById(R.id.tvAlbumName);
+                TextView tvAlbumPath = dialogView.findViewById(R.id.tvAlbumPath);
+                TextView tvAlbumSize = dialogView.findViewById(R.id.tvAlbumSize);
+                TextView tvAlbumCount = dialogView.findViewById(R.id.tvAlbumCount);
+                Button btOK = dialogView.findViewById(R.id.buttonOk);
                 tvAlbumName.setText(mReceiveBucket.getName());
                 tvAlbumPath.setText(mReceiveBucket.getPathToAlbum());
                 tvAlbumSize.setText(readableFileSize(getSizeAlbum(mImageList)));

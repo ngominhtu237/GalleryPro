@@ -1,29 +1,31 @@
 package com.ss.gallerypro.event.amodebar;
 
-import android.app.Activity;
+import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.activity.PhotoSplitView;
-import com.ss.gallerypro.adapter.PhotoSplitViewAdapter;
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.fragments.list.albums.pictures.AlbumPictureViewAdapter;
+import com.ss.gallerypro.fragments.list.albums.pictures.AlbumPicturesFragment;
 
 import java.util.ArrayList;
 
 public class Toolbar_ActionMode_Photo implements ActionMode.Callback {
 
-    private Activity mActivity;
+    private Context mContext;
     private ArrayList<MediaItem> mediaItems;
-    private PhotoSplitViewAdapter photoSplitViewAdapter;
-    private PhotoSplitView photoSplitView;
+    private AlbumPictureViewAdapter adapter;
+    private Fragment mFragment;
+    private int mItemChecked = 1;
 
-    public Toolbar_ActionMode_Photo(Activity mActivity, ArrayList<MediaItem> mediaItems, PhotoSplitViewAdapter photoSplitViewAdapter) {
-        this.mActivity = mActivity;
+    public Toolbar_ActionMode_Photo(Fragment fragment, Context mContext, ArrayList<MediaItem> mediaItems, AlbumPictureViewAdapter adapter) {
+        this.mContext = mContext;
         this.mediaItems = mediaItems;
-        this.photoSplitViewAdapter = photoSplitViewAdapter;
-        photoSplitView = (PhotoSplitView) mActivity;
+        this.adapter = adapter;
+        mFragment = fragment;
     }
 
     @Override
@@ -41,8 +43,9 @@ public class Toolbar_ActionMode_Photo implements ActionMode.Callback {
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                if(photoSplitView != null) {
-                    photoSplitView.deleteImages();
+                AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) mFragment;
+                if(albumPicturesFragment != null) {
+                    albumPicturesFragment.deleteMedias();
                 }
                 break;
         }
@@ -51,7 +54,16 @@ public class Toolbar_ActionMode_Photo implements ActionMode.Callback {
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        photoSplitViewAdapter.removeSelection();
-        photoSplitView.setNullToActionMode();
+        adapter.removeSelection();
+        AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) mFragment;
+        albumPicturesFragment.setNullToActionMode();
+    }
+
+    public void changeMenu(int numbItemCheck){
+        this.mItemChecked = numbItemCheck;
+        AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) mFragment;
+        if(albumPicturesFragment.getActionMode() != null){
+            albumPicturesFragment.getActionMode().invalidate();
+        }
     }
 }

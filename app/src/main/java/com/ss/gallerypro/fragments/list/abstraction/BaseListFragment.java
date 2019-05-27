@@ -1,7 +1,5 @@
 package com.ss.gallerypro.fragments.list.abstraction;
 
-import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
+import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.sort.SortingMode;
@@ -81,7 +80,6 @@ abstract public class BaseListFragment extends Fragment {
                 setEnableSwipeRefresh(false);
                 onListItemSelect(position);
             }
-
         }));
     }
 
@@ -103,7 +101,9 @@ abstract public class BaseListFragment extends Fragment {
 
     protected abstract void onListItemSelect(int position);
 
-    protected abstract void initRecycleView(View v);
+    protected void initRecycleView(View v) {
+        recyclerView = v.findViewById(R.id.albumRecycleView);
+    }
 
     abstract protected int getLayoutId();
 
@@ -128,22 +128,5 @@ abstract public class BaseListFragment extends Fragment {
     public void setNullToActionMode() {
         if (mActionMode != null)
             mActionMode = null;
-    }
-
-    protected void setLockScreenOrientation(boolean lock) {
-        if (Build.VERSION.SDK_INT >= 18) {
-            getActivity().setRequestedOrientation(lock? ActivityInfo.SCREEN_ORIENTATION_LOCKED:ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-            return;
-        }
-
-        if (lock) {
-            switch (getActivity().getWindowManager().getDefaultDisplay().getRotation()) {
-                case 0: getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); break; // value 1
-                case 2: getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT); break; // value 9
-                case 1: getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); break; // value 0
-                case 3: getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE); break; // value 8
-            }
-        } else
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR); // value 10
     }
 }

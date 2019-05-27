@@ -127,7 +127,7 @@ public class VideoFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Integer size) {
-//            albumAdapter.updateData(mBuckets);
+//            albumAdapter.updateDataToView(mBuckets);
 //            albumAdapter.notifyDataSetChanged();
 //            // se set lai sau
 //            albumAdapter.changeSortingMode(getSortingMode());

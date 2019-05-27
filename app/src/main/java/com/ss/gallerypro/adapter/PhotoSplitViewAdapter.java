@@ -85,7 +85,7 @@ public class PhotoSplitViewAdapter extends RecyclerView.Adapter<PhotoSplitViewAd
 
         RequestOptions options = new RequestOptions()
                 .useAnimationPool(true)
-                .override(holder.ivAlbumImage.getWidth(), holder.ivAlbumImage.getHeight())
+                .override(holder.ivAlbumPictureThumb.getWidth(), holder.ivAlbumPictureThumb.getHeight())
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
         Glide.with(mContext)
@@ -93,17 +93,10 @@ public class PhotoSplitViewAdapter extends RecyclerView.Adapter<PhotoSplitViewAd
                 .thumbnail(0.1f)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(options)
-                .into(holder.ivAlbumImage);
+                .into(holder.ivAlbumPictureThumb);
 
-        holder.ivTick.setVisibility(mSelectedItemsIds.get(position) ? View.VISIBLE : View.GONE);
-        holder.ivPlayVideo.setVisibility(mItem.getMediaType().contains("video") ? View.VISIBLE : View.GONE);
-
-
-//        Animation animation = AnimationUtils.loadAnimation(mContext,
-//                (position > lastPosition) ? R.anim.up_from_bottom
-//                        : R.anim.down_from_top);
-//        holder.itemView.startAnimation(animation);
-//        lastPosition = position;
+        holder.ivCheckbox.setVisibility(mSelectedItemsIds.get(position) ? View.VISIBLE : View.GONE);
+        holder.ivPlayIcon.setVisibility(mItem.getMediaType().contains("video") ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -119,15 +112,15 @@ public class PhotoSplitViewAdapter extends RecyclerView.Adapter<PhotoSplitViewAd
 
     public class ViewHolder extends RecyclerView.ViewHolder  {
 
-        ImageView ivAlbumImage;
-        ImageView ivTick;
-        ImageView ivPlayVideo;
+        ImageView ivAlbumPictureThumb;
+        ImageView ivCheckbox;
+        ImageView ivPlayIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.ivAlbumImage = itemView.findViewById(R.id.ivAlbumImage);
-            this.ivTick = itemView.findViewById(R.id.ivCheckbox);
-            this.ivPlayVideo = itemView.findViewById(R.id.ivPlayVideo);
+            this.ivAlbumPictureThumb = itemView.findViewById(R.id.ivAlbumPictureThumb);
+            this.ivCheckbox = itemView.findViewById(R.id.ivCheckbox);
+            this.ivPlayIcon = itemView.findViewById(R.id.ivPlayIcon);
         }
     }
 

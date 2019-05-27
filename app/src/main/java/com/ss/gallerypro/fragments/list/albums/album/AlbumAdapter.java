@@ -1,4 +1,4 @@
-package com.ss.gallerypro.fragments.list.album;
+package com.ss.gallerypro.fragments.list.albums.album;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -25,6 +25,7 @@ public class AlbumAdapter extends BaseListViewAdapter<AlbumViewHolder> {
     private static final String TAG = "AlbumAdapter";
 
     private ArrayList<Bucket> mBuckets; // chưa abstract
+    private OnNotifyDataChanged callback;
 
     AlbumAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder,LayoutType layoutType, ArrayList<Bucket> mBuckets) {
         super(context, sortingMode, sortingOrder, layoutType);
@@ -79,25 +80,23 @@ public class AlbumAdapter extends BaseListViewAdapter<AlbumViewHolder> {
     @Override
     public void changeSortingOrder(SortingOrder sortingOrder) {
         super.changeSortingOrder(sortingOrder);
-        dataAdapterChangeCallback.updateData(mBuckets);
+        callback.updateDataToView(mBuckets);
     }
 
     @Override
     public void changeSortingMode(SortingMode sortingMode) {
         super.changeSortingMode(sortingMode);
-        dataAdapterChangeCallback.updateData(mBuckets);
+        callback.updateDataToView(mBuckets);
     }
 
     @Override
     protected void reverseDataOrder() {
         Collections.reverse(mBuckets);
-        notifyDataSetChanged();
     }
 
     @Override
     protected void sort() {
         mBuckets.sort(AlbumsComparators.getComparator(mSortingMode, mSortingOrder));
-        notifyDataSetChanged();
     }
 
     public void updateData(ArrayList<Bucket> newBuckets) {
@@ -109,5 +108,9 @@ public class AlbumAdapter extends BaseListViewAdapter<AlbumViewHolder> {
     public void removeAlbum(int pos) {
         mBuckets.remove(pos);
         notifyItemRemoved(pos);
+    }
+
+    public void setDataAdapterChangeCallback(OnNotifyDataChanged dataAdapterChangeCallback) {
+        this.callback = dataAdapterChangeCallback;
     }
 }
