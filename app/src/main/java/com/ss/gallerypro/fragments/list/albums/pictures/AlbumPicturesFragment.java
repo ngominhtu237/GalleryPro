@@ -26,9 +26,8 @@ import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
-import com.ss.gallerypro.event.RecyclerClick_Listener;
-import com.ss.gallerypro.event.RecyclerTouchListener;
 import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Photo;
+import com.ss.gallerypro.fragments.RecycleViewClickListener;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListFragment;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
 import com.ss.gallerypro.fragments.list.albums.pictures.model.MediaRepositoryImpl;
@@ -46,7 +45,7 @@ import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import static com.ss.gallerypro.data.AlbumHelper.getSizeAlbum;
 import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
-public class AlbumPicturesFragment extends BaseListFragment implements IMediaView, BaseListViewAdapter.CheckedItemInterface {
+public class AlbumPicturesFragment extends BaseListFragment implements IMediaView, RecycleViewClickListener, BaseListViewAdapter.CheckedItemInterface {
 
     private AlbumPictureViewAdapter adapter;
     private Toolbar_ActionMode_Photo toolbarActionModePhoto;
@@ -149,26 +148,25 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
 
     @Override
     protected void implementRecyclerViewClickListeners() {
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerClick_Listener() {
-            @Override
-            public void onClick(View view, final int position) {
-                if (mActionMode != null) {
-                    onListItemSelect(position);
-                } else {
-                    Intent intent = new Intent(getContext(), PicturePreview.class);
-                    intent.putExtra("current_image_position", position);
-                    intent.putExtra("album_path", mReceiveBucket.getPathToAlbum());
-                    intent.putExtra("list_image", adapter.getMediaList());
-                    startActivity(intent);
-                }
-            }
+        adapter.setRecycleViewClickListener(this);
+    }
 
-            @Override
-            public void onLongClick(View view, int position) {
-                onListItemSelect(position);
-            }
+    @Override
+    public void onClick(View view, int position) {
+        if (mActionMode != null) {
+            onListItemSelect(position);
+        } else {
+            Intent intent = new Intent(getContext(), PicturePreview.class);
+            intent.putExtra("current_image_position", position);
+            intent.putExtra("album_path", mReceiveBucket.getPathToAlbum());
+            intent.putExtra("list_image", adapter.getMediaList());
+            startActivity(intent);
+        }
+    }
 
-        }));
+    @Override
+    public void onLongClick(View view, int position) {
+        onListItemSelect(position);
     }
 
     @Override

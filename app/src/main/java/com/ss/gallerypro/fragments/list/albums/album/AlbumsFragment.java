@@ -55,7 +55,7 @@ import java.util.Set;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public class AlbumsFragment extends BaseListFragment implements IAlbumsView, BaseListViewAdapter.CheckedItemInterface {
+public class AlbumsFragment extends BaseListFragment implements IAlbumsView, RecycleViewClickListener, BaseListViewAdapter.CheckedItemInterface {
 
     private AlbumsAdapter albumsAdapter;
     private Toolbar_ActionMode_Bucket toolbarActionModeBucket;
@@ -123,21 +123,22 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Bas
 
     @Override
     protected void implementRecyclerViewClickListeners() {
-        albumsAdapter.setRecycleViewClickListener(new RecycleViewClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                if (mActionMode != null) {
-                    onListItemSelect(position);
-                } else {
-                    handleClickItem(position);
-                }
-            }
-            @Override
-            public void onLongClick(View view, int position) {
-                setEnableSwipeRefresh(false);
-                onListItemSelect(position);
-            }
-        });
+        albumsAdapter.setRecycleViewClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        if (mActionMode != null) {
+            onListItemSelect(position);
+        } else {
+            handleClickItem(position);
+        }
+    }
+
+    @Override
+    public void onLongClick(View view, int position) {
+        setEnableSwipeRefresh(false);
+        onListItemSelect(position);
     }
 
     protected void onListItemSelect(int position) {
