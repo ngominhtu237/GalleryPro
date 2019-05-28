@@ -51,6 +51,10 @@ dependencies {
     implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation project(':subsampling-scale-image-view-3.10.0')
+
+    //butter-knife for view-binding
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 repositories {
     mavenCentral()

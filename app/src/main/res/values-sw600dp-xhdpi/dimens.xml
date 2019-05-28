@@ -4,5 +4,5 @@
         SM-T595
     -->
     <dimen name="album_column">3dp</dimen>
-    <dimen name="album_column_landscape">7dp</dimen>
+    <dimen name="album_column_landscape">5dp</dimen>
 </resources>

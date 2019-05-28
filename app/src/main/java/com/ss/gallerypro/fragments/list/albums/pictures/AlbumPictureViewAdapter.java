@@ -25,11 +25,10 @@ import static android.support.constraint.Constraints.TAG;
 
 public class AlbumPictureViewAdapter extends BaseListViewAdapter<AlbumPicturesViewHolder> {
 
-    private ArrayList<MediaItem> mImageList;
-    private OnNotifyDataChanged callback;
-    AlbumPictureViewAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder,ArrayList<MediaItem> mImageList) {
+    private ArrayList<MediaItem> mMediaList;
+    AlbumPictureViewAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder) {
         super(context, sortingMode, sortingOrder);
-        this.mImageList = mImageList;
+        mMediaList = new ArrayList<>();
     }
 
     @NonNull
@@ -41,7 +40,7 @@ public class AlbumPictureViewAdapter extends BaseListViewAdapter<AlbumPicturesVi
 
     @Override
     public void onBindViewHolder(@NonNull AlbumPicturesViewHolder holder, int position) {
-        MediaItem mItem = mImageList.get(position);
+        MediaItem mItem = mMediaList.get(position);
 
         RequestOptions options = new RequestOptions()
                 .useAnimationPool(true)
@@ -62,34 +61,37 @@ public class AlbumPictureViewAdapter extends BaseListViewAdapter<AlbumPicturesVi
 
     @Override
     public int getItemCount() {
-        return mImageList.size();
+        return mMediaList.size();
     }
 
     @Override
     public void changeSortingOrder(SortingOrder sortingOrder) {
         super.changeSortingOrder(sortingOrder);
-        callback.updateDataToView(mImageList);
     }
 
     @Override
     public void changeSortingMode(SortingMode sortingMode) {
         super.changeSortingMode(sortingMode);
-        callback.updateDataToView(mImageList);
     }
 
     @Override
     protected void reverseDataOrder() {
-        Collections.reverse(mImageList);
+        Collections.reverse(mMediaList);
     }
 
     @Override
     protected void sort() {
-        mImageList.sort(PhotoComparators.getComparator(mSortingMode, mSortingOrder));
+        mMediaList.sort(PhotoComparators.getComparator(mSortingMode, mSortingOrder));
     }
 
-    public void updateData(ArrayList<MediaItem> mImageList) {
-        this.mImageList = mImageList;
+    public void setDataList(ArrayList<MediaItem> medias) {
+        mMediaList.clear();
+        mMediaList.addAll(medias);
         notifyDataSetChanged();
+    }
+
+    public ArrayList<MediaItem> getMediaList() {
+        return mMediaList;
     }
 
     @Override
@@ -100,16 +102,12 @@ public class AlbumPictureViewAdapter extends BaseListViewAdapter<AlbumPicturesVi
 
     // create to use animation
     public void removeImage(int position) {
-        if (position < 0 || position >= mImageList.size()) {
+        if (position < 0 || position >= mMediaList.size()) {
             // Warning, invalid position
             Log.v(TAG , "FC occur!");
         } else {
-            mImageList.remove(position);
+            mMediaList.remove(position);
             notifyItemRemoved(position);
         }
-    }
-
-    public void setDataAdapterChangeCallback(OnNotifyDataChanged dataAdapterChangeCallback) {
-        this.callback = dataAdapterChangeCallback;
     }
 }

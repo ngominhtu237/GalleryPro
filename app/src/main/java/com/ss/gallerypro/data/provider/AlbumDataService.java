@@ -15,30 +15,31 @@ import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.AlbumHelper;
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.filter.AlbumFilter;
+import com.ss.gallerypro.fragments.list.albums.album.OnAlbumDataNotify;
 import com.ss.gallerypro.utils.DataTypeUtils;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class AlbumDataHandler {
+public class AlbumDataService {
 
     private ArrayList<Bucket> mBuckets;
     private Context mContext;
-    private IAlbumDataChangedCallback dataChangedCallback;
+    private OnAlbumDataNotify.GetAlbum getAlbumCallback;
+    private OnAlbumDataNotify.DeleteAlbum deleteAlbumCallback;
 
-    public AlbumDataHandler(Context context) {
+    public AlbumDataService(Context context) {
         this.mContext = context;
     }
 
-    public void setDataChangedCallback(IAlbumDataChangedCallback dataChangedCallback) {
-        this.dataChangedCallback = dataChangedCallback;
-    }
 
-    public void getAlbums() {
+    public void getAlbums(OnAlbumDataNotify.GetAlbum callback) {
+        getAlbumCallback = callback;
         new GetAlbumTask().execute();
     }
 
-    public void deleteAlbums(ArrayList<Bucket> albums) {
+    public void deleteAlbums(ArrayList<Bucket> albums, OnAlbumDataNotify.DeleteAlbum callback) {
+        deleteAlbumCallback = callback;
         new DeleteAlbumTask().execute(albums);
     }
 
@@ -58,7 +59,7 @@ public class AlbumDataHandler {
 
         @Override
         protected void onPostExecute(Integer size) {
-            dataChangedCallback.processGetDataFinish(mBuckets);
+            getAlbumCallback.onResponse(mBuckets);
             super.onPostExecute(size);
         }
     }
@@ -100,7 +101,7 @@ public class AlbumDataHandler {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            dataChangedCallback.processDeleteFinish();
+            deleteAlbumCallback.onResponse();
             dialog.dismiss();
             setLockScreenOrientation(false);
         }

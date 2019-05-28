@@ -20,16 +20,15 @@ import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class AlbumAdapter extends BaseListViewAdapter<AlbumViewHolder> {
+public class AlbumsAdapter extends BaseListViewAdapter<AlbumViewHolder> {
 
-    private static final String TAG = "AlbumAdapter";
+    private static final String TAG = "AlbumsAdapter";
 
     private ArrayList<Bucket> mBuckets; // chưa abstract
-    private OnNotifyDataChanged callback;
 
-    AlbumAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder,LayoutType layoutType, ArrayList<Bucket> mBuckets) {
+    AlbumsAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder, LayoutType layoutType) {
         super(context, sortingMode, sortingOrder, layoutType);
-        this.mBuckets = mBuckets;
+        mBuckets = new ArrayList<>();
     }
 
     @NonNull
@@ -81,13 +80,11 @@ public class AlbumAdapter extends BaseListViewAdapter<AlbumViewHolder> {
     @Override
     public void changeSortingOrder(SortingOrder sortingOrder) {
         super.changeSortingOrder(sortingOrder);
-        callback.updateDataToView(mBuckets);
     }
 
     @Override
     public void changeSortingMode(SortingMode sortingMode) {
         super.changeSortingMode(sortingMode);
-        callback.updateDataToView(mBuckets);
     }
 
     @Override
@@ -100,8 +97,9 @@ public class AlbumAdapter extends BaseListViewAdapter<AlbumViewHolder> {
         mBuckets.sort(AlbumsComparators.getComparator(mSortingMode, mSortingOrder));
     }
 
-    public void updateData(ArrayList<Bucket> newBuckets) {
-        this.mBuckets = newBuckets;
+    public void setDataList(ArrayList<Bucket> buckets) {
+        mBuckets.clear();
+        mBuckets.addAll(buckets);
         notifyDataSetChanged();
     }
 
@@ -111,7 +109,7 @@ public class AlbumAdapter extends BaseListViewAdapter<AlbumViewHolder> {
         notifyItemRemoved(position);
     }
 
-    public void setDataAdapterChangeCallback(OnNotifyDataChanged dataAdapterChangeCallback) {
-        this.callback = dataAdapterChangeCallback;
+    public ArrayList<Bucket> getBuckets() {
+        return mBuckets;
     }
 }

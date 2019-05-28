@@ -18,27 +18,27 @@ import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
+import com.ss.gallerypro.fragments.list.albums.pictures.OnMediaDataNotify;
 
 import java.util.ArrayList;
 
-public class MediaDataHandler {
+public class MediaDataService {
     private Context mContext;
-    private IMediaDataChangeCallback dataChangeCallback;
     private ArrayList<MediaItem> mMedias;
+    private OnMediaDataNotify.GetMedia getMediaCallback;
+    private OnMediaDataNotify.DeleteMedia deleteMediaCallback;
 
-    public MediaDataHandler(Context context) {
+    public MediaDataService(Context context) {
         this.mContext = context;
     }
 
-    public void setDataChangedCallback(IMediaDataChangeCallback dataChangedCallback) {
-        this.dataChangeCallback = dataChangedCallback;
-    }
-
-    public void getMedia(Bucket bucket) {
+    public void getMedia(Bucket bucket, OnMediaDataNotify.GetMedia callback) {
+        getMediaCallback = callback;
         new GetMediaTask().execute(bucket);
     }
 
-    public void deleteMedias(ArrayList<MediaItem> medias) {
+    public void deleteMedias(ArrayList<MediaItem> medias, OnMediaDataNotify.DeleteMedia callback) {
+        deleteMediaCallback = callback;
         new DeleteMediaTask().execute(medias);
     }
 
@@ -60,7 +60,7 @@ public class MediaDataHandler {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            dataChangeCallback.processGetDataFinish(mMedias);
+            getMediaCallback.onResponse(mMedias);
             super.onPostExecute(aVoid);
         }
     }
@@ -102,7 +102,7 @@ public class MediaDataHandler {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            dataChangeCallback.processDeleteFinish();
+            deleteMediaCallback.onResponse();
             dialog.dismiss();
             setLockScreenOrientation(false);
         }

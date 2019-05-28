@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,14 +33,15 @@ import com.ss.gallerypro.data.AlbumHelper;
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.filter.AlbumFilter;
-import com.ss.gallerypro.data.provider.AlbumDataHandler;
-import com.ss.gallerypro.data.provider.IAlbumDataChangedCallback;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Bucket;
 import com.ss.gallerypro.fragments.RecycleViewClickListener;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListFragment;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
+import com.ss.gallerypro.fragments.list.albums.album.model.AlbumRepositoryImpl;
+import com.ss.gallerypro.fragments.list.albums.album.presenter.AlbumsPresenterImpl;
+import com.ss.gallerypro.fragments.list.albums.album.view.IAlbumsView;
 import com.ss.gallerypro.fragments.list.albums.pictures.AlbumPicturesFragment;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
@@ -53,59 +55,75 @@ import java.util.Set;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public class AlbumFragment extends BaseListFragment implements BaseListViewAdapter.CheckedItemInterface, IAlbumDataChangedCallback, OnNotifyDataChanged {
+public class AlbumsFragment extends BaseListFragment implements IAlbumsView, BaseListViewAdapter.CheckedItemInterface {
 
-    static final int REQUEST_CODE = 1;
-    private ArrayList<Bucket> mBuckets;
-    private AlbumAdapter albumAdapter;
+    private AlbumsAdapter albumsAdapter;
     private Toolbar_ActionMode_Bucket toolbarActionModeBucket;
     private ArrayList<Bucket> receiveBuckets;
     private SparseBooleanArray selectedDeleteAlbum;
-    private AlbumDataHandler mAlbumDataHandler;
 
-    public AlbumFragment() {
+    private AlbumsPresenterImpl presenter;
+
+    public AlbumsFragment() {
         super();
-        mBuckets = new ArrayList<>();
         receiveBuckets = new ArrayList<>();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAlbumDataHandler = new AlbumDataHandler(getContext());
-        mAlbumDataHandler.setDataChangedCallback(this);
+        presenter = new AlbumsPresenterImpl(this, new AlbumRepositoryImpl(mAttachedActivity));
 
         // receive from SplashScreen
-        receiveBuckets = getActivity().getIntent().getParcelableArrayListExtra("album_data");
+        receiveBuckets = mAttachedActivity.getIntent().getParcelableArrayListExtra("album_data");
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = super.onCreateView(inflater, container, savedInstanceState);
-        mSwipeRefreshLayout = v.findViewById(R.id.activity_main_swipe_refresh_layout);
-        desertPlaceholder = v.findViewById(R.id.placeholder);
-        mSwipeRefreshListener = () -> {
-            mAlbumDataHandler.getAlbums();
-            albumAdapter.notifyDataSetChanged();
-        };
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        mSwipeRefreshLayout.setOnRefreshListener(listener);
 
-        mSwipeRefreshLayout.setOnRefreshListener(mSwipeRefreshListener);
-        if(receiveBuckets == null || receiveBuckets.size() == 0) {
+        if(presenter.isListAlbumEmpty(receiveBuckets)) {
             mSwipeRefreshLayout.post(() -> {
                 mSwipeRefreshLayout.setRefreshing(true);
-                mSwipeRefreshListener.onRefresh();
+                listener.onRefresh();
             });
         } else {
-            mBuckets = receiveBuckets;
+            albumsAdapter.setDataList(receiveBuckets);
         }
-        return v;
+        return view;
+    }
+
+    @Override
+    protected void initRecycleView(View v) {
+        super.initRecycleView(v);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            NUM_COLUMNS = AlbumHelper.getNumbColumnPort(getActivity());
+        } else {
+            NUM_COLUMNS = AlbumHelper.getNumbColumnLand(getActivity());
+        }
+        mGridSpacingItemDecoration = new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, mAttachedActivity), true);
+        albumsAdapter = new AlbumsAdapter(getActivity(), getSortingMode(), getSortingOrder(), mLayoutType);
+        albumsAdapter.setItemCheckedInterface(this);
+        if(mLayoutType == LayoutType.GRID) {
+            recyclerView.addItemDecoration(mGridSpacingItemDecoration);
+            mLayoutManager = new GridlayoutManagerFixed(getContext(), NUM_COLUMNS);
+        } else {
+            recyclerView.removeItemDecoration(mGridSpacingItemDecoration);
+            mLayoutManager = new LinearLayoutManager(getContext());
+        }
+        recyclerView.setLayoutManager(mLayoutManager);
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
+        recyclerView.setLayoutAnimation(animation);
+        recyclerView.setItemAnimator(new LandingAnimator());
+        recyclerView.setAdapter(albumsAdapter);
     }
 
     @Override
     protected void implementRecyclerViewClickListeners() {
-        albumAdapter.setRecycleViewClickListener(new RecycleViewClickListener() {
+        albumsAdapter.setRecycleViewClickListener(new RecycleViewClickListener() {
             @Override
             public void onClick(View view, int position) {
                 if (mActionMode != null) {
@@ -114,13 +132,29 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
                     handleClickItem(position);
                 }
             }
-
             @Override
             public void onLongClick(View view, int position) {
                 setEnableSwipeRefresh(false);
                 onListItemSelect(position);
             }
         });
+    }
+
+    protected void onListItemSelect(int position) {
+        albumsAdapter.toggleSelection(position);
+        boolean hasCheckedItems = albumsAdapter.getSelectedCount() > 0;
+
+        if (hasCheckedItems && mActionMode == null) {
+            toolbarActionModeBucket = new Toolbar_ActionMode_Bucket(this, getActivity(), albumsAdapter, albumsAdapter.getBuckets());
+            mActionMode = ((AppCompatActivity) Objects.requireNonNull(getActivity())).startSupportActionMode(toolbarActionModeBucket);
+        } else if (!hasCheckedItems && mActionMode != null) {
+            mActionMode.finish();
+        }
+
+        if (mActionMode != null) {
+            mActionMode.setTitle(String.valueOf(albumsAdapter
+                    .getSelectedCount()) + " selected");
+        }
     }
 
     @Override
@@ -131,14 +165,12 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
     @SuppressLint("CommitTransaction")
     @Override
     protected void handleClickItem(int position) {
-
-        // start AlbumPictureFragment
         FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) fragmentManager.findFragmentByTag("AlbumPicturesFragment");
         if(albumPicturesFragment == null) {
             albumPicturesFragment = new AlbumPicturesFragment();
             Bundle args = new Bundle();
-            args.putParcelable("album", mBuckets.get(position));
+            args.putParcelable("album", albumsAdapter.getBuckets().get(position));
             albumPicturesFragment.setArguments(args);
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -151,78 +183,30 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
 
 
     @Override
-    protected void onListItemSelect(int position) {
-        albumAdapter.toggleSelection(position);
-
-        boolean hasCheckedItems = albumAdapter.getSelectedCount() > 0;
-
-        if (hasCheckedItems && mActionMode == null) {
-            toolbarActionModeBucket = new Toolbar_ActionMode_Bucket(this, getActivity(), albumAdapter, mBuckets);
-            mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(toolbarActionModeBucket);
-        } else if (!hasCheckedItems && mActionMode != null) {
-            mActionMode.finish();
-        }
-
-        if (mActionMode != null) {
-            mActionMode.setTitle(String.valueOf(albumAdapter
-                    .getSelectedCount()) + " selected");
-        }
-
-    }
-
-    @Override
-    protected void initRecycleView(View v) {
-        super.initRecycleView(v);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            NUM_COLUMNS = AlbumHelper.getNumbColumnPort(getActivity());
-        } else {
-            NUM_COLUMNS = AlbumHelper.getNumbColumnLand(getActivity());
-        }
-        mGridSpacingItemDecoration = new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, getContext()), true);
-        recyclerView.setHasFixedSize(true);
-        albumAdapter = new AlbumAdapter(getActivity(), getSortingMode(), getSortingOrder(), mLayoutType, mBuckets);
-        albumAdapter.setItemCheckedInterface(this);
-        albumAdapter.setDataAdapterChangeCallback(this);
-        if(mLayoutType == LayoutType.GRID) {
-            recyclerView.addItemDecoration(mGridSpacingItemDecoration);
-            mLayoutManager = new GridlayoutManagerFixed(getContext(), NUM_COLUMNS);
-        } else {
-            recyclerView.removeItemDecoration(mGridSpacingItemDecoration);
-            mLayoutManager = new LinearLayoutManager(getContext());
-        }
-        recyclerView.setLayoutManager(mLayoutManager);
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
-        recyclerView.setLayoutAnimation(animation);
-        recyclerView.setItemAnimator(new LandingAnimator());
-        recyclerView.setAdapter(albumAdapter);
-    }
-
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.album_menu, menu);
+        mAttachedActivity.getMenuInflater().inflate(R.menu.album_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public LayoutType getLayoutType() {
-        return albumAdapter != null ? albumAdapter.getLayoutType() : AlbumHelper.getLayoutType();
+        return albumsAdapter != null ? albumsAdapter.getLayoutType() : AlbumHelper.getLayoutType();
     }
 
     @Override
     public SortingMode getSortingMode() {
-        return albumAdapter != null ? albumAdapter.getSortingMode() : AlbumHelper.getSortingMode();
+        return albumsAdapter != null ? albumsAdapter.getSortingMode() : AlbumHelper.getSortingMode();
     }
 
     @Override
     public SortingOrder getSortingOrder() {
-        return albumAdapter != null ? albumAdapter.getSortingOrder() : AlbumHelper.getSortingOrder();
+        return albumsAdapter != null ? albumsAdapter.getSortingOrder() : AlbumHelper.getSortingOrder();
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         boolean editMode = false, oneSelected = false;
-        int mItemSelected = albumAdapter.getSelectedCount();
+        int mItemSelected = albumsAdapter.getSelectedCount();
         if(mItemSelected == 0) {
             editMode = false;
         } else if (mItemSelected == 1) {
@@ -266,19 +250,19 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.name_sort_mode:
-                albumAdapter.changeSortingMode(SortingMode.NAME);
+                albumsAdapter.changeSortingMode(SortingMode.NAME);
                 AlbumHelper.setSortingMode(SortingMode.NAME);
                 item.setChecked(true);
                 return true;
 
             case R.id.size_sort_mode:
-                albumAdapter.changeSortingMode(SortingMode.SIZE);
+                albumsAdapter.changeSortingMode(SortingMode.SIZE);
                 AlbumHelper.setSortingMode(SortingMode.SIZE);
                 item.setChecked(true);
                 return true;
 
             case R.id.date_taken_sort_mode:
-                albumAdapter.changeSortingMode(SortingMode.DATE);
+                albumsAdapter.changeSortingMode(SortingMode.DATE);
                 AlbumHelper.setSortingMode(SortingMode.DATE);
                 item.setChecked(true);
                 return true;
@@ -286,7 +270,7 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
             case R.id.ascending_sort_order:
                 item.setChecked(!item.isChecked());
                 SortingOrder sortingOrder = SortingOrder.fromValue(item.isChecked());
-                albumAdapter.changeSortingOrder(sortingOrder);
+                albumsAdapter.changeSortingOrder(sortingOrder);
                 AlbumHelper.setSortingOrder(sortingOrder);
                 return true;
 
@@ -295,7 +279,7 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
                 return true;
 
             case R.id.increase_column_count:
-                if(NUM_COLUMNS+1 <= 10) {
+                if(NUM_COLUMNS+1 <= 6) {
                     NUM_COLUMNS++;
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                         AlbumHelper.setNumbColumnPort(NUM_COLUMNS);
@@ -327,7 +311,7 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
                 return true;
 
             case R.id.mode_grid:
-                albumAdapter.changeLayoutType(LayoutType.GRID);
+                albumsAdapter.changeLayoutType(LayoutType.GRID);
                 AlbumHelper.setLayoutType(LayoutType.GRID);
                 recyclerView.removeItemDecoration(mGridSpacingItemDecoration);
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -340,16 +324,16 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
                 recyclerView.addItemDecoration(mGridSpacingItemDecoration);
                 recyclerView.setLayoutManager(new GridlayoutManagerFixed(getContext(), NUM_COLUMNS));
                 ((GridlayoutManagerFixed) mLayoutManager).setSpanCount(NUM_COLUMNS);
-                recyclerView.setAdapter(albumAdapter);
+                recyclerView.setAdapter(albumsAdapter);
                 mLayoutType = getLayoutType();
                 item.setChecked(true);
                 return true;
 
             case R.id.mode_list:
-                albumAdapter.changeLayoutType(LayoutType.LIST);
+                albumsAdapter.changeLayoutType(LayoutType.LIST);
                 AlbumHelper.setLayoutType(LayoutType.LIST);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setAdapter(albumAdapter);
+                recyclerView.setAdapter(albumsAdapter);
                 mLayoutType = getLayoutType();
                 item.setChecked(true);
                 return true;
@@ -385,7 +369,7 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
                     desertPlaceholder.setVisibility(View.GONE);
                     mSwipeRefreshLayout.post(() -> {
                         mSwipeRefreshLayout.setRefreshing(true);
-                        mSwipeRefreshListener.onRefresh();
+                        listener.onRefresh();
                     });
                 } else {
                     recyclerView.setVisibility(View.GONE);
@@ -409,38 +393,13 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
         }
     }
 
-    @Override
-    public void processGetDataFinish(ArrayList<Bucket> newBucket) {
-        albumAdapter.updateData(newBucket);
-
-        // se set lai sau
-        albumAdapter.changeSortingMode(getSortingMode());
-        mSwipeRefreshLayout.setRefreshing(false);
-        if(newBucket.size() == 0) {
-            recyclerView.setVisibility(View.GONE);
-            desertPlaceholder.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            desertPlaceholder.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void processDeleteFinish() {
-        for(int i=selectedDeleteAlbum.size()-1; i>=0; i--) {
-            removeAlbum(selectedDeleteAlbum.keyAt(i));
-        }
-    }
-
     @SuppressWarnings("unchecked")
     public void deleteAlbums(){
-        selectedDeleteAlbum = albumAdapter.getSelectedIds(); // get all selected
+        selectedDeleteAlbum = albumsAdapter.getSelectedIds(); // get all selected
         ArrayList<Bucket> mDeletedAlbums = new ArrayList<>();
-        // Loop all selected ids
         for (int i = (selectedDeleteAlbum.size() - 1); i >= 0; i--) {
             if (selectedDeleteAlbum.valueAt(i)) {
-                //If current id is selected remove the item via key
-                mDeletedAlbums.add(mBuckets.get(selectedDeleteAlbum.keyAt(i)));
+                mDeletedAlbums.add(albumsAdapter.getBuckets().get(selectedDeleteAlbum.keyAt(i)));
             }
         }
         final Dialog dialog = new Dialog(Objects.requireNonNull(getContext()));
@@ -451,18 +410,42 @@ public class AlbumFragment extends BaseListFragment implements BaseListViewAdapt
         btCancel.setOnClickListener(view -> dialog.dismiss());
         btDelete.setOnClickListener(view -> {
             dialog.dismiss();
-            mAlbumDataHandler.deleteAlbums(mDeletedAlbums);
+            presenter.deleteAlbums(mDeletedAlbums);
             mActionMode.finish();
         });
 
     }
 
+    private final SwipeRefreshLayout.OnRefreshListener listener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            presenter.getAlbums();
+            albumsAdapter.notifyDataSetChanged();
+        }
+    };
+
     @Override
-    public void updateDataToView(ArrayList<Bucket> newBucket) {
-        mBuckets = newBucket;
+    public void onGetAlbumSuccess(ArrayList<Bucket> buckets) {
+        albumsAdapter.setDataList(buckets);
+        albumsAdapter.changeSortingMode(getSortingMode());
+        mSwipeRefreshLayout.setRefreshing(false);
+        if(presenter.isListAlbumEmpty(buckets)) {
+            recyclerView.setVisibility(View.GONE);
+            desertPlaceholder.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            desertPlaceholder.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onDeleteAlbumSuccess() {
+        for(int i=selectedDeleteAlbum.size()-1; i>=0; i--) {
+            removeAlbum(selectedDeleteAlbum.keyAt(i));
+        }
     }
 
     private void removeAlbum(int position) {
-        albumAdapter.removeAlbum(position);
+        albumsAdapter.removeAlbum(position);
     }
 }

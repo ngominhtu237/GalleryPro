@@ -1,5 +1,6 @@
 package com.ss.gallerypro.fragments.list.abstraction;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,18 +22,29 @@ import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 abstract public class BaseListFragment extends Fragment {
 
+    protected Unbinder unbinder;
+
+    @Nullable
+    @BindView(R.id.activity_main_swipe_refresh_layout)
     protected SwipeRefreshLayout mSwipeRefreshLayout;
-    protected SwipeRefreshLayout.OnRefreshListener mSwipeRefreshListener;
+
+    @BindView(R.id.placeholder)
+    protected DesertPlaceholder desertPlaceholder;
+
     protected RecyclerView.LayoutManager mLayoutManager;
     protected GridSpacingItemDecoration mGridSpacingItemDecoration;
-    protected DesertPlaceholder desertPlaceholder;
     protected RecyclerView recyclerView;
     protected LayoutType mLayoutType = getLayoutType();
     protected int NUM_COLUMNS;
 
     protected ActionMode mActionMode;
+    protected Activity mAttachedActivity;
 
     public BaseListFragment() {
         super();
@@ -41,16 +53,21 @@ abstract public class BaseListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        mAttachedActivity = getActivity();
         super.onCreate(savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(getLayoutId(), container, false);
-        initRecycleView(v);
+        View view = inflater.inflate(getLayoutId(), container, false);
+        // bind view using butter knife
+        if (view != null) {
+            unbinder = ButterKnife.bind(this, view);
+        }
+        initRecycleView(view);
         implementRecyclerViewClickListeners();
-        return v;
+        return view;
     }
 
     protected abstract void implementRecyclerViewClickListeners();
@@ -79,10 +96,9 @@ abstract public class BaseListFragment extends Fragment {
 
     protected abstract void handleClickItem(int position);
 
-    protected abstract void onListItemSelect(int position);
-
     protected void initRecycleView(View v) {
         recyclerView = v.findViewById(R.id.albumRecycleView);
+        recyclerView.setHasFixedSize(true);
     }
 
     abstract protected int getLayoutId();
@@ -108,5 +124,13 @@ abstract public class BaseListFragment extends Fragment {
     public void setNullToActionMode() {
         if (mActionMode != null)
             mActionMode = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        // unbind the view to free some memory
+        unbinder.unbind();
     }
 }

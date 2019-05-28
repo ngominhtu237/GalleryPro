@@ -12,7 +12,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 
 import com.ss.gallerypro.fragments.AboutUsFragment;
-import com.ss.gallerypro.fragments.list.albums.album.AlbumFragment;
+import com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;
 import com.ss.gallerypro.fragments.list.video.VideoFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -57,11 +57,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_albums:
-                AlbumFragment albumFragment = new AlbumFragment();
+                AlbumsFragment albumsFragment = new AlbumsFragment();
                 getSupportFragmentManager()
                         .beginTransaction()
-                        //.replace(R.id.fragment_container, new AlbumFragment())
-                        .add(R.id.fragment_container, albumFragment, "AlbumFragment")
+                        //.replace(R.id.fragment_container, new AlbumsFragment())
+                        .add(R.id.fragment_container, albumsFragment, "AlbumsFragment")
                         .commit();
                 break;
 
@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void startAlbumView() {
-        AlbumFragment albumFragment = new AlbumFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, albumFragment)
+        AlbumsFragment albumsFragment = new AlbumsFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, albumsFragment)
                 .commit();
     }
 

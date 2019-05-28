@@ -7,9 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.fragments.list.albums.album.AlbumAdapter;
+import com.ss.gallerypro.fragments.list.albums.album.AlbumsAdapter;
 import com.ss.gallerypro.data.Bucket;
-import com.ss.gallerypro.fragments.list.albums.album.AlbumFragment;
+import com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;
 
 import java.util.ArrayList;
 
@@ -17,14 +17,14 @@ public class Toolbar_ActionMode_Bucket implements ActionMode.Callback {
 
     private Fragment mFragment;
     private Context mContext;
-    private AlbumAdapter albumAdapter;
+    private AlbumsAdapter albumsAdapter;
     private ArrayList<Bucket> mBucket;
     private int mItemChecked = 1;
 
-    public Toolbar_ActionMode_Bucket(Fragment mFragment, Context mContext, AlbumAdapter albumAdapter, ArrayList<Bucket> mBucket) {
+    public Toolbar_ActionMode_Bucket(Fragment mFragment, Context mContext, AlbumsAdapter albumsAdapter, ArrayList<Bucket> mBucket) {
         this.mFragment = mFragment;
         this.mContext = mContext;
-        this.albumAdapter = albumAdapter;
+        this.albumsAdapter = albumsAdapter;
         this.mBucket = mBucket;
     }
 
@@ -54,9 +54,9 @@ public class Toolbar_ActionMode_Bucket implements ActionMode.Callback {
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                AlbumFragment albumFragment = (AlbumFragment) mFragment;
-                if(albumFragment != null) {
-                    albumFragment.deleteAlbums();
+                AlbumsFragment albumsFragment = (AlbumsFragment) mFragment;
+                if(albumsFragment != null) {
+                    albumsFragment.deleteAlbums();
                 }
                 break;
         }
@@ -65,18 +65,18 @@ public class Toolbar_ActionMode_Bucket implements ActionMode.Callback {
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        albumAdapter.removeSelection();
-        AlbumFragment albumFragment = (AlbumFragment) mFragment;
+        albumsAdapter.removeSelection();
+        AlbumsFragment albumsFragment = (AlbumsFragment) mFragment;
 
-        albumFragment.setNullToActionMode();
-        albumFragment.setEnableSwipeRefresh(true);
+        albumsFragment.setNullToActionMode();
+        albumsFragment.setEnableSwipeRefresh(true);
     }
 
     public void changeMenu(int numbItemCheck){
         this.mItemChecked = numbItemCheck;
-        AlbumFragment albumFragment = (AlbumFragment) mFragment;
-        if(albumFragment.getActionMode() != null){
-            albumFragment.getActionMode().invalidate();
+        AlbumsFragment albumsFragment = (AlbumsFragment) mFragment;
+        if(albumsFragment.getActionMode() != null){
+            albumsFragment.getActionMode().invalidate();
         }
     }
 }

@@ -24,8 +24,6 @@ import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.MediaItem;
-import com.ss.gallerypro.data.provider.IMediaDataChangeCallback;
-import com.ss.gallerypro.data.provider.MediaDataHandler;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.event.RecyclerClick_Listener;
@@ -33,6 +31,10 @@ import com.ss.gallerypro.event.RecyclerTouchListener;
 import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Photo;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListFragment;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
+import com.ss.gallerypro.fragments.list.albums.pictures.model.MediaRepositoryImpl;
+import com.ss.gallerypro.fragments.list.albums.pictures.presenter.IMediaPresenter;
+import com.ss.gallerypro.fragments.list.albums.pictures.presenter.MediaPresenterImpl;
+import com.ss.gallerypro.fragments.list.albums.pictures.view.IMediaView;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
@@ -44,35 +46,34 @@ import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import static com.ss.gallerypro.data.AlbumHelper.getSizeAlbum;
 import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
-public class AlbumPicturesFragment extends BaseListFragment implements BaseListViewAdapter.CheckedItemInterface, IMediaDataChangeCallback, OnNotifyDataChanged {
+public class AlbumPicturesFragment extends BaseListFragment implements IMediaView, BaseListViewAdapter.CheckedItemInterface {
 
-    private ArrayList<MediaItem> mListMediaItem;
     private AlbumPictureViewAdapter adapter;
     private Toolbar_ActionMode_Photo toolbarActionModePhoto;
     private View rootView;
     private SparseBooleanArray selectedMediaDelete;
-    private MediaDataHandler mMediaDataHandler;
 
     private Bucket mReceiveBucket;
-    private boolean isDeleted; // if delete back to album fragment -> need refresh
+    private IMediaPresenter presenter;
 
     public AlbumPicturesFragment() {
-        mListMediaItem = new ArrayList<>();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter = new MediaPresenterImpl(this, new MediaRepositoryImpl(mAttachedActivity));
 
         Bundle bundle = getArguments();
         if(bundle != null) {
             mReceiveBucket = bundle.getParcelable("album");
         }
+        if (mReceiveBucket != null) {
+            mAttachedActivity.setTitle(mReceiveBucket.getName());
+        }
 
         // get data -> save to mListMediaItem
-        mMediaDataHandler = new MediaDataHandler(getContext());
-        mMediaDataHandler.setDataChangedCallback(this);
-        mMediaDataHandler.getMedia(mReceiveBucket);
+        presenter.getMedias(mReceiveBucket);
     }
 
     @Nullable
@@ -80,21 +81,6 @@ public class AlbumPicturesFragment extends BaseListFragment implements BaseListV
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         return rootView;
-    }
-
-    @Override
-    public void processGetDataFinish(ArrayList<MediaItem> newMedias) {
-        adapter.updateData(newMedias);
-        adapter.changeSortingMode(getSortingMode());
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void processDeleteFinish() {
-        for(int i=selectedMediaDelete.size()-1; i>=0; i--) {
-            removeImage(selectedMediaDelete.keyAt(i));
-        }
-        isDeleted = true;
     }
 
     @SuppressLint("SetTextI18n")
@@ -105,7 +91,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements BaseListV
         for (int i = (selectedMediaDelete.size() - 1); i >= 0; i--) {
             if (selectedMediaDelete.valueAt(i)) {
                 //If current id is selected remove the item via key
-                mDeletedMedias.add(mListMediaItem.get(selectedMediaDelete.keyAt(i)));
+                mDeletedMedias.add(adapter.getMediaList().get(selectedMediaDelete.keyAt(i)));
             }
         }
         final Dialog dialog = new Dialog(Objects.requireNonNull(getContext()));
@@ -119,7 +105,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements BaseListV
         btnCancel.setOnClickListener(view -> dialog.dismiss());
         btnDelete.setOnClickListener(view -> {
             dialog.dismiss();
-            mMediaDataHandler.deleteMedias(mDeletedMedias);
+            presenter.deleteMedias(mDeletedMedias);
             mActionMode.finish();
         });
     }
@@ -129,15 +115,14 @@ public class AlbumPicturesFragment extends BaseListFragment implements BaseListV
 
     }
 
-    @Override
     protected void onListItemSelect(int position) {
         adapter.toggleSelection(position);
 
         boolean hasCheckedItems = adapter.getSelectedCount() > 0;
 
         if (hasCheckedItems && mActionMode == null) {
-            toolbarActionModePhoto = new Toolbar_ActionMode_Photo(this, getContext(), mListMediaItem, adapter);
-            mActionMode = ((AppCompatActivity) Objects.requireNonNull(getActivity())).startSupportActionMode(toolbarActionModePhoto);
+            toolbarActionModePhoto = new Toolbar_ActionMode_Photo(this, getContext(), adapter.getMediaList(), adapter);
+            mActionMode = ((AppCompatActivity) Objects.requireNonNull(mAttachedActivity)).startSupportActionMode(toolbarActionModePhoto);
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
         }
@@ -154,8 +139,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements BaseListV
         recyclerView.setItemAnimator(new LandingAnimator());
         int NUM_COLUMNS = 4;
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, Objects.requireNonNull(getContext())), true));
-        adapter = new AlbumPictureViewAdapter(getContext(), getSortingMode(), getSortingOrder(), mListMediaItem);
-        adapter.setDataAdapterChangeCallback(this);
+        adapter = new AlbumPictureViewAdapter(getContext(), getSortingMode(), getSortingOrder());
         adapter.setItemCheckedInterface(this);
         GridlayoutManagerFixed gridlayoutManagerFixed = new GridlayoutManagerFixed(getContext(), NUM_COLUMNS);
         recyclerView.setLayoutManager(gridlayoutManagerFixed);
@@ -174,7 +158,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements BaseListV
                     Intent intent = new Intent(getContext(), PicturePreview.class);
                     intent.putExtra("current_image_position", position);
                     intent.putExtra("album_path", mReceiveBucket.getPathToAlbum());
-                    intent.putExtra("list_image", mListMediaItem);
+                    intent.putExtra("list_image", adapter.getMediaList());
                     startActivity(intent);
                 }
             }
@@ -189,7 +173,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements BaseListV
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Objects.requireNonNull(getActivity()).getMenuInflater().inflate(R.menu.photo_split_menu, menu);
+        mAttachedActivity.getMenuInflater().inflate(R.menu.photo_split_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -260,8 +244,8 @@ public class AlbumPicturesFragment extends BaseListFragment implements BaseListV
                 Button btOK = dialogView.findViewById(R.id.buttonOk);
                 tvAlbumName.setText(mReceiveBucket.getName());
                 tvAlbumPath.setText(mReceiveBucket.getPathToAlbum());
-                tvAlbumSize.setText(readableFileSize(getSizeAlbum(mListMediaItem)));
-                tvAlbumCount.setText(String.valueOf(mListMediaItem.size()));
+                tvAlbumSize.setText(readableFileSize(getSizeAlbum(adapter.getMediaList())));
+                tvAlbumCount.setText(String.valueOf(adapter.getMediaList().size()));
 
                 //Now we need an AlertDialog.Builder object
                 AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
@@ -291,12 +275,21 @@ public class AlbumPicturesFragment extends BaseListFragment implements BaseListV
         }
     }
 
-    @Override
-    public void updateDataToView(ArrayList<MediaItem> mImageList) {
-        mListMediaItem = mImageList;
-    }
-
     private void removeImage(int position) {
         adapter.removeImage(position);
+    }
+
+    @Override
+    public void onGetMediaSuccess(ArrayList<MediaItem> medias) {
+        adapter.setDataList(medias);
+        adapter.changeSortingMode(getSortingMode());
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDeleteMediaSuccess() {
+        for(int i=selectedMediaDelete.size()-1; i>=0; i--) {
+            removeImage(selectedMediaDelete.keyAt(i));
+        }
     }
 }
