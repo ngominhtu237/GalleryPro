@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,10 +20,13 @@ import com.ss.gallerypro.fragments.AboutUsFragment;
 import com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;
 import com.ss.gallerypro.fragments.list.video.VideoFragment;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
     private HeaderViewHolder mHeaderViewHolder;
+    private FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +49,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+        mFragmentManager = getSupportFragmentManager();
+
+        mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                // change navigation selected item on fragment backstack change
+                Fragment current = getCurrentFragment();
+                if (current instanceof VideoFragment) {
+                    navigationView.setCheckedItem(R.id.nav_videos);
+                } else {
+                    navigationView.setCheckedItem(R.id.nav_albums);
+                }
+                // handler hamburger to arrow and reverse
+                if (mFragmentManager.getBackStackEntryCount() > 0) {
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true); // show back button
                     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                         @Override
@@ -75,6 +90,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public Fragment getCurrentFragment() {
+        return mFragmentManager.findFragmentById(R.id.fragment_container);
+    }
+
     @SuppressLint("SetTextI18n")
     private void initNavHeader() {
         String left = getEmojiByUnicode(0x1F603) + getEmojiByUnicode(0x1F604);
@@ -85,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+        Objects.requireNonNull(getSupportActionBar()).show();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(Gravity.START);
         } else {
@@ -96,22 +116,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_albums:
+                Objects.requireNonNull(getSupportActionBar()).show();
                 AlbumsFragment albumsFragment = new AlbumsFragment();
-                getSupportFragmentManager()
-                        .beginTransaction()
+                mFragmentManager.beginTransaction()
                         //.replace(R.id.fragment_container, new AlbumsFragment())
                         .add(R.id.fragment_container, albumsFragment, "AlbumsFragment")
                         .commit();
                 break;
 
             case R.id.nav_videos:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new VideoFragment())
+                Objects.requireNonNull(getSupportActionBar()).show();
+                mFragmentManager.beginTransaction().replace(R.id.fragment_container, new VideoFragment())
                         .commit();
                 break;
 
             case R.id.nav_about_us:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AboutUsFragment())
-                        .commit();
+                AboutUsFragment aboutUsFragment = new AboutUsFragment();
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, aboutUsFragment, "AboutUsFragment");
+
+                // Add fragment one in back stack. So it will not be destroyed. Press back menu can pop it up from the stack.
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
                 break;
         }
 
@@ -121,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void startAlbumView() {
         AlbumsFragment albumsFragment = new AlbumsFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, albumsFragment)
+        mFragmentManager.beginTransaction().replace(R.id.fragment_container, albumsFragment)
                 .commit();
     }
 

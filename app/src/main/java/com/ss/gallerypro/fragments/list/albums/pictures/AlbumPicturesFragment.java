@@ -70,15 +70,16 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         if (mReceiveBucket != null) {
             mAttachedActivity.setTitle(mReceiveBucket.getName());
         }
-
-        // get data -> save to mListMediaItem
-        presenter.getMedias(mReceiveBucket);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = super.onCreateView(inflater, container, savedInstanceState);
+
+        // back from another fragment not call onCreate Fragment
+        presenter.getMedias(mReceiveBucket);
+
         return rootView;
     }
 
