@@ -1,0 +1,77 @@
+Index: app/src/main/java/com/ss/gallerypro/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ss.gallerypro;\n\nimport android.annotation.SuppressLint;\nimport android.os.Bundle;\nimport android.support.annotation.NonNull;\nimport android.support.design.widget.NavigationView;\nimport android.support.v4.app.Fragment;\nimport android.support.v4.app.FragmentManager;\nimport android.support.v4.app.FragmentTransaction;\nimport android.support.v4.view.GravityCompat;\nimport android.support.v4.widget.DrawerLayout;\nimport android.support.v7.app.ActionBarDrawerToggle;\nimport android.support.v7.app.AppCompatActivity;\nimport android.support.v7.widget.Toolbar;\nimport android.view.Gravity;\nimport android.view.MenuItem;\nimport android.view.View;\n\nimport com.ss.gallerypro.fragments.AboutUsFragment;\nimport com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;\nimport com.ss.gallerypro.fragments.list.video.VideoFragment;\n\nimport java.util.Objects;\n\npublic class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {\n\n    private DrawerLayout drawer;\n    private HeaderViewHolder mHeaderViewHolder;\n    private FragmentManager mFragmentManager;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_main);\n        Toolbar toolbar = findViewById(R.id.toolbar);\n        setSupportActionBar(toolbar);\n\n        drawer = findViewById(R.id.drawer_layout);\n        NavigationView navigationView = findViewById(R.id.nav_view);\n        navigationView.setItemIconTintList(null);\n        navigationView.setNavigationItemSelectedListener(this);\n\n        mHeaderViewHolder = new HeaderViewHolder(navigationView.getHeaderView(0));\n\n        initNavHeader();\n\n        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,\n                R.string.navigation_drawer_open, R.string.navigation_drawer_close);\n        drawer.addDrawerListener(toggle);\n        toggle.syncState();\n\n        mFragmentManager = getSupportFragmentManager();\n\n        mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {\n            @Override\n            public void onBackStackChanged() {\n                // change navigation selected item on fragment backstack change\n                Fragment current = getCurrentFragment();\n                if (current instanceof VideoFragment) {\n                    navigationView.setCheckedItem(R.id.nav_videos);\n                } else {\n                    navigationView.setCheckedItem(R.id.nav_albums);\n                }\n                // handler hamburger to arrow and reverse\n                if (mFragmentManager.getBackStackEntryCount() > 0) {\n                    getSupportActionBar().setDisplayHomeAsUpEnabled(true); // show back button\n                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {\n                        @Override\n                        public void onClick(View v) {\n                            onBackPressed();\n                        }\n                    });\n                } else {\n                    //show hamburger\n                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);\n                    toggle.syncState();\n                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {\n                        @Override\n                        public void onClick(View v) {\n                            drawer.openDrawer(GravityCompat.START);\n                        }\n                    });\n                }\n            }\n        });\n\n        if (savedInstanceState == null) {\n            startAlbumView();\n            navigationView.setCheckedItem(R.id.nav_albums);\n        }\n    }\n\n    public Fragment getCurrentFragment() {\n        return mFragmentManager.findFragmentById(R.id.fragment_container);\n    }\n\n    @SuppressLint(\"SetTextI18n\")\n    private void initNavHeader() {\n        String left = getEmojiByUnicode(0x1F603) + getEmojiByUnicode(0x1F604);\n        String right = getEmojiByUnicode(0x1F60D) + getEmojiByUnicode(0x1F618);\n        mHeaderViewHolder.mTitle.setText(left + \" Gallery \" + right);\n    }\n\n\n    @Override\n    public void onBackPressed() {\n        Objects.requireNonNull(getSupportActionBar()).show();\n        if (drawer.isDrawerOpen(GravityCompat.START)) {\n            drawer.closeDrawer(Gravity.START);\n        } else {\n            super.onBackPressed();\n        }\n    }\n\n    @Override\n    public boolean onNavigationItemSelected(@NonNull MenuItem item) {\n        switch (item.getItemId()) {\n            case R.id.nav_albums:\n                Objects.requireNonNull(getSupportActionBar()).show();\n                AlbumsFragment albumsFragment = new AlbumsFragment();\n                mFragmentManager.beginTransaction()\n                        //.replace(R.id.fragment_container, new AlbumsFragment())\n                        .add(R.id.fragment_container, albumsFragment, \"AlbumsFragment\")\n                        .commit();\n                break;\n\n            case R.id.nav_videos:\n                Objects.requireNonNull(getSupportActionBar()).show();\n                mFragmentManager.beginTransaction().replace(R.id.fragment_container, new VideoFragment())\n                        .commit();\n                break;\n\n            case R.id.nav_about_us:\n                AboutUsFragment aboutUsFragment = new AboutUsFragment();\n                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();\n                fragmentTransaction.replace(R.id.fragment_container, aboutUsFragment, \"AboutUsFragment\");\n\n                // Add fragment one in back stack. So it will not be destroyed. Press back menu can pop it up from the stack.\n                fragmentTransaction.addToBackStack(null);\n                fragmentTransaction.commit();\n                break;\n        }\n\n        drawer.closeDrawer(GravityCompat.START);\n        return true;\n    }\n\n    private void startAlbumView() {\n        AlbumsFragment albumsFragment = new AlbumsFragment();\n        mFragmentManager.beginTransaction().replace(R.id.fragment_container, albumsFragment)\n                .commit();\n    }\n\n    public String getEmojiByUnicode(int unicode){\n        return new String(Character.toChars(unicode));\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/ss/gallerypro/MainActivity.java	(date 1559123523000)
++++ app/src/main/java/com/ss/gallerypro/MainActivity.java	(date 1559124605833)
+@@ -58,9 +58,12 @@
+                 Fragment current = getCurrentFragment();
+                 if (current instanceof VideoFragment) {
+                     navigationView.setCheckedItem(R.id.nav_videos);
++                } else if (current instanceof AboutUsFragment) {
++                    navigationView.setCheckedItem(R.id.nav_about_us);
+                 } else {
+                     navigationView.setCheckedItem(R.id.nav_albums);
+                 }
++
+                 // handler hamburger to arrow and reverse
+                 if (mFragmentManager.getBackStackEntryCount() > 0) {
+                     getSupportActionBar().setDisplayHomeAsUpEnabled(true); // show back button
+@@ -104,7 +107,9 @@
+ 
+     @Override
+     public void onBackPressed() {
+-        Objects.requireNonNull(getSupportActionBar()).show();
++        if(!Objects.requireNonNull(getSupportActionBar()).isShowing()) {
++            Objects.requireNonNull(getSupportActionBar()).show();
++        }
+         if (drawer.isDrawerOpen(GravityCompat.START)) {
+             drawer.closeDrawer(Gravity.START);
+         } else {
+@@ -116,26 +121,35 @@
+     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+         switch (item.getItemId()) {
+             case R.id.nav_albums:
+-                Objects.requireNonNull(getSupportActionBar()).show();
+-                AlbumsFragment albumsFragment = new AlbumsFragment();
++                if(!Objects.requireNonNull(getSupportActionBar()).isShowing()) {
++                    Objects.requireNonNull(getSupportActionBar()).show();
++                }
++
++                AlbumsFragment albumsFragment = (AlbumsFragment) mFragmentManager.findFragmentByTag("AlbumsFragment");
++                if(albumsFragment == null) {
++                    albumsFragment = new AlbumsFragment();
++                }
+                 mFragmentManager.beginTransaction()
+-                        //.replace(R.id.fragment_container, new AlbumsFragment())
+-                        .add(R.id.fragment_container, albumsFragment, "AlbumsFragment")
++                        .replace(R.id.fragment_container, albumsFragment, "AlbumsFragment")
+                         .commit();
+                 break;
+ 
+             case R.id.nav_videos:
+-                Objects.requireNonNull(getSupportActionBar()).show();
++                if(!Objects.requireNonNull(getSupportActionBar()).isShowing()) {
++                    Objects.requireNonNull(getSupportActionBar()).show();
++                }
++
+                 mFragmentManager.beginTransaction().replace(R.id.fragment_container, new VideoFragment())
+                         .commit();
+                 break;
+ 
+             case R.id.nav_about_us:
+-                AboutUsFragment aboutUsFragment = new AboutUsFragment();
++                AboutUsFragment aboutUsFragment = (AboutUsFragment) mFragmentManager.findFragmentByTag("AboutUsFragment");
++                if(aboutUsFragment == null) {
++                    aboutUsFragment = new AboutUsFragment();
++                }
+                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                 fragmentTransaction.replace(R.id.fragment_container, aboutUsFragment, "AboutUsFragment");
+-
+-                // Add fragment one in back stack. So it will not be destroyed. Press back menu can pop it up from the stack.
+                 fragmentTransaction.addToBackStack(null);
+                 fragmentTransaction.commit();
+                 break;

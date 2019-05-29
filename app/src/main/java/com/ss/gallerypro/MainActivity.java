@@ -20,8 +20,6 @@ import com.ss.gallerypro.fragments.AboutUsFragment;
 import com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;
 import com.ss.gallerypro.fragments.list.video.VideoFragment;
 
-import java.util.Objects;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        Objects.requireNonNull(getSupportActionBar()).show();
+        getSupportActionBar().setTitle(R.string.app_name);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(Gravity.START);
         } else {
@@ -116,16 +114,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_albums:
-                Objects.requireNonNull(getSupportActionBar()).show();
                 AlbumsFragment albumsFragment = new AlbumsFragment();
                 mFragmentManager.beginTransaction()
                         //.replace(R.id.fragment_container, new AlbumsFragment())
-                        .add(R.id.fragment_container, albumsFragment, "AlbumsFragment")
+                        .replace(R.id.fragment_container, albumsFragment, "AlbumsFragment")
                         .commit();
                 break;
 
             case R.id.nav_videos:
-                Objects.requireNonNull(getSupportActionBar()).show();
                 mFragmentManager.beginTransaction().replace(R.id.fragment_container, new VideoFragment())
                         .commit();
                 break;
@@ -147,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void startAlbumView() {
         AlbumsFragment albumsFragment = new AlbumsFragment();
-        mFragmentManager.beginTransaction().replace(R.id.fragment_container, albumsFragment)
+        mFragmentManager.beginTransaction().replace(R.id.fragment_container, albumsFragment,"AlbumsFragment")
                 .commit();
     }
 
