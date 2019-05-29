@@ -37,12 +37,14 @@ abstract public class BaseListFragment extends Fragment {
     @BindView(R.id.placeholder)
     protected DesertPlaceholder desertPlaceholder;
 
+    @BindView(R.id.albumRecycleView)
+    protected RecyclerView recyclerView;
+
     protected RecyclerView.LayoutManager mLayoutManager;
     protected GridSpacingItemDecoration mGridSpacingItemDecoration;
-    protected RecyclerView recyclerView;
+
     protected LayoutType mLayoutType = getLayoutType();
     protected int NUM_COLUMNS;
-
     protected ActionMode mActionMode;
     protected Activity mAttachedActivity;
 
@@ -97,7 +99,6 @@ abstract public class BaseListFragment extends Fragment {
     protected abstract void handleClickItem(int position);
 
     protected void initRecycleView(View v) {
-        recyclerView = v.findViewById(R.id.albumRecycleView);
         recyclerView.setHasFixedSize(true);
     }
 

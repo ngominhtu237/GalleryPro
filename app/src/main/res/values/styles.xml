@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <!-- HERE-->
@@ -23,9 +23,10 @@
     </style>
 
     <style name="MyToolbar.Theme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:colorBackground">@color/md_dark_appbar</item>
-        <item name="android:textColorSecondary">@color/colorHighlight</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:colorControlHighlight">@color/colorHighlight</item>
+        <item name="android:textColorSecondary">@color/md_cyan_500</item>
+        <item name="android:textColor">@color/accent_black</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

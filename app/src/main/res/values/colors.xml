@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimary">@color/accent_purple</color>
+    <color name="colorPrimaryStatusTransparent">@color/accent_purple_transparent</color>
     <color name="colorAccent">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="brown">#2b2b2b</color>
@@ -14,6 +14,7 @@
     <color name="accent_red">#f44336</color>
     <color name="accent_pink">#e91e63</color>
     <color name="accent_purple">#9c27b0</color>
+    <color name="accent_purple_transparent">#649c27b0</color>
     <color name="accent_deep_purple">#673ab7</color>
     <color name="accent_indago">#3f51b5</color>
     <color name="accent_blue">#2196f3</color>

@@ -5,4 +5,9 @@
     -->
     <dimen name="album_column">2dp</dimen>
     <dimen name="album_column_landscape">5dp</dimen>
+
+    <!-- HeaderHeight = NavDrawerWidth * 9/16  -->
+    <dimen name="nav_drawer_width">270dp</dimen>
+    <dimen name="navDrawer_header_height">250dp</dimen>
+    <dimen name="nav_header_icon_size">70dp</dimen>
 </resources>
