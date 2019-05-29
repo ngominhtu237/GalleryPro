@@ -6,6 +6,12 @@
     <string name="openDrawer">open_drawer</string>
     <string name="closeDrawer">close_drawer</string>
 
+    <string name="navigation_drawer_header_title">Gallery</string>
+    <!-- Navigation Drawer Header labels -->
+    <string name="nav_header_photos">Photos</string>
+    <string name="nav_header_videos">Videos</string>
+    <string name="nav_header_albums">Albums</string>
+
     <!-- Navigation Drawer menu labels -->
     <string name="nav_albums">Album</string>
     <string name="nav_times">Timeline</string>

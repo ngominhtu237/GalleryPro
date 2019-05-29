@@ -206,7 +206,7 @@ public class PhotoSplitView extends AppCompatActivity {
                 TextView tvAlbumName = dialogView.findViewById(R.id.tvAlbumName);
                 TextView tvAlbumPath = dialogView.findViewById(R.id.tvAlbumPath);
                 TextView tvAlbumSize = dialogView.findViewById(R.id.tvAlbumSize);
-                TextView tvAlbumCount = dialogView.findViewById(R.id.tvAlbumCount);
+                TextView tvAlbumCount = dialogView.findViewById(R.id.tvCountAlbum);
                 Button btOK = dialogView.findViewById(R.id.buttonOk);
                 tvAlbumName.setText(mReceiveBucket.getName());
                 tvAlbumPath.setText(mReceiveBucket.getPathToAlbum());

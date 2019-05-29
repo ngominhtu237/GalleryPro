@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">20dp</dimen>
     <dimen name="nav_header_height">200dp</dimen>
@@ -12,6 +12,7 @@
 
     <dimen name="ten_dp">10dp</dimen>
     <dimen name="twenty_dp">20dp</dimen>
+    <dimen name="twenty_two_dp">22dp</dimen>
     <dimen name="twenty_five_dp">25dp</dimen>
     <dimen name="fifteen_dp">15dp</dimen>
     <dimen name="eighteen_dp">18dp</dimen>
@@ -78,5 +79,10 @@
     <integer name="anim_duration_medium">300</integer>
 
     <dimen name="photos_list_spacing">4dp</dimen>
+
+    <!-- Nav header -->
+    <dimen name="nav_size_label">11sp</dimen>
+    <dimen name="nav_size_count">15sp</dimen>
+    <dimen name="nav_padding_label_count">2dp</dimen>
 
 </resources>

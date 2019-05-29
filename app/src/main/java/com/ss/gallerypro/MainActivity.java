@@ -1,5 +1,6 @@
 package com.ss.gallerypro;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,12 +21,12 @@ import com.ss.gallerypro.fragments.list.video.VideoFragment;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
+    private HeaderViewHolder mHeaderViewHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -33,6 +34,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mHeaderViewHolder = new HeaderViewHolder(navigationView.getHeaderView(0));
+
+        initNavHeader();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -68,6 +73,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startAlbumView();
             navigationView.setCheckedItem(R.id.nav_albums);
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void initNavHeader() {
+        String left = getEmojiByUnicode(0x1F603) + getEmojiByUnicode(0x1F604);
+        String right = getEmojiByUnicode(0x1F60D) + getEmojiByUnicode(0x1F618);
+        mHeaderViewHolder.mTitle.setText(left + " Gallery " + right);
     }
 
 
@@ -113,4 +125,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
     }
 
+    public String getEmojiByUnicode(int unicode){
+        return new String(Character.toChars(unicode));
+    }
 }

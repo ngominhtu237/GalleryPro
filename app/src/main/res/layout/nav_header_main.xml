@@ -25,20 +25,116 @@
         android:foregroundGravity="center"/>
 
     <TextView
+        android:id="@+id/nav_header_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/avatar"
         android:layout_marginTop="5dp"
-        android:text="Gallery"
+        android:text="@string/navigation_drawer_header_title"
         android:fontFamily="tohoma"
         android:textColor="@color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="info@tu.nm1.com"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_marginTop="@dimen/twenty_two_dp"
+        android:layout_below="@+id/nav_header_title">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nav_header_photos"
+                android:textSize="@dimen/nav_size_label"
+                android:textColor="@color/colorHighlight"/>
+            <TextView
+                android:id="@+id/tvPhotoCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="529"
+                android:textSize="@dimen/nav_size_count"
+                android:layout_marginTop="@dimen/nav_padding_label_count"
+                android:layout_marginBottom="@dimen/nav_padding_label_count"
+                android:textColor="@color/white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="239.2 MB"
+                android:textSize="@dimen/nav_size_label"
+                android:textColor="@color/colorHighlight"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nav_header_videos"
+                android:textSize="@dimen/nav_size_label"
+                android:textColor="@color/colorHighlight"/>
+            <TextView
+                android:id="@+id/tvVideoCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="@dimen/nav_size_count"
+                android:layout_marginTop="@dimen/nav_padding_label_count"
+                android:layout_marginBottom="@dimen/nav_padding_label_count"
+                android:textColor="@color/white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 MB"
+                android:textSize="@dimen/nav_size_label"
+                android:textColor="@color/colorHighlight"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nav_header_albums"
+                android:textSize="@dimen/nav_size_label"
+                android:textColor="@color/colorHighlight"/>
+            <TextView
+                android:id="@+id/tvCountAlbum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="14"
+                android:textSize="@dimen/nav_size_count"
+                android:layout_marginTop="@dimen/nav_padding_label_count"
+                android:layout_marginBottom="@dimen/nav_padding_label_count"
+                android:textColor="@color/white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="239.2 MB"
+                android:textSize="@dimen/nav_size_label"
+                android:textColor="@color/colorHighlight"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>
