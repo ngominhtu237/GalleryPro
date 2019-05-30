@@ -22,9 +22,9 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class VideoFragment extends Fragment {
+public class VideosFragment extends Fragment {
 
-    private static final String TAG = "VideoFragment";
+    private static final String TAG = "VideosFragment";
     private static int NUM_COLUMNS;
     private ArrayList<MediaItem> mVideoList;
     private VideoAdapter videoAdapter;
@@ -41,7 +41,7 @@ public class VideoFragment extends Fragment {
         return mActionMode;
     }
 
-    public VideoFragment() {
+    public VideosFragment() {
         mVideoList = new ArrayList<>();
     }
 

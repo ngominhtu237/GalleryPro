@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@color/accent_purple"
+        android:background="@color/colorPrimary"
         android:scaleType="fitCenter" />
 
     <de.hdodenhof.circleimageview.CircleImageView

@@ -18,7 +18,7 @@ import android.view.View;
 
 import com.ss.gallerypro.fragments.AboutUsFragment;
 import com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;
-import com.ss.gallerypro.fragments.list.albums.video.VideoFragment;
+import com.ss.gallerypro.fragments.list.albums.video.VideosFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker {
 
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onBackStackChanged() {
                 // change navigation selected item on fragment backstack change
                 Fragment current = getCurrentFragment();
-                if (current instanceof VideoFragment) {
+                if (current instanceof VideosFragment) {
                     navigationView.setCheckedItem(R.id.nav_videos);
                 } else if (current instanceof AboutUsFragment){
                     navigationView.setCheckedItem(R.id.nav_about_us);
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_videos:
-                mFragmentManager.beginTransaction().replace(R.id.fragment_container, new VideoFragment())
+                mFragmentManager.beginTransaction().replace(R.id.fragment_container, new VideosFragment())
                         .commit();
                 break;
 

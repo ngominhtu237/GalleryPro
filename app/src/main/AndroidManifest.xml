@@ -24,9 +24,6 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".activity.PhotoSplitView"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activity.PicturePreview"
             android:theme="@style/PictureView" />
         <activity
