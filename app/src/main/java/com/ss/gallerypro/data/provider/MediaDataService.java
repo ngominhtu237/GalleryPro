@@ -18,7 +18,7 @@ import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
-import com.ss.gallerypro.fragments.list.albums.pictures.OnMediaDataNotify;
+import com.ss.gallerypro.fragments.list.pictures.OnMediaDataNotify;
 
 import java.util.ArrayList;
 

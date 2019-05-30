@@ -8,8 +8,8 @@ import android.view.MenuItem;
 
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
-import com.ss.gallerypro.fragments.list.albums.pictures.AlbumPictureViewAdapter;
-import com.ss.gallerypro.fragments.list.albums.pictures.AlbumPicturesFragment;
+import com.ss.gallerypro.fragments.list.pictures.AlbumPictureViewAdapter;
+import com.ss.gallerypro.fragments.list.pictures.AlbumPicturesFragment;
 
 import java.util.ArrayList;
 

@@ -43,7 +43,7 @@ import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
 import com.ss.gallerypro.fragments.list.albums.album.model.AlbumRepositoryImpl;
 import com.ss.gallerypro.fragments.list.albums.album.presenter.AlbumsPresenterImpl;
 import com.ss.gallerypro.fragments.list.albums.album.view.IAlbumsView;
-import com.ss.gallerypro.fragments.list.albums.pictures.AlbumPicturesFragment;
+import com.ss.gallerypro.fragments.list.pictures.AlbumPicturesFragment;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 

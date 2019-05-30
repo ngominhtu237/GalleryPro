@@ -1,4 +1,4 @@
-package com.ss.gallerypro.fragments.list.albums.pictures.presenter;
+package com.ss.gallerypro.fragments.list.pictures.presenter;
 
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.MediaItem;

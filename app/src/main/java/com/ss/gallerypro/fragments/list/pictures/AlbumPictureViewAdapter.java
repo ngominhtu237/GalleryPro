@@ -1,4 +1,4 @@
-package com.ss.gallerypro.fragments.list.albums.pictures;
+package com.ss.gallerypro.fragments.list.pictures;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

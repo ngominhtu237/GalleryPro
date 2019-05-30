@@ -1,8 +1,8 @@
-package com.ss.gallerypro.fragments.list.albums.pictures.model;
+package com.ss.gallerypro.fragments.list.pictures.model;
 
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.MediaItem;
-import com.ss.gallerypro.fragments.list.albums.pictures.OnMediaDataNotify;
+import com.ss.gallerypro.fragments.list.pictures.OnMediaDataNotify;
 
 import java.util.ArrayList;
 

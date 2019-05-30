@@ -1,4 +1,4 @@
-package com.ss.gallerypro.fragments.list.albums.pictures;
+package com.ss.gallerypro.fragments.list.pictures;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -30,10 +30,10 @@ import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Photo;
 import com.ss.gallerypro.fragments.RecycleViewClickListener;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListFragment;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
-import com.ss.gallerypro.fragments.list.albums.pictures.model.MediaRepositoryImpl;
-import com.ss.gallerypro.fragments.list.albums.pictures.presenter.IMediaPresenter;
-import com.ss.gallerypro.fragments.list.albums.pictures.presenter.MediaPresenterImpl;
-import com.ss.gallerypro.fragments.list.albums.pictures.view.IMediaView;
+import com.ss.gallerypro.fragments.list.pictures.model.MediaRepositoryImpl;
+import com.ss.gallerypro.fragments.list.pictures.presenter.IMediaPresenter;
+import com.ss.gallerypro.fragments.list.pictures.presenter.MediaPresenterImpl;
+import com.ss.gallerypro.fragments.list.pictures.view.IMediaView;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 

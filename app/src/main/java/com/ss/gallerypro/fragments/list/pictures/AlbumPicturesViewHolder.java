@@ -1,4 +1,4 @@
-package com.ss.gallerypro.fragments.list.albums.pictures;
+package com.ss.gallerypro.fragments.list.pictures;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
