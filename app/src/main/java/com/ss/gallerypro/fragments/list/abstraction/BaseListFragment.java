@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
+import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.LayoutType;
@@ -69,6 +70,7 @@ abstract public class BaseListFragment extends Fragment {
         }
         initRecycleView(view);
         implementRecyclerViewClickListeners();
+        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(false);
         return view;
     }
 

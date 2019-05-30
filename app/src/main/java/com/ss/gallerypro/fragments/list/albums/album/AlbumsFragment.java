@@ -27,6 +27,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.AlbumHelper;
@@ -83,6 +84,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                              Bundle savedInstanceState) {
 
         View view = super.onCreateView(inflater, container, savedInstanceState);
+        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(true);
         mSwipeRefreshLayout.setOnRefreshListener(listener);
 
         if(presenter.isListAlbumEmpty(receiveBuckets)) {
