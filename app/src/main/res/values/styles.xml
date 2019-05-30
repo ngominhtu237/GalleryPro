@@ -19,7 +19,7 @@
         <item name="windowActionModeOverlay">true</item>
 
         <!--  For Custom Action Mode Background Color/Drawable -->
-        <item name="actionModeBackground">@color/colorAccent</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
     </style>
 
     <style name="MyToolbar.Theme" parent="Theme.AppCompat.NoActionBar">
