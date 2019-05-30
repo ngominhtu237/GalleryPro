@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Fragment current = getCurrentFragment();
                 if (current instanceof VideoFragment) {
                     navigationView.setCheckedItem(R.id.nav_videos);
+                } else if (current instanceof AboutUsFragment){
+                    navigationView.setCheckedItem(R.id.nav_about_us);
                 } else {
                     navigationView.setCheckedItem(R.id.nav_albums);
                 }
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         getSupportActionBar().setTitle(R.string.app_name);
+        getSupportActionBar().show();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(Gravity.START);
         } else {
