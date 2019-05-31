@@ -62,10 +62,15 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter = new VideoPresenterImpl(this, new VideoRepositoryImpl(mAttachedActivity));
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         if(mAttachedActivity != null) {
             ((AppCompatActivity) mAttachedActivity).getSupportActionBar().setTitle("Video");
         }
-        presenter = new VideoPresenterImpl(this, new VideoRepositoryImpl(mAttachedActivity));
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Nullable

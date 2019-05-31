@@ -66,9 +66,14 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         if(bundle != null) {
             mReceiveBucket = bundle.getParcelable("album");
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         if (mReceiveBucket != null) {
             Objects.requireNonNull(((AppCompatActivity) mAttachedActivity).getSupportActionBar()).setTitle(mReceiveBucket.getName());
         }
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Nullable
