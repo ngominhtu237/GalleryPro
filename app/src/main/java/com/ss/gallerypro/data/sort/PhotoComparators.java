@@ -32,7 +32,7 @@ public class PhotoComparators {
             @Override
             public int compare(MediaItem i1, MediaItem i2) {
                 // Order ascending.
-                return Integer.parseInt(i1.getDateModified()) - Integer.parseInt(i2.getDateModified());
+                return Long.valueOf(i1.getDateTaken()).compareTo(Long.valueOf(i2.getDateTaken()));
             }
         };
     }

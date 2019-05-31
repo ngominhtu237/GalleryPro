@@ -16,13 +16,13 @@
                         android:title="@string/name"
                         app:showAsAction="never" />
                     <item
-                        android:id="@+id/date_taken_sort_mode_photo"
-                        android:checked="true"
-                        android:title="@string/date"
-                        app:showAsAction="never" />
-                    <item
                         android:id="@+id/size_sort_mode_photo"
                         android:title="@string/size"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/date_taken_sort_mode_photo"
+                        android:checked="true"
+                        android:title="@string/date_taken"
                         app:showAsAction="never" />
                 </group>
                 <group android:checkableBehavior="all">
