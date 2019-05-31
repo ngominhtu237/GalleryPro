@@ -1,11 +1,11 @@
-package com.ss.gallerypro.fragments.list.pictures.model;
+package com.ss.gallerypro.fragments.list.split.pictures.model;
 
 import android.content.Context;
 
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.provider.MediaDataService;
-import com.ss.gallerypro.fragments.list.pictures.OnMediaDataNotify;
+import com.ss.gallerypro.fragments.list.split.OnMediaDataNotify;
 
 import java.util.ArrayList;
 

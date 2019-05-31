@@ -1,4 +1,4 @@
-package com.ss.gallerypro.fragments.list.pictures;
+package com.ss.gallerypro.fragments.list.split.pictures;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -34,7 +34,7 @@ public class AlbumPictureViewAdapter extends BaseListViewAdapter<AlbumPicturesVi
     @NonNull
     @Override
     public AlbumPicturesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_split_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_albums_item, parent, false);
         return new AlbumPicturesViewHolder(view);
     }
 
@@ -62,16 +62,6 @@ public class AlbumPictureViewAdapter extends BaseListViewAdapter<AlbumPicturesVi
     @Override
     public int getItemCount() {
         return mMediaList.size();
-    }
-
-    @Override
-    public void changeSortingOrder(SortingOrder sortingOrder) {
-        super.changeSortingOrder(sortingOrder);
-    }
-
-    @Override
-    public void changeSortingMode(SortingMode sortingMode) {
-        super.changeSortingMode(sortingMode);
     }
 
     @Override

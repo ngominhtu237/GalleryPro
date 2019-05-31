@@ -74,7 +74,7 @@ public class PhotoSplitViewAdapter extends RecyclerView.Adapter<PhotoSplitViewAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_split_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_albums_item, parent, false);
         return new PhotoSplitViewAdapter.ViewHolder(view);
     }
 

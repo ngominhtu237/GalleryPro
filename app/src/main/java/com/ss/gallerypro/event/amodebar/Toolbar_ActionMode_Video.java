@@ -8,20 +8,19 @@ import android.view.MenuItem;
 
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
-import com.ss.gallerypro.fragments.list.split.pictures.AlbumPictureViewAdapter;
-import com.ss.gallerypro.fragments.list.split.pictures.AlbumPicturesFragment;
+import com.ss.gallerypro.fragments.list.split.video.VideosAdapter;
+import com.ss.gallerypro.fragments.list.split.video.VideosFragment;
 
 import java.util.ArrayList;
 
-public class Toolbar_ActionMode_Photo implements ActionMode.Callback {
-
+public class Toolbar_ActionMode_Video implements ActionMode.Callback {
     private Context mContext;
     private ArrayList<MediaItem> mediaItems;
-    private AlbumPictureViewAdapter adapter;
+    private VideosAdapter adapter;
     private Fragment mFragment;
     private int mItemChecked = 1;
 
-    public Toolbar_ActionMode_Photo(Fragment fragment, Context mContext, ArrayList<MediaItem> mediaItems, AlbumPictureViewAdapter adapter) {
+    public Toolbar_ActionMode_Video(Fragment fragment, Context mContext, ArrayList<MediaItem> mediaItems, VideosAdapter adapter) {
         this.mContext = mContext;
         this.mediaItems = mediaItems;
         this.adapter = adapter;
@@ -43,9 +42,9 @@ public class Toolbar_ActionMode_Photo implements ActionMode.Callback {
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) mFragment;
-                if(albumPicturesFragment != null) {
-                    albumPicturesFragment.deleteMedias();
+                VideosFragment videosFragment = (VideosFragment) mFragment;
+                if(videosFragment != null) {
+                    videosFragment.deleteMedias();
                 }
                 break;
         }
@@ -55,15 +54,15 @@ public class Toolbar_ActionMode_Photo implements ActionMode.Callback {
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         adapter.removeSelection();
-        AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) mFragment;
-        albumPicturesFragment.setNullToActionMode();
+        VideosFragment videosFragment = (VideosFragment) mFragment;
+        videosFragment.setNullToActionMode();
     }
 
     public void changeMenu(int numbItemCheck){
         this.mItemChecked = numbItemCheck;
-        AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) mFragment;
-        if(albumPicturesFragment.getActionMode() != null){
-            albumPicturesFragment.getActionMode().invalidate();
+        VideosFragment videosFragment = (VideosFragment) mFragment;
+        if(videosFragment.getActionMode() != null){
+            videosFragment.getActionMode().invalidate();
         }
     }
 }

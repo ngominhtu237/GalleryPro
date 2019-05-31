@@ -70,11 +70,10 @@ public class AlbumHelper {
     }
 
     public static Long getSizeAlbum(ArrayList<MediaItem> mImageList){
-        Long s = Long.valueOf(0);
+        Long s = 0L;
         for(int i=0; i<mImageList.size(); i++){
             s+= Long.valueOf(mImageList.get(i).getSize());
         }
         return s;
     }
-
 }

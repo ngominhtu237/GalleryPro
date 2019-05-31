@@ -1,4 +1,4 @@
-package com.ss.gallerypro.fragments.list.pictures.view;
+package com.ss.gallerypro.fragments.list.split.pictures.view;
 
 import com.ss.gallerypro.data.MediaItem;
 

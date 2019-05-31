@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ss.gallerypro.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:clickable="true"
+    android:foreground="@drawable/ripple">
+
+    <ImageView
+        android:id="@+id/ivVideoThumb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/md_dark_cards"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/ivCheckbox"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@mipmap/checked"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/three_dp"
+        android:layout_marginEnd="@dimen/three_dp">
+
+        <TextView
+            android:id="@+id/tvDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/five_dp"
+            android:text="03:54"
+            android:textColor="@color/white"/>
+
+        <ImageView
+            android:id="@+id/ivPlayIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/icon_play_button" />
+    </LinearLayout>
+</com.ss.gallerypro.view.SquareRelativeLayout>

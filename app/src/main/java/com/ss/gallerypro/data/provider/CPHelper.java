@@ -164,4 +164,36 @@ public class CPHelper {
         }
         return mAlbumImages;
     }
+
+    public static ArrayList<MediaItem> getVideos(Context context) {
+        String path, mediaName, timestamp, size,width, height, mediaType, dateTaken, duration;
+        ArrayList<MediaItem> mVideoList = new ArrayList<>();
+        Uri uriExternal = MediaStore.Files.getContentUri("external");
+        String selection = "media_type = " + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+        Cursor cursor = context.getContentResolver().query(uriExternal, MediaItem.getProjection(), selection, null, null);
+        MediaItem item;
+        while(cursor.moveToNext()) {
+            item = new MediaItem();
+            path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
+            mediaName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE));
+            mediaType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.MIME_TYPE));
+            timestamp = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_MODIFIED));
+            dateTaken = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN));
+            size = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE));
+            width = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.WIDTH));
+            height = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.HEIGHT));
+            duration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
+            item.setPathMediaItem(path);
+            item.setName(mediaName);
+            item.setDateModified(timestamp);
+            item.setDateTaken(dateTaken);
+            item.setSize(size);
+            item.setWidth(width);
+            item.setHeight(height);
+            item.setMediaType(mediaType);
+            item.setDuration(duration);
+            mVideoList.add(item);
+        }
+        return mVideoList;
+    }
 }

@@ -230,7 +230,7 @@ public class PhotoSplitView extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.photo_split_menu, menu);
+        getMenuInflater().inflate(R.menu.album_pictures_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

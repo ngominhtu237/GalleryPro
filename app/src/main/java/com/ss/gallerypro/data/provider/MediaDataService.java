@@ -18,7 +18,7 @@ import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
-import com.ss.gallerypro.fragments.list.pictures.OnMediaDataNotify;
+import com.ss.gallerypro.fragments.list.split.OnMediaDataNotify;
 
 import java.util.ArrayList;
 
@@ -35,6 +35,11 @@ public class MediaDataService {
     public void getMedia(Bucket bucket, OnMediaDataNotify.GetMedia callback) {
         getMediaCallback = callback;
         new GetMediaTask().execute(bucket);
+    }
+
+    public void getVideoList(OnMediaDataNotify.GetMedia callback) {
+        getMediaCallback = callback;
+        new GetVideoTask().execute();
     }
 
     public void deleteMedias(ArrayList<MediaItem> medias, OnMediaDataNotify.DeleteMedia callback) {
@@ -54,6 +59,27 @@ public class MediaDataService {
         protected Void doInBackground(Bucket... buckets) {
             Bucket mReceiveBucket = buckets[0];
             mMedias = CPHelper.getMedias(mContext, mReceiveBucket.getBucketId(), mReceiveBucket.getName());
+            mMedias.sort(PhotoComparators.getComparator(SortingMode.DATE, SortingOrder.DESCENDING));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            getMediaCallback.onResponse(mMedias);
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private class GetVideoTask extends AsyncTask<Void, Integer, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mMedias = CPHelper.getVideos(mContext);
             mMedias.sort(PhotoComparators.getComparator(SortingMode.DATE, SortingOrder.DESCENDING));
             return null;
         }

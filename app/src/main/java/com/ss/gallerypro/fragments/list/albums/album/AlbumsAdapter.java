@@ -78,16 +78,6 @@ public class AlbumsAdapter extends BaseListViewAdapter<AlbumViewHolder> {
     }
 
     @Override
-    public void changeSortingOrder(SortingOrder sortingOrder) {
-        super.changeSortingOrder(sortingOrder);
-    }
-
-    @Override
-    public void changeSortingMode(SortingMode sortingMode) {
-        super.changeSortingMode(sortingMode);
-    }
-
-    @Override
     protected void reverseDataOrder() {
         Collections.reverse(mBuckets);
     }

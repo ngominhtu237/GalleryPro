@@ -1,7 +1,6 @@
 package com.ss.gallerypro.fragments.list.albums.album;
 
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -43,7 +42,7 @@ import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
 import com.ss.gallerypro.fragments.list.albums.album.model.AlbumRepositoryImpl;
 import com.ss.gallerypro.fragments.list.albums.album.presenter.AlbumsPresenterImpl;
 import com.ss.gallerypro.fragments.list.albums.album.view.IAlbumsView;
-import com.ss.gallerypro.fragments.list.pictures.AlbumPicturesFragment;
+import com.ss.gallerypro.fragments.list.split.pictures.AlbumPicturesFragment;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
@@ -133,8 +132,25 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         if (mActionMode != null) {
             onListItemSelect(position);
         } else {
-            handleClickItem(position);
+            openAlbum(position);
         }
+    }
+
+    protected void openAlbum(int position) {
+        FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+        AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) fragmentManager.findFragmentByTag("AlbumPicturesFragment");
+        if(albumPicturesFragment == null) {
+            albumPicturesFragment = new AlbumPicturesFragment();
+            Bundle args = new Bundle();
+            args.putParcelable("album", albumsAdapter.getBuckets().get(position));
+            albumPicturesFragment.setArguments(args);
+        }
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, albumPicturesFragment, "AlbumPicturesFragment");
+
+        // Add fragment one in back stack. So it will not be destroyed. Press back menu can pop it up from the stack.
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -163,25 +179,6 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_album_view;
-    }
-
-    @SuppressLint("CommitTransaction")
-    @Override
-    protected void handleClickItem(int position) {
-        FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-        AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) fragmentManager.findFragmentByTag("AlbumPicturesFragment");
-        if(albumPicturesFragment == null) {
-            albumPicturesFragment = new AlbumPicturesFragment();
-            Bundle args = new Bundle();
-            args.putParcelable("album", albumsAdapter.getBuckets().get(position));
-            albumPicturesFragment.setArguments(args);
-        }
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, albumPicturesFragment, "AlbumPicturesFragment");
-
-        // Add fragment one in back stack. So it will not be destroyed. Press back menu can pop it up from the stack.
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
     }
 
 

@@ -44,7 +44,7 @@ abstract public class BaseListFragment extends Fragment {
     protected RecyclerView.LayoutManager mLayoutManager;
     protected GridSpacingItemDecoration mGridSpacingItemDecoration;
 
-    protected LayoutType mLayoutType = getLayoutType();
+    protected LayoutType mLayoutType;
     protected int NUM_COLUMNS;
     protected ActionMode mActionMode;
     protected Activity mAttachedActivity;
@@ -98,19 +98,10 @@ abstract public class BaseListFragment extends Fragment {
         return mActionMode;
     }
 
-    protected abstract void handleClickItem(int position);
-
     protected void initRecycleView(View v) {
+        mLayoutType = getLayoutType();
         recyclerView.setHasFixedSize(true);
     }
-
-    abstract protected int getLayoutId();
-
-    abstract protected LayoutType getLayoutType();
-
-    abstract protected SortingMode getSortingMode();
-
-    abstract protected SortingOrder getSortingOrder();
 
     //Set enable SwipeRefreshLayout
     public void setEnableSwipeRefresh(boolean isEnable) {
@@ -132,8 +123,21 @@ abstract public class BaseListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        // unbind the view to free some memory
         unbinder.unbind();
+    }
+
+    abstract protected int getLayoutId();
+
+    // override is optional
+    protected LayoutType getLayoutType() {
+        return null;
+    }
+
+    protected SortingMode getSortingMode() {
+        return null;
+    }
+
+    protected SortingOrder getSortingOrder() {
+        return null;
     }
 }

@@ -1,11 +1,12 @@
-package com.ss.gallerypro.fragments.list.pictures;
+package com.ss.gallerypro.fragments.list.split.video;
+
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
@@ -18,22 +19,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.activity.PicturePreview;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
-import com.ss.gallerypro.data.Bucket;
-import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
-import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Photo;
+import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Video;
 import com.ss.gallerypro.fragments.RecycleViewClickListener;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListFragment;
 import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
-import com.ss.gallerypro.fragments.list.pictures.model.MediaRepositoryImpl;
-import com.ss.gallerypro.fragments.list.pictures.presenter.IMediaPresenter;
-import com.ss.gallerypro.fragments.list.pictures.presenter.MediaPresenterImpl;
-import com.ss.gallerypro.fragments.list.pictures.view.IMediaView;
+import com.ss.gallerypro.fragments.list.split.video.model.VideoRepositoryImpl;
+import com.ss.gallerypro.fragments.list.split.video.presenter.IVideoPresenter;
+import com.ss.gallerypro.fragments.list.split.video.presenter.VideoPresenterImpl;
+import com.ss.gallerypro.fragments.list.split.video.view.IVideoView;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
@@ -42,44 +41,39 @@ import java.util.Objects;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-import static com.ss.gallerypro.data.AlbumHelper.getSizeAlbum;
+import static com.ss.gallerypro.data.MediaHelper.getSizeMedia;
 import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
-public class AlbumPicturesFragment extends BaseListFragment implements IMediaView, RecycleViewClickListener, BaseListViewAdapter.CheckedItemInterface {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class VideosFragment extends BaseListFragment implements IVideoView, RecycleViewClickListener, BaseListViewAdapter.CheckedItemInterface {
 
-    private AlbumPictureViewAdapter adapter;
-    private Toolbar_ActionMode_Photo toolbarActionModePhoto;
+    private VideosAdapter adapter;
+    private Toolbar_ActionMode_Video toolbarActionModeVideo;
     private View rootView;
     private SparseBooleanArray selectedMediaDelete;
 
-    private Bucket mReceiveBucket;
-    private IMediaPresenter presenter;
+    private IVideoPresenter presenter;
 
-    public AlbumPicturesFragment() {
+    public VideosFragment() {
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new MediaPresenterImpl(this, new MediaRepositoryImpl(mAttachedActivity));
-
-        Bundle bundle = getArguments();
-        if(bundle != null) {
-            mReceiveBucket = bundle.getParcelable("album");
+        if(mAttachedActivity != null) {
+            ((AppCompatActivity) mAttachedActivity).getSupportActionBar().setTitle("Video");
         }
-        if (mReceiveBucket != null) {
-            Objects.requireNonNull(((AppCompatActivity) mAttachedActivity).getSupportActionBar()).setTitle(mReceiveBucket.getName());
-        }
+        presenter = new VideoPresenterImpl(this, new VideoRepositoryImpl(mAttachedActivity));
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        // back from another fragment not call onCreate Fragment
-        presenter.getMedias(mReceiveBucket);
-
+        presenter.getVideoList();
+        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(true);
         return rootView;
     }
 
@@ -110,19 +104,14 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         });
     }
 
-    @Override
-    protected void handleClickItem(int position) {
-
-    }
-
     protected void onListItemSelect(int position) {
         adapter.toggleSelection(position);
 
         boolean hasCheckedItems = adapter.getSelectedCount() > 0;
 
         if (hasCheckedItems && mActionMode == null) {
-            toolbarActionModePhoto = new Toolbar_ActionMode_Photo(this, getContext(), adapter.getMediaList(), adapter);
-            mActionMode = ((AppCompatActivity) Objects.requireNonNull(mAttachedActivity)).startSupportActionMode(toolbarActionModePhoto);
+            toolbarActionModeVideo = new Toolbar_ActionMode_Video(this, getContext(), adapter.getMediaList(), adapter);
+            mActionMode = ((AppCompatActivity) Objects.requireNonNull(mAttachedActivity)).startSupportActionMode(toolbarActionModeVideo);
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
         }
@@ -137,9 +126,9 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
     protected void initRecycleView(View v) {
         super.initRecycleView(v);
         recyclerView.setItemAnimator(new LandingAnimator());
-        int NUM_COLUMNS = 4;
+        int NUM_COLUMNS = 3;
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, Objects.requireNonNull(getContext())), true));
-        adapter = new AlbumPictureViewAdapter(getContext(), getSortingMode(), getSortingOrder());
+        adapter = new VideosAdapter(getContext(), getSortingMode(), getSortingOrder());
         adapter.setItemCheckedInterface(this);
         GridlayoutManagerFixed gridlayoutManagerFixed = new GridlayoutManagerFixed(getContext(), NUM_COLUMNS);
         recyclerView.setLayoutManager(gridlayoutManagerFixed);
@@ -148,47 +137,19 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
     }
 
     @Override
-    protected void implementRecyclerViewClickListeners() {
-        adapter.setRecycleViewClickListener(this);
-    }
-
-    @Override
     public void onClick(View view, int position) {
-        if (mActionMode != null) {
-            onListItemSelect(position);
-        } else {
-            Intent intent = new Intent(getContext(), PicturePreview.class);
-            intent.putExtra("current_image_position", position);
-            intent.putExtra("album_path", mReceiveBucket.getPathToAlbum());
-            intent.putExtra("list_image", adapter.getMediaList());
-            startActivity(intent);
-        }
+
     }
 
     @Override
     public void onLongClick(View view, int position) {
-        onListItemSelect(position);
+
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        mAttachedActivity.getMenuInflater().inflate(R.menu.photo_split_menu, menu);
+        mAttachedActivity.getMenuInflater().inflate(R.menu.album_pictures_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    protected LayoutType getLayoutType() {
-        return null;
-    }
-
-    @Override
-    protected SortingMode getSortingMode() {
-        return adapter != null ? adapter.getSortingMode() : SortingMode.DATE;
-    }
-
-    @Override
-    protected SortingOrder getSortingOrder() {
-        return adapter != null ? adapter.getSortingOrder() : SortingOrder.DESCENDING;
     }
 
     @Override
@@ -235,16 +196,12 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
             case R.id.album_details:
                 ViewGroup viewGroup = rootView.findViewById(android.R.id.content);
                 //then we will inflate the custom alert dialog xml that we created
-                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_album_details, viewGroup, false);
-                TextView tvAlbumName = dialogView.findViewById(R.id.tvAlbumName);
-                TextView tvAlbumPath = dialogView.findViewById(R.id.tvAlbumPath);
-                TextView tvAlbumSize = dialogView.findViewById(R.id.tvAlbumSize);
-                TextView tvAlbumCount = dialogView.findViewById(R.id.tvCountAlbum);
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_video_details, viewGroup, false);
+                TextView tvSize = dialogView.findViewById(R.id.tvSize);
+                TextView tvVideoCount = dialogView.findViewById(R.id.tvCountVideo);
                 Button btOK = dialogView.findViewById(R.id.buttonOk);
-                tvAlbumName.setText(mReceiveBucket.getName());
-                tvAlbumPath.setText(mReceiveBucket.getPathToAlbum());
-                tvAlbumSize.setText(readableFileSize(getSizeAlbum(adapter.getMediaList())));
-                tvAlbumCount.setText(String.valueOf(adapter.getMediaList().size()));
+                tvSize.setText(readableFileSize(getSizeMedia(adapter.getMediaList())));
+                tvVideoCount.setText(String.valueOf(adapter.getMediaList().size()));
 
                 //Now we need an AlertDialog.Builder object
                 AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
@@ -261,6 +218,10 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void implementRecyclerViewClickListeners() {
+        adapter.setRecycleViewClickListener(this);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -268,27 +229,37 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
     }
 
     @Override
-    public void change(int numbItemCheck) {
-        if(toolbarActionModePhoto != null) {
-            toolbarActionModePhoto.changeMenu(numbItemCheck);
-        }
-    }
-
-    private void removeImage(int position) {
-        adapter.removeImage(position);
+    protected SortingMode getSortingMode() {
+        return adapter != null ? adapter.getSortingMode() : SortingMode.DATE;
     }
 
     @Override
-    public void onGetMediaSuccess(ArrayList<MediaItem> medias) {
-        adapter.setDataList(medias);
+    protected SortingOrder getSortingOrder() {
+        return adapter != null ? adapter.getSortingOrder() : SortingOrder.DESCENDING;
+    }
+
+    @Override
+    public void change(int numbItemCheck) {
+        if(toolbarActionModeVideo != null) {
+            toolbarActionModeVideo.changeMenu(numbItemCheck);
+        }
+    }
+
+    @Override
+    public void onGetVideoSuccess(ArrayList<MediaItem> mediaItems) {
+        adapter.setDataList(mediaItems);
         adapter.changeSortingMode(getSortingMode());
         adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onDeleteMediaSuccess() {
+    public void onDeleteVideoSuccess() {
         for(int i=selectedMediaDelete.size()-1; i>=0; i--) {
-            removeImage(selectedMediaDelete.keyAt(i));
+            removeVideo(selectedMediaDelete.keyAt(i));
         }
+    }
+
+    private void removeVideo(int position) {
+        adapter.removeVideo(position);
     }
 }

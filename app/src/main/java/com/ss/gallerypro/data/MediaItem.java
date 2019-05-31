@@ -13,6 +13,7 @@ public class MediaItem implements Serializable {
     private String size;
     private String width, height;
     private String mediaType;
+    private String duration;
 
     public static String[] getProjection() {
         return new String[]{
@@ -23,6 +24,7 @@ public class MediaItem implements Serializable {
                 MediaStore.Images.Media.SIZE,
                 MediaStore.Images.Media.WIDTH,
                 MediaStore.Images.Media.HEIGHT,
+                MediaStore.Video.VideoColumns.DURATION,
                 MediaStore.MediaColumns.MIME_TYPE
         };
     }
@@ -89,5 +91,13 @@ public class MediaItem implements Serializable {
 
     public void setHeight(String height) {
         this.height = height;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }
