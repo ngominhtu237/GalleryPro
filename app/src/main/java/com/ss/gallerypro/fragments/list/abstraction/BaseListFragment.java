@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,16 +19,13 @@ import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
+import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
-abstract public class BaseListFragment extends Fragment {
-
-    protected Unbinder unbinder;
+abstract public class BaseListFragment extends BaseFragment {
 
     @Nullable
     @BindView(R.id.activity_main_swipe_refresh_layout)
@@ -63,11 +59,7 @@ abstract public class BaseListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(getLayoutId(), container, false);
-        // bind view using butter knife
-        if (view != null) {
-            unbinder = ButterKnife.bind(this, view);
-        }
+        View view = super.onCreateView(inflater, container, savedInstanceState);
         initRecycleView(view);
         implementRecyclerViewClickListeners();
         ((DrawerLocker) mAttachedActivity).setDrawerEnabled(false);
@@ -123,10 +115,7 @@ abstract public class BaseListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
-
-    abstract protected int getLayoutId();
 
     // override is optional
     protected LayoutType getLayoutType() {

@@ -6,8 +6,9 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -41,9 +42,6 @@ import java.util.Objects;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-import static com.ss.gallerypro.data.MediaHelper.getSizeMedia;
-import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -56,6 +54,8 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
 
     private IVideoPresenter presenter;
 
+    BottomSheetBehavior sheetBehavior;
+
     public VideosFragment() {
     }
 
@@ -67,9 +67,6 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        if(mAttachedActivity != null) {
-            ((AppCompatActivity) mAttachedActivity).getSupportActionBar().setTitle("Video");
-        }
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -199,25 +196,27 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
                 return true;
 
             case R.id.album_details:
-                ViewGroup viewGroup = rootView.findViewById(android.R.id.content);
-                //then we will inflate the custom alert dialog xml that we created
-                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_video_details, viewGroup, false);
-                TextView tvSize = dialogView.findViewById(R.id.tvSize);
-                TextView tvVideoCount = dialogView.findViewById(R.id.tvCountVideo);
-                Button btOK = dialogView.findViewById(R.id.buttonOk);
-                tvSize.setText(readableFileSize(getSizeMedia(adapter.getMediaList())));
-                tvVideoCount.setText(String.valueOf(adapter.getMediaList().size()));
+//                ViewGroup viewGroup = rootView.findViewById(android.R.id.content);
+//                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_video_details, viewGroup, false);
+//                TextView tvSize = dialogView.findViewById(R.id.tvSize);
+//                TextView tvVideoCount = dialogView.findViewById(R.id.tvCountVideo);
+//                Button btOK = dialogView.findViewById(R.id.buttonOk);
+//                tvSize.setText(readableFileSize(getSizeMedia(adapter.getMediaList())));
+//                tvVideoCount.setText(String.valueOf(adapter.getMediaList().size()));
+//                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+//                builder.setView(dialogView);
+//                AlertDialog alertDialog = builder.create();
+//                alertDialog.show();
+//                btOK.setOnClickListener((view) -> alertDialog.dismiss());
 
-                //Now we need an AlertDialog.Builder object
-                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+                View view = getLayoutInflater().inflate(R.layout.fragment_bottom_sheet_dialog, null);
 
-                //setting the view of the builder to our custom view that we already inflated
-                builder.setView(dialogView);
+                BottomSheetDialog dialog = new BottomSheetDialog(mAttachedActivity);
+                dialog.setContentView(view);
 
-                //finally creating the alert dialog and displaying it
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-                btOK.setOnClickListener((view) -> alertDialog.dismiss());
+                sheetBehavior = BottomSheetBehavior.from((View) view.getParent());
+                sheetBehavior.setPeekHeight(600);
+                dialog.show();
 
         }
         return super.onOptionsItemSelected(item);

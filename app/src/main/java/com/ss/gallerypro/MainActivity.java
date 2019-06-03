@@ -17,8 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ss.gallerypro.fragments.AboutUsFragment;
+import com.ss.gallerypro.fragments.home.HomeFragment;
 import com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;
-import com.ss.gallerypro.fragments.list.split.video.VideosFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker {
 
@@ -55,13 +55,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onBackStackChanged() {
                 // change navigation selected item on fragment backstack change
                 Fragment current = getCurrentFragment();
-                if (current instanceof VideosFragment) {
-                    navigationView.setCheckedItem(R.id.nav_videos);
-                } else if (current instanceof AboutUsFragment){
-                    navigationView.setCheckedItem(R.id.nav_about_us);
-                } else {
-                    navigationView.setCheckedItem(R.id.nav_albums);
-                }
+//                if (current instanceof VideosFragment) {
+//                    navigationView.setCheckedItem(R.id.nav_videos);
+//                } else if (current instanceof AboutUsFragment){
+//                    navigationView.setCheckedItem(R.id.nav_about_us);
+//                } else {
+//                    navigationView.setCheckedItem(R.id.nav_albums);
+//                }
                 // handler hamburger to arrow and reverse
                 if (mFragmentManager.getBackStackEntryCount() > 0) {
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true); // show back button
@@ -86,8 +86,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         if (savedInstanceState == null) {
-            startAlbumView();
-            navigationView.setCheckedItem(R.id.nav_albums);
+//            startAlbumView();
+//            navigationView.setCheckedItem(R.id.nav_albums);
+            startHomeFragment();
+            navigationView.setCheckedItem(R.id.nav_home);
         }
     }
 
@@ -117,18 +119,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_albums:
-                AlbumsFragment albumsFragment = new AlbumsFragment();
-                mFragmentManager.beginTransaction()
-                        //.replace(R.id.fragment_container, new AlbumsFragment())
-                        .replace(R.id.fragment_container, albumsFragment, "AlbumsFragment")
+            case R.id.nav_home:
+                HomeFragment homeFragment= new HomeFragment();
+                mFragmentManager.beginTransaction().replace(R.id.fragment_container, homeFragment,"HomeFragment")
                         .commit();
                 break;
 
-            case R.id.nav_videos:
-                mFragmentManager.beginTransaction().replace(R.id.fragment_container, new VideosFragment())
-                        .commit();
-                break;
+//            case R.id.nav_albums:
+//                AlbumsFragment albumsFragment = new AlbumsFragment();
+//                mFragmentManager.beginTransaction()
+//                        //.replace(R.id.fragment_container, new AlbumsFragment())
+//                        .replace(R.id.fragment_container, albumsFragment, "AlbumsFragment")
+//                        .commit();
+//                break;
+//
+//            case R.id.nav_videos:
+//                mFragmentManager.beginTransaction().replace(R.id.fragment_container, new VideosFragment())
+//                        .commit();
+//                break;
 
             case R.id.nav_about_us:
                 AboutUsFragment aboutUsFragment = new AboutUsFragment();
@@ -143,6 +151,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void startHomeFragment() {
+        HomeFragment homeFragment= new HomeFragment();
+        mFragmentManager.beginTransaction().replace(R.id.fragment_container, homeFragment,"HomeFragment")
+                .commit();
     }
 
     private void startAlbumView() {

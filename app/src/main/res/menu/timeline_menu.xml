@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:id="@+id/general_timeline_items">
+
+        <item
+            android:id="@+id/action_timeline_camera"
+            android:icon="@drawable/ic_photo_camera_white_24dp"
+            android:title="@string/item_camera_main"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/action_timeline_setting"
+            android:title="@string/settings"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/action_timeline_about"
+            android:title="@string/about"
+            app:showAsAction="never" />
+    </group>
+
+    <group android:id="@+id/edit_mode_items">
+        <item
+            android:id="@+id/action_timeline_delete"
+            android:title="@string/delete"
+            app:showAsAction="ifRoom" />
+    </group>
+</menu>

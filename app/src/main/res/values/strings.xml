@@ -13,13 +13,14 @@
     <string name="nav_header_albums">Albums</string>
 
     <!-- Navigation Drawer menu labels -->
+    <string name="nav_home">Home</string>
     <string name="nav_albums">Album</string>
     <string name="nav_times">Timeline</string>
     <string name="nav_rate">Rate 5 star</string>
     <string name="nav_video">Video</string>
     <string name="nav_notifications">Notifications</string>
     <string name="nav_settings">Settings</string>
-    <string name="nav_about_us">About Us</string>
+    <string name="nav_about_us">About</string>
 
     <!-- Toolbar titles when navigation menu item is selected -->
     <string-array name="nav_item_activity_titles">

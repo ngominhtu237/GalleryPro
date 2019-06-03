@@ -5,13 +5,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_albums"
-            android:icon="@mipmap/baseline_photo_library_white_48"
-            android:title="@string/nav_albums" />
-        <item
-            android:id="@+id/nav_videos"
-            android:icon="@mipmap/nav_play"
-            android:title="@string/nav_video" />
+            android:id="@+id/nav_home"
+            android:icon="@mipmap/nav_home"
+            android:title="@string/nav_home" />
+        <!--<item-->
+            <!--android:id="@+id/nav_albums"-->
+            <!--android:icon="@mipmap/baseline_photo_library_white_48"-->
+            <!--android:title="@string/nav_albums" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_videos"-->
+            <!--android:icon="@mipmap/nav_play"-->
+            <!--android:title="@string/nav_video" />-->
         <!--<item-->
             <!--android:id="@+id/nav_times"-->
             <!--android:icon="@mipmap/ic_av_timer_black_24dp"-->

@@ -36,10 +36,9 @@
 
         <item
             android:id="@+id/action_camera"
-            android:orderInCategory="100"
             android:icon="@drawable/ic_photo_camera_white_24dp"
             android:title="Camera"
-            app:showAsAction="ifRoom">
+            app:showAsAction="never">
         </item>
 
         <item

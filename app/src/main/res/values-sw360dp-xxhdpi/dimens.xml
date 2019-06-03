@@ -10,4 +10,7 @@
     <dimen name="nav_drawer_width">270dp</dimen>
     <dimen name="navDrawer_header_height">250dp</dimen>
     <dimen name="nav_header_icon_size">70dp</dimen>
+
+    <!-- Tab Layout -->
+    <dimen name="tab_indicator_height">3dp</dimen>
 </resources>
