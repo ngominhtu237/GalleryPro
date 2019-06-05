@@ -1,5 +1,6 @@
 package com.ss.gallerypro.data;
 
+import android.graphics.Bitmap;
 import android.provider.MediaStore;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class MediaItem implements Serializable {
     private String width, height;
     private String mediaType;
     private String duration;
+    private Bitmap bitmap;
 
     public static String[] getProjection() {
         return new String[]{
@@ -27,6 +29,14 @@ public class MediaItem implements Serializable {
                 MediaStore.Video.VideoColumns.DURATION,
                 MediaStore.MediaColumns.MIME_TYPE
         };
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 
     public String getDateTaken() {

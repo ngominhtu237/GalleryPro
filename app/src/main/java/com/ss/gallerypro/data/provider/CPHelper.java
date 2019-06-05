@@ -13,6 +13,13 @@ import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.Function;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.filter.AlbumFilter;
+import com.ss.gallerypro.data.sort.PhotoComparators;
+import com.ss.gallerypro.data.sort.SortingMode;
+import com.ss.gallerypro.data.sort.SortingOrder;
+import com.ss.gallerypro.fragments.listHeader.abstraction.ContentModel;
+import com.ss.gallerypro.fragments.listHeader.abstraction.ItemInterface;
+import com.ss.gallerypro.fragments.listHeader.abstraction.SectionModel;
+import com.ss.gallerypro.utils.Convert;
 
 import java.io.File;
 import java.io.IOException;
@@ -196,4 +203,55 @@ public class CPHelper {
         }
         return mVideoList;
     }
+
+    public static ArrayList<ItemInterface> getMediaTimeline(Context context) {
+        ArrayList<ItemInterface> mListData = new ArrayList<>();
+        ArrayList<MediaItem> mediaItems = new ArrayList<>();
+        Uri uriExternal = MediaStore.Files.getContentUri("external");
+        String selection = "media_type = 1";
+        Cursor cursor = context.getContentResolver().query(uriExternal, MediaItem.getProjection(), selection, null, null);
+        MediaItem item;
+        while(cursor != null && cursor.moveToNext()) {
+            item = new MediaItem();
+            String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
+            String mediaName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE));
+            String mediaType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.MIME_TYPE));
+            String timestamp = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_MODIFIED));
+            String dateTaken = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN));
+            String size = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE));
+            String width = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.WIDTH));
+            String height = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.HEIGHT));
+            String duration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
+            item.setPathMediaItem(path);
+            item.setName(mediaName);
+            item.setDateModified(timestamp);
+            item.setDateTaken(dateTaken);
+            item.setSize(size);
+            item.setWidth(width);
+            item.setHeight(height);
+            item.setMediaType(mediaType);
+            item.setDuration(duration);
+            mediaItems.add(item);
+        }
+        // SORT
+        mediaItems.sort(PhotoComparators.getComparator(SortingMode.DATE, SortingOrder.DESCENDING));
+
+        String currentDateTaken = "-1";
+        for(int i=0; i<mediaItems.size(); i++) {
+            String tempDateTaken = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken()));
+            if(!currentDateTaken.equals(tempDateTaken)) {
+                SectionModel section = new SectionModel(tempDateTaken);
+                currentDateTaken = tempDateTaken;
+                mListData.add(section);
+
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                mListData.add(content);
+            } else {
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                mListData.add(content);
+            }
+        }
+        return mListData;
+    }
+
 }

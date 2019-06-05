@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.fragments.BaseFragment;
-import com.ss.gallerypro.fragments.list.TimelineFragment;
+import com.ss.gallerypro.fragments.listHeader.timeline.TimelineFragment;
 import com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;
 import com.ss.gallerypro.fragments.list.split.video.VideosFragment;
 

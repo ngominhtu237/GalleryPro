@@ -18,6 +18,7 @@
     <dimen name="eighteen_dp">18dp</dimen>
     <dimen name="five_dp">5dp</dimen>
     <dimen name="three_dp">3dp</dimen>
+    <dimen name="two_dp">2dp</dimen>
     <dimen name="thirty_dp">30dp</dimen>
     <dimen name="twenty_sp">20sp</dimen>
     <dimen name="sixteen_sp">16sp</dimen>
@@ -91,5 +92,7 @@
     <dimen name="design_navigation_padding_bottom" tools:override="true">0dp</dimen>
 
     <dimen name="activity_margin">16dp</dimen>
+
+    <dimen name="image_size">150dp</dimen>
 
 </resources>

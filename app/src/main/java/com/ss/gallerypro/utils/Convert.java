@@ -1,5 +1,6 @@
 package com.ss.gallerypro.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
 public class Convert {
@@ -16,5 +17,9 @@ public class Convert {
         if (minutes > 0)
             seconds -= TimeUnit.MINUTES.toSeconds(minutes);
         return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds) : String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public static String Epoch2DateString(long epochSeconds) {
+        return new SimpleDateFormat("EEEE, dd MMM yyyy").format(new java.util.Date (epochSeconds));
     }
 }
