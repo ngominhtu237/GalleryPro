@@ -19,6 +19,7 @@ import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.list.split.OnMediaDataNotify;
+import com.ss.gallerypro.fragments.listHeader.abstraction.OnTimelineDataNotify;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,8 @@ public class MediaDataService {
     private ArrayList<MediaItem> mMedias;
     private OnMediaDataNotify.GetMedia getMediaCallback;
     private OnMediaDataNotify.DeleteMedia deleteMediaCallback;
+    private OnTimelineDataNotify.Get getTimelineDataCb;
+    private OnTimelineDataNotify.Delete deleteTimelineDataCb;
 
     public MediaDataService(Context context) {
         this.mContext = context;
@@ -47,6 +50,14 @@ public class MediaDataService {
         new DeleteMediaTask().execute(medias);
     }
 
+    public void getDataTimeline(OnTimelineDataNotify.Get callback) {
+
+    }
+
+    public void deleteDataTimeline(ArrayList<MediaItem> medias, OnTimelineDataNotify.Delete callback) {
+
+    }
+
     @SuppressLint("StaticFieldLeak")
     private class GetMediaTask extends AsyncTask<Bucket, Integer, Void> {
 
@@ -59,7 +70,7 @@ public class MediaDataService {
         protected Void doInBackground(Bucket... buckets) {
             Bucket mReceiveBucket = buckets[0];
             mMedias = CPHelper.getMedias(mContext, mReceiveBucket.getBucketId(), mReceiveBucket.getName());
-            mMedias.sort(PhotoComparators.getComparator(SortingMode.DATE, SortingOrder.DESCENDING));
+            mMedias.sort(PhotoComparators.getComparator(SortingMode.DATE_TAKEN, SortingOrder.DESCENDING));
             return null;
         }
 
@@ -80,7 +91,7 @@ public class MediaDataService {
         @Override
         protected Void doInBackground(Void... voids) {
             mMedias = CPHelper.getVideos(mContext);
-            mMedias.sort(PhotoComparators.getComparator(SortingMode.DATE, SortingOrder.DESCENDING));
+            mMedias.sort(PhotoComparators.getComparator(SortingMode.DATE_TAKEN, SortingOrder.DESCENDING));
             return null;
         }
 

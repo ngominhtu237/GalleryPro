@@ -11,47 +11,53 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.ss.gallerypro.data.sort.SortingMode;
+import com.ss.gallerypro.data.sort.SortingOrder;
+import com.ss.gallerypro.fragments.listHeader.abstraction.model.ContentModel;
+import com.ss.gallerypro.fragments.listHeader.abstraction.model.HeaderModel;
+import com.ss.gallerypro.fragments.listHeader.abstraction.model.IItem;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public abstract class BaseHeaderAdapter<SECTION extends BaseSectionViewHolder, CONTENT extends BaseContentViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, CONTENT extends BaseContentViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<ItemInterface> mListData = new ArrayList<>();
+    private ArrayList<IItem> mListData = new ArrayList<>();
     WeakReference<Context> mContextWeakReference;
+    protected SortingOrder mSortingOrder;
+    protected SortingMode mSortingMode;
 
-    public static final int SECTION_VIEW = 0;
-    public static final int CONTENT_VIEW = 1;
-
-    public BaseHeaderAdapter(Context context) {
+    public BaseTimelineAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder ) {
         this.mContextWeakReference = new WeakReference<>(context);
+        mSortingMode = sortingMode;
+        mSortingOrder = sortingOrder;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = mContextWeakReference.get();
-        if(viewType == SECTION_VIEW) {
-            return createSectionViewHolder(LayoutInflater.from(parent.getContext()).inflate(getSectionItemLayout(), parent, false));
+        if(viewType == ViewType.HEADER_VIEW_TYPE) {
+            return createHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(getHeaderItemLayout(), parent, false));
         } else {
             return createContentViewHolder(LayoutInflater.from(parent.getContext()).inflate(getContentItemLayout(), parent, false));
         }
     }
 
-    protected abstract SECTION createSectionViewHolder(View view);
+    protected abstract HEADER createHeaderViewHolder(View view);
 
     protected abstract CONTENT createContentViewHolder(View view);
 
-    protected abstract int getSectionItemLayout();
+    protected abstract int getHeaderItemLayout();
 
     protected abstract int getContentItemLayout();
 
     @Override
     public int getItemViewType(int position) {
-        if (mListData.get(position).isSection()) {
-            return SECTION_VIEW;
+        if (mListData.get(position).isHeader()) {
+            return ViewType.HEADER_VIEW_TYPE;
         } else {
-            return CONTENT_VIEW;
+            return ViewType.CONTENT_VIEW_TYPE;
         }
     }
 
@@ -63,9 +69,9 @@ public abstract class BaseHeaderAdapter<SECTION extends BaseSectionViewHolder, C
             return;
         }
 
-        if(SECTION_VIEW == getItemViewType(position)) {
-            SECTION sectionHolder = (SECTION) holder;
-            SectionModel sModel = (SectionModel) mListData.get(position);
+        if(ViewType.HEADER_VIEW_TYPE == getItemViewType(position)) {
+            HEADER sectionHolder = (HEADER) holder;
+            HeaderModel sModel = (HeaderModel) mListData.get(position);
             sectionHolder.tvTitle.setText(sModel.title);
             return;
         }
@@ -87,20 +93,19 @@ public abstract class BaseHeaderAdapter<SECTION extends BaseSectionViewHolder, C
     }
 
 
-
     @Override
     public int getItemCount() {
         if (mListData == null) return 0;
         return mListData.size();
     }
 
-    public void setData(ArrayList<ItemInterface> dataList) {
+    public void setData(ArrayList<IItem> dataList) {
         mListData.clear();
         mListData.addAll(dataList);
         notifyDataSetChanged();
     }
 
-    public ArrayList<ItemInterface> getData() {
+    public ArrayList<IItem> getData() {
         return mListData;
     }
 }

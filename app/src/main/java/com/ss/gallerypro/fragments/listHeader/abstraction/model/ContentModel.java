@@ -1,8 +1,8 @@
-package com.ss.gallerypro.fragments.listHeader.abstraction;
+package com.ss.gallerypro.fragments.listHeader.abstraction.model;
 
 import com.ss.gallerypro.data.MediaItem;
 
-public class ContentModel implements ItemInterface {
+public class ContentModel implements IItem {
 
     public MediaItem mMediaItem;
 
@@ -11,7 +11,7 @@ public class ContentModel implements ItemInterface {
     }
 
     @Override
-    public boolean isSection() {
+    public boolean isHeader() {
         return false;
     }
 }

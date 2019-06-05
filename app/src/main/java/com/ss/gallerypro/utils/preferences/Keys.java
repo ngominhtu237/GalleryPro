@@ -31,4 +31,10 @@ public class Keys {
     public static final String TIMELINE_ENABLED = "enable_timeline";
 
     public static final String RUN_SPLASH = "RUN_SPLASH";
+
+    // Timeline
+    public static final String TIMELINE_SORTING_MODE = "timeline_sorting_mode";
+    public static final String TIMELINE_SORTING_ORDER = "timeline_sorting_order";
+    public static final String TIMELINE_COLUMN_PORTRAIT = "timeline_column_portrait";
+    public static final String TIMELINE_COLUMN_LANDSCAPE = "timeline_column_landscape";
 }

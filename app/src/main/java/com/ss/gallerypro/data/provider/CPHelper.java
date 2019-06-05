@@ -12,19 +12,20 @@ import com.ss.gallerypro.data.AlbumHelper;
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.Function;
 import com.ss.gallerypro.data.MediaItem;
-import com.ss.gallerypro.data.filter.AlbumFilter;
+import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
-import com.ss.gallerypro.fragments.listHeader.abstraction.ContentModel;
-import com.ss.gallerypro.fragments.listHeader.abstraction.ItemInterface;
-import com.ss.gallerypro.fragments.listHeader.abstraction.SectionModel;
+import com.ss.gallerypro.fragments.listHeader.abstraction.model.ContentModel;
+import com.ss.gallerypro.fragments.listHeader.abstraction.model.HeaderModel;
+import com.ss.gallerypro.fragments.listHeader.abstraction.model.IItem;
 import com.ss.gallerypro.utils.Convert;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 
 public class CPHelper {
@@ -43,29 +44,29 @@ public class CPHelper {
 
         ArrayList<Object> args = new ArrayList<>();
         StringBuilder selection = new StringBuilder();
-        for(int i=0; i<filter.size(); i++) {
-            if(filter.size() == 0) {
+        for (int i = 0; i < filter.size(); i++) {
+            if (filter.size() == 0) {
                 selection = new StringBuilder("media_type=? ");
                 args.add(MediaStore.Files.FileColumns.MEDIA_TYPE_NONE);
             } else {
-                if (AlbumFilter.fromValue(filter.get(i)) == AlbumFilter.IMAGE) {
+                if (MediaFilter.fromValue(filter.get(i)) == MediaFilter.IMAGE) {
                     countFilter++;
                     args.add(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE);
                 }
-                if (AlbumFilter.fromValue(filter.get(i)) == AlbumFilter.VIDEO) {
+                if (MediaFilter.fromValue(filter.get(i)) == MediaFilter.VIDEO) {
                     countFilter++;
                     args.add(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO);
                 }
             }
         }
-        for(int c=0; c<countFilter; c++) {
+        for (int c = 0; c < countFilter; c++) {
             selection.append(MediaStore.Files.FileColumns.MEDIA_TYPE + "=?");
-            if(c+1 != countFilter){
+            if (c + 1 != countFilter) {
                 selection.append(" or ");
             }
         } // => media_type = ? or media_type = ?
         String sel = selection + ") and (";  // sel:  media_type = ? or media_type = ? ) and (
-        if(countFilter > 0) {
+        if (countFilter > 0) {
             selection.append(") group by (parent");
         }
         // selection: media_type = ? or media_type = ? ) group by (parent
@@ -74,10 +75,10 @@ public class CPHelper {
         query.args(args.toArray());
 
         Cursor cursor;
-        if(context != null && !selection.toString().equals("")) {
+        if (context != null && !selection.toString().equals("")) {
             cursor = query.build().getCursor(context.getContentResolver());
             Log.v("sql", DatabaseUtils.dumpCursorToString(cursor));
-            while(cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 bucket = new Bucket();
                 bucketId = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID));
                 path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
@@ -85,7 +86,7 @@ public class CPHelper {
                 // Get path to album
                 File filePath = new File(path);
                 String dir = "";
-                if (!filePath.isDirectory()){
+                if (!filePath.isDirectory()) {
                     dir = filePath.getParentFile().getAbsolutePath();
                 }
                 bucket.setPathToAlbum(dir);
@@ -113,7 +114,7 @@ public class CPHelper {
             canonicalPath = file.getAbsolutePath();
         }
         final Uri uri = MediaStore.Files.getContentUri("external");
-        if(context != null) {
+        if (context != null) {
             final int result = context.getContentResolver().delete(uri,
                     MediaStore.Files.FileColumns.DATA + "=?", new String[]{canonicalPath});
             if (result == 0) {
@@ -128,28 +129,28 @@ public class CPHelper {
 
     public static ArrayList<MediaItem> getMedias(Context context, String bucketId, String album_name) {
 
-        String path, mediaName, timestamp, size,width, height, mediaType, dateTaken;
+        String path, mediaName, timestamp, size, width, height, mediaType, dateTaken;
         MediaItem item;
         mAlbumImages.clear();
         Uri uriExternal = MediaStore.Files.getContentUri("external");
         String arrNameFilter[] = context.getResources().getStringArray(R.array.list_filter);
         String selection = "bucket_display_name = \"" + album_name + "\"" + " and bucket_id = \"" + bucketId + "\"";
         List<String> filter = new ArrayList<>(AlbumHelper.getFilter(arrNameFilter.length));
-        if(filter.size() > 0) {
-            if(filter.get(0).equals("0")) {
+        if (filter.size() > 0) {
+            if (filter.get(0).equals("0")) {
                 selection += " and (media_type=1 ";
-                if(filter.size() > 1 && filter.get(1).equals("1")) {
+                if (filter.size() > 1 && filter.get(1).equals("1")) {
                     selection += " or media_type=3) ";
                 } else {
                     selection += ") ";
                 }
             }
-            if(filter.get(0).equals("1")) {
+            if (filter.get(0).equals("1")) {
                 selection += " and (media_type=3) ";
             }
         }
         Cursor cursor = context.getContentResolver().query(uriExternal, MediaItem.getProjection(), selection, null, null);
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             item = new MediaItem();
             path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
             mediaName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE));
@@ -173,13 +174,13 @@ public class CPHelper {
     }
 
     public static ArrayList<MediaItem> getVideos(Context context) {
-        String path, mediaName, timestamp, size,width, height, mediaType, dateTaken, duration;
+        String path, mediaName, timestamp, size, width, height, mediaType, dateTaken, duration;
         ArrayList<MediaItem> mVideoList = new ArrayList<>();
         Uri uriExternal = MediaStore.Files.getContentUri("external");
         String selection = "media_type = " + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
         Cursor cursor = context.getContentResolver().query(uriExternal, MediaItem.getProjection(), selection, null, null);
         MediaItem item;
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             item = new MediaItem();
             path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
             mediaName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE));
@@ -204,14 +205,13 @@ public class CPHelper {
         return mVideoList;
     }
 
-    public static ArrayList<ItemInterface> getMediaTimeline(Context context) {
-        ArrayList<ItemInterface> mListData = new ArrayList<>();
+    public static ArrayList<IItem> getMediaTimeline(Context context, MediaFilter mediaFilter, SortingMode sortingMode, SortingOrder sortingOrder) {
         ArrayList<MediaItem> mediaItems = new ArrayList<>();
         Uri uriExternal = MediaStore.Files.getContentUri("external");
-        String selection = "media_type = 1";
+        String selection = "media_type = " + mediaFilter.getValue();
         Cursor cursor = context.getContentResolver().query(uriExternal, MediaItem.getProjection(), selection, null, null);
         MediaItem item;
-        while(cursor != null && cursor.moveToNext()) {
+        while (cursor != null && cursor.moveToNext()) {
             item = new MediaItem();
             String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
             String mediaName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE));
@@ -233,25 +233,145 @@ public class CPHelper {
             item.setDuration(duration);
             mediaItems.add(item);
         }
-        // SORT
-        mediaItems.sort(PhotoComparators.getComparator(SortingMode.DATE, SortingOrder.DESCENDING));
-
-        String currentDateTaken = "-1";
-        for(int i=0; i<mediaItems.size(); i++) {
-            String tempDateTaken = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken()));
-            if(!currentDateTaken.equals(tempDateTaken)) {
-                SectionModel section = new SectionModel(tempDateTaken);
-                currentDateTaken = tempDateTaken;
-                mListData.add(section);
-
-                ContentModel content = new ContentModel(mediaItems.get(i));
-                mListData.add(content);
-            } else {
-                ContentModel content = new ContentModel(mediaItems.get(i));
-                mListData.add(content);
-            }
-        }
-        return mListData;
+        mediaItems.sort(PhotoComparators.getComparator(sortingMode, sortingOrder));
+        return getListData(mediaItems, sortingMode);
     }
 
+    private static ArrayList<IItem> getListData(ArrayList<MediaItem> mediaItems, SortingMode sortingMode) {
+
+        switch (sortingMode) {
+            case DATE_TAKEN:
+                return createDataSortByDateTaken(mediaItems);
+            case LAST_MODIFIED:
+                return createDataSortByLastModified(mediaItems);
+            case NAME:
+                return createDataSortByName(mediaItems);
+            case SIZE:
+                return createDataSortBySize(mediaItems);
+        }
+        return null;
+    }
+
+    private static TreeMap<Integer, String> sizeSortAsc = new TreeMap<Integer, String>() {{
+        put(0, "Very Tiny Size (<1MB)");
+        put(1, "Tiny Size (>=1MB & <5MB)");
+        put(2, "Very Small Size (>=5MB & <50MB)");
+        put(3, "Small Size (>=50MB & <100MB)");
+        put(4, "Medium Size (>=100MB)");
+    }};
+
+
+    private static ArrayList<IItem> createDataSortBySize(ArrayList<MediaItem> mediaItems) {
+        ArrayList<IItem> list = new ArrayList<>();
+        boolean c1 = false, c2 = false, c3 = false, c4 = false, c5 = false;
+        for (int i = 0; i < mediaItems.size(); i++) {
+            Long temp = Long.valueOf(mediaItems.get(i).getSize()) / (1024L * 1024L);
+            if (temp < 1) {
+                if (!c1) {
+                    HeaderModel section = new HeaderModel(sizeSortAsc.get(0));
+                    list.add(section);
+                    c1 = true;
+                }
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            }
+            if (temp >= 1 && temp < 5) {
+                if (!c2) {
+                    HeaderModel section = new HeaderModel(sizeSortAsc.get(1));
+                    list.add(section);
+                    c2 = true;
+                }
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            }
+            if (temp >= 5 && temp < 50) {
+                if (!c3) {
+                    HeaderModel section = new HeaderModel(sizeSortAsc.get(2));
+                    list.add(section);
+                    c3 = true;
+                }
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            }
+            if (temp >= 50 && temp < 100) {
+                if (!c4) {
+                    HeaderModel section = new HeaderModel(sizeSortAsc.get(3));
+                    list.add(section);
+                    c4 = true;
+                }
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            }
+            if (temp >= 100) {
+                if (!c5) {
+                    HeaderModel section = new HeaderModel(sizeSortAsc.get(4));
+                    list.add(section);
+                    c5 = true;
+                }
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            }
+        }
+        return list;
+    }
+
+    private static ArrayList<IItem> createDataSortByName(ArrayList<MediaItem> mediaItems) {
+        ArrayList<IItem> list = new ArrayList<>();
+        char currentName = '@';
+        for (int i = 0; i < mediaItems.size(); i++) {
+            char c = mediaItems.get(i).getName().charAt(0);
+            if (currentName != c) {
+                HeaderModel section = new HeaderModel(String.valueOf(c));
+                currentName = c;
+                list.add(section);
+
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            } else {
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            }
+        }
+        return list;
+    }
+
+    private static ArrayList<IItem> createDataSortByLastModified(ArrayList<MediaItem> mediaItems) {
+        ArrayList<IItem> list = new ArrayList<>();
+        String currentLastModified = "-1";
+        for (int i = 0; i < mediaItems.size(); i++) {
+            String temp = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateModified()));
+            if (!currentLastModified.equals(temp)) {
+                HeaderModel section = new HeaderModel(temp);
+                currentLastModified = temp;
+                list.add(section);
+
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            } else {
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            }
+        }
+        return list;
+    }
+
+    private static ArrayList<IItem> createDataSortByDateTaken(ArrayList<MediaItem> mediaItems) {
+        ArrayList<IItem> list = new ArrayList<>();
+        String currentDateTaken = "-1";
+        for (int i = 0; i < mediaItems.size(); i++) {
+            String tempDateTaken = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken()));
+            if (!currentDateTaken.equals(tempDateTaken)) {
+                HeaderModel section = new HeaderModel(tempDateTaken);
+                currentDateTaken = tempDateTaken;
+                list.add(section);
+
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            } else {
+                ContentModel content = new ContentModel(mediaItems.get(i));
+                list.add(content);
+            }
+        }
+        return list;
+    }
 }

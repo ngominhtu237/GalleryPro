@@ -4,19 +4,19 @@ import android.content.Context;
 import android.view.View;
 
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.fragments.listHeader.abstraction.BaseHeaderAdapter;
+import com.ss.gallerypro.fragments.listHeader.abstraction.BaseTimelineAdapter;
 import com.ss.gallerypro.fragments.listHeader.timeline.holder.ContentViewHolder;
-import com.ss.gallerypro.fragments.listHeader.timeline.holder.SectionViewHolder;
+import com.ss.gallerypro.fragments.listHeader.timeline.holder.HeaderViewHolder;
 
-public class TimelineAdapter extends BaseHeaderAdapter<SectionViewHolder, ContentViewHolder> {
+public class TimelineAdapter extends BaseTimelineAdapter<HeaderViewHolder, ContentViewHolder> {
 
     public TimelineAdapter(Context context) {
         super(context);
     }
 
     @Override
-    protected SectionViewHolder createSectionViewHolder(View view) {
-        return new SectionViewHolder(view);
+    protected HeaderViewHolder createHeaderViewHolder(View view) {
+        return new HeaderViewHolder(view);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class TimelineAdapter extends BaseHeaderAdapter<SectionViewHolder, Conten
     }
 
     @Override
-    protected int getSectionItemLayout() {
+    protected int getHeaderItemLayout() {
         return R.layout.item_timeline_section;
     }
 

@@ -17,7 +17,7 @@ public class AlbumsComparators {
             case SIZE:
                 comparator = getSizeComparator();
                 break;
-            case DATE: default:
+            case DATE_TAKEN: default:
                 comparator = getDateTakenComparator();
                 break;
         }

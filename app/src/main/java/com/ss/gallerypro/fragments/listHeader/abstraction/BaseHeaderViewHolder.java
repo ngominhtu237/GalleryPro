@@ -9,11 +9,11 @@ import com.ss.gallerypro.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public abstract class BaseSectionViewHolder extends RecyclerView.ViewHolder{
+public abstract class BaseHeaderViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.tv_timeline_header)
     TextView tvTitle;
 
-    protected BaseSectionViewHolder(View view) {
+    protected BaseHeaderViewHolder(View view) {
         super(view);
         ButterKnife.bind(this, view);
     }

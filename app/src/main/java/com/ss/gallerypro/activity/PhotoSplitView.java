@@ -150,7 +150,7 @@ public class PhotoSplitView extends AppCompatActivity {
     }
 
     public SortingMode sortingMode() {
-        return photoSplitViewAdapter != null ? photoSplitViewAdapter.sortingMode() : SortingMode.DATE;
+        return photoSplitViewAdapter != null ? photoSplitViewAdapter.sortingMode() : SortingMode.DATE_TAKEN;
     }
 
     public SortingOrder sortingOrder() {
@@ -163,7 +163,7 @@ public class PhotoSplitView extends AppCompatActivity {
             case NAME:
                 menu.findItem(R.id.name_sort_mode_photo).setChecked(true);
                 break;
-            case DATE:
+            case DATE_TAKEN:
                 menu.findItem(R.id.date_taken_sort_mode_photo).setChecked(true);
                 break;
             case SIZE:
@@ -189,7 +189,7 @@ public class PhotoSplitView extends AppCompatActivity {
                 return true;
 
             case R.id.date_taken_sort_mode_photo:
-                photoSplitViewAdapter.changeSortingMode(SortingMode.DATE);
+                photoSplitViewAdapter.changeSortingMode(SortingMode.DATE_TAKEN);
                 item.setChecked(true);
                 return true;
 
@@ -285,7 +285,7 @@ public class PhotoSplitView extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             mImageList = CPHelper.getMedias(PhotoSplitView.this, mReceiveBucket.getBucketId(), mReceiveBucket.getName());
-            Collections.sort(mImageList, PhotoComparators.getComparator(SortingMode.DATE, SortingOrder.DESCENDING));
+            Collections.sort(mImageList, PhotoComparators.getComparator(SortingMode.DATE_TAKEN, SortingOrder.DESCENDING));
             return null;
         }
 

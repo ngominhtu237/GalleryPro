@@ -14,12 +14,13 @@
     <com.ss.gallerypro.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/md_dark_cards">
+        android:background="@color/md_dark_dividers">
 
         <com.ss.gallerypro.view.SquareImageView
             android:id="@+id/ivTimelineThumbnail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/ic_holder"
             android:scaleType="centerCrop" />
 
         <ImageView

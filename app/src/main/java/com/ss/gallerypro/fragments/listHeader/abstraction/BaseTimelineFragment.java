@@ -19,13 +19,15 @@ import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.fragments.BaseFragment;
-import com.ss.gallerypro.utils.Measure;
+import com.ss.gallerypro.fragments.listHeader.abstraction.model.ITimelineRepository;
+import com.ss.gallerypro.fragments.listHeader.abstraction.presenter.ITimelinePresenter;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
+import com.ss.gallerypro.view.ItemOffsetDecoration;
 
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public abstract class BaseHeaderFragment extends BaseFragment {
+public abstract class BaseTimelineFragment extends BaseFragment {
     @BindView(R.id.timelineRecycleView)
     protected RecyclerView mRecyclerView;
 
@@ -43,15 +45,25 @@ public abstract class BaseHeaderFragment extends BaseFragment {
     private ActionMode mActionMode;
     protected int NUM_COLUMN;
 
-    public BaseHeaderFragment() {
+    protected BaseTimelineAdapter adapter;
+    protected ITimelinePresenter presenter;
+    protected ITimelineRepository model;
+
+    public BaseTimelineFragment() {
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         mAttachedActivity = getActivity();
+        model = createModel();
+        presenter = createPresenter(model);
         super.onCreate(savedInstanceState);
     }
+
+    protected abstract ITimelineRepository createModel();
+
+    protected abstract ITimelinePresenter createPresenter(ITimelineRepository model);
 
     @Nullable
     @Override
@@ -64,23 +76,35 @@ public abstract class BaseHeaderFragment extends BaseFragment {
 
     private void initRecycleView() {
         mRecyclerView.setHasFixedSize(true);
-        NUM_COLUMN = getNumberColumn();
-        mGridSpacingItemDecoration = new GridSpacingItemDecoration(NUM_COLUMN, Measure.pxToDp(1, mAttachedActivity), false);
-        mRecyclerView.addItemDecoration(mGridSpacingItemDecoration);
+        NUM_COLUMN = getColumnRecycleView();
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(mAttachedActivity, R.dimen.timeline_item_spacing);
+        mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new GridlayoutManagerFixed(getContext(), NUM_COLUMN);
-        setSpanCountItem();
         mRecyclerView.setLayoutManager(mLayoutManager);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
         mRecyclerView.setLayoutAnimation(animation);
         mRecyclerView.setItemAnimator(new LandingAnimator());
-        initAndSetAdapter();
+        adapter = createAdapter();
+        mRecyclerView.setAdapter(adapter);
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (ViewType.HEADER_VIEW_TYPE == adapter.getItemViewType(position)) {
+                    return getHeaderColumn();
+                }
+                return getContentColumn();
+            }
+        });
     }
 
-    protected abstract void setSpanCountItem();
+    protected abstract int getContentColumn();
 
-    protected abstract int getNumberColumn();
+    protected abstract int getHeaderColumn();
 
-    protected abstract void initAndSetAdapter();
+    protected abstract BaseTimelineAdapter createAdapter();
+
+    protected abstract int getColumnRecycleView();
+
 
     public ActionMode getActionMode() {
         return mActionMode;

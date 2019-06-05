@@ -6,7 +6,7 @@
     android:layout_marginLeft="@dimen/two_dp"
     android:layout_marginRight="@dimen/two_dp"
     android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="@dimen/five_dp"
     android:orientation="vertical">
     <TextView
         android:id="@+id/tv_timeline_header"
@@ -16,6 +16,8 @@
         android:paddingTop="@dimen/three_dp"
         android:paddingBottom="@dimen/three_dp"
         android:paddingLeft="@dimen/ten_dp"
-        android:textSize="16sp" />
+        android:textColor="@color/themeText"
+        android:textStyle="bold"
+        android:textSize="14sp" />
 </LinearLayout>
 

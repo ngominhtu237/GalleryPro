@@ -1,38 +1,16 @@
 package com.ss.gallerypro.data.sort;
 
-import android.provider.MediaStore;
-
 /**
  * Created by Tu on 6/24/2018.
  */
 
 public enum SortingMode {
-    NAME (0, MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME),
-    DATE (1, MediaStore.MediaColumns.DATE_MODIFIED, "max(" + MediaStore.Images.Media.DATE_MODIFIED + ")"),
-    SIZE(2, MediaStore.MediaColumns.SIZE, "count(*)");
+    NAME (0), DATE_TAKEN(1), SIZE(2), LAST_MODIFIED(3);
 
     int value;
-    String mediaColumn;
-    String albumsColumn;
 
-    SortingMode(int value, String mediaColumn) {
+    SortingMode(int value) {
         this.value = value;
-        this.mediaColumn = mediaColumn;
-        this.albumsColumn = mediaColumn;
-    }
-
-    SortingMode(int value, String mediaColumn, String albumsColumn) {
-        this.value = value;
-        this.mediaColumn = mediaColumn;
-        this.albumsColumn = albumsColumn;
-    }
-
-    public String getMediaColumn() {
-        return mediaColumn;
-    }
-
-    public String getAlbumsColumn() {
-        return albumsColumn;
     }
 
     public int getValue() {
@@ -42,8 +20,9 @@ public enum SortingMode {
     public static SortingMode fromValue(int value) {
         switch (value) {
             case 0: return NAME;
-            case 1: default: return DATE;
+            case 1: default: return DATE_TAKEN;
             case 2: return SIZE;
+            case 3: return LAST_MODIFIED;
         }
     }
 }

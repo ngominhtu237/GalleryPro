@@ -55,6 +55,9 @@ dependencies {
     //butter-knife for view-binding
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    // Shimmer
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
 }
 repositories {
     mavenCentral()

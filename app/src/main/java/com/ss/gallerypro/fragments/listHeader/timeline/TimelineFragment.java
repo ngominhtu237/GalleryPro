@@ -3,8 +3,8 @@ package com.ss.gallerypro.fragments.listHeader.timeline;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,10 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ss.gallerypro.R;
+import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.data.provider.CPHelper;
-import com.ss.gallerypro.fragments.listHeader.abstraction.BaseHeaderAdapter;
-import com.ss.gallerypro.fragments.listHeader.abstraction.BaseHeaderFragment;
-import com.ss.gallerypro.fragments.listHeader.abstraction.ItemInterface;
+import com.ss.gallerypro.data.sort.SortingMode;
+import com.ss.gallerypro.data.sort.SortingOrder;
+import com.ss.gallerypro.fragments.listHeader.abstraction.BaseTimelineAdapter;
+import com.ss.gallerypro.fragments.listHeader.abstraction.BaseTimelineFragment;
+import com.ss.gallerypro.fragments.listHeader.abstraction.model.IItem;
+import com.ss.gallerypro.fragments.listHeader.abstraction.model.ITimelineRepository;
+import com.ss.gallerypro.fragments.listHeader.abstraction.presenter.ITimelinePresenter;
+import com.ss.gallerypro.fragments.listHeader.abstraction.view.ITimelineView;
 import com.ss.gallerypro.fragments.listHeader.timeline.adapter.TimelineAdapter;
 
 import java.util.ArrayList;
@@ -24,12 +31,25 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TimelineFragment extends BaseHeaderFragment {
-
-    private TimelineAdapter adapter;
+public class TimelineFragment extends BaseTimelineFragment implements ITimelineView {
 
     public TimelineFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected ITimelineRepository createModel() {
+        return new TimelineRepository(mAttachedActivity);
+    }
+
+    @Override
+    protected ITimelinePresenter createPresenter(ITimelineRepository model) {
+        return new TimelinePresenter(this, model);
     }
 
     @Override
@@ -41,31 +61,27 @@ public class TimelineFragment extends BaseHeaderFragment {
     }
 
     @Override
-    protected void setSpanCountItem() {
-        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (BaseHeaderAdapter.SECTION_VIEW == adapter.getItemViewType(position)) {
-                    return 3;
-                }
-                return 1;
-            }
-        });
+    protected int getContentColumn() {
+        return 1;
     }
 
     @Override
-    protected int getNumberColumn() {
+    protected int getHeaderColumn() {
         return 3;
     }
 
     @Override
-    protected void initAndSetAdapter() {
-        adapter = new TimelineAdapter(getContext());
-        mRecyclerView.setAdapter(adapter);
+    protected BaseTimelineAdapter createAdapter() {
+        return new TimelineAdapter(mAttachedActivity);
     }
 
-    private ArrayList<ItemInterface> getListDataFromDB() {
-        return CPHelper.getMediaTimeline(mAttachedActivity);
+    @Override
+    protected int getColumnRecycleView() {
+        return 3;
+    }
+
+    private ArrayList<IItem> getListDataFromDB() {
+        return CPHelper.getMediaTimeline(mAttachedActivity, MediaFilter.IMAGE, SortingMode.SIZE, SortingOrder.ASCENDING);
     }
 
     @Override
@@ -105,4 +121,13 @@ public class TimelineFragment extends BaseHeaderFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onGetTimelineSuccess(ArrayList<MediaItem> mediaItems) {
+
+    }
+
+    @Override
+    public void onDeleteTimelineSuccess() {
+
+    }
 }

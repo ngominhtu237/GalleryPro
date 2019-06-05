@@ -2,7 +2,9 @@
 <resources>
     <color name="colorPrimary">@color/accent_teal</color>
     <color name="colorPrimaryStatusTransparent">@color/accent_teal_transparent</color>
-    <color name="colorAccent">#000000</color>
+    <color name="themeText">@color/accent_black</color>
+    <color name="themeBackground">@color/white</color>
+
     <color name="white">#FFFFFF</color>
     <color name="brown">#2b2b2b</color>
     <color name="green">#237639</color>

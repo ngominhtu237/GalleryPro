@@ -16,7 +16,10 @@ public class PhotoComparators {
             case SIZE:
                 comparator = getSizeComparator();
                 break;
-            case DATE: default:
+            case LAST_MODIFIED:
+                comparator = getDateModifiedComparator();
+                break;
+            case DATE_TAKEN: default:
                 comparator = getDateTakenComparator();
                 break;
         }
@@ -33,6 +36,16 @@ public class PhotoComparators {
             public int compare(MediaItem i1, MediaItem i2) {
                 // Order ascending.
                 return Long.valueOf(i1.getDateTaken()).compareTo(Long.valueOf(i2.getDateTaken()));
+            }
+        };
+    }
+
+    private static Comparator<MediaItem> getDateModifiedComparator() {
+        return new Comparator<MediaItem>() {
+            @Override
+            public int compare(MediaItem i1, MediaItem i2) {
+                // Order ascending.
+                return Long.valueOf(i1.getDateModified()).compareTo(Long.valueOf(i2.getDateModified()));
             }
         };
     }

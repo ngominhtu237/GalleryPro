@@ -160,7 +160,7 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
             case NAME:
                 menu.findItem(R.id.name_sort_mode_photo).setChecked(true);
                 break;
-            case DATE:
+            case DATE_TAKEN:
                 menu.findItem(R.id.date_taken_sort_mode_photo).setChecked(true);
                 break;
             case SIZE:
@@ -185,7 +185,7 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
                 return true;
 
             case R.id.date_taken_sort_mode_photo:
-                adapter.changeSortingMode(SortingMode.DATE);
+                adapter.changeSortingMode(SortingMode.DATE_TAKEN);
                 item.setChecked(true);
                 return true;
 
@@ -234,7 +234,7 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
 
     @Override
     protected SortingMode getSortingMode() {
-        return adapter != null ? adapter.getSortingMode() : SortingMode.DATE;
+        return adapter != null ? adapter.getSortingMode() : SortingMode.DATE_TAKEN;
     }
 
     @Override

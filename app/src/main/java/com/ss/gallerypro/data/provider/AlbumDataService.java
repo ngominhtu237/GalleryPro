@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.AlbumHelper;
 import com.ss.gallerypro.data.Bucket;
-import com.ss.gallerypro.data.filter.AlbumFilter;
+import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.fragments.list.albums.album.OnAlbumDataNotify;
 import com.ss.gallerypro.utils.DataTypeUtils;
 
@@ -108,7 +108,7 @@ public class AlbumDataService {
     }
 
     private ArrayList<Integer> getFilter() {
-        return DataTypeUtils.stringSetToArrayInteger(AlbumHelper.getFilter(AlbumFilter.values().length));
+        return DataTypeUtils.stringSetToArrayInteger(AlbumHelper.getFilter(MediaFilter.values().length));
     }
 
 

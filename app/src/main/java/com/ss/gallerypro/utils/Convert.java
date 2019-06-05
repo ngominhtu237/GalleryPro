@@ -20,6 +20,6 @@ public class Convert {
     }
 
     public static String Epoch2DateString(long epochSeconds) {
-        return new SimpleDateFormat("EEEE, dd MMM yyyy").format(new java.util.Date (epochSeconds));
+        return new SimpleDateFormat("MMM dd, yyyy").format(new java.util.Date (epochSeconds));
     }
 }

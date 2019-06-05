@@ -13,4 +13,9 @@
 
     <!-- Tab Layout -->
     <dimen name="tab_indicator_height">3dp</dimen>
+
+    <!-- Timeline  -->
+    <dimen name="timeline_item_spacing">1dp</dimen>
+    <dimen name="timeline_column_portrait">3dp</dimen>
+    <dimen name="timeline_column_landscape">5dp</dimen>
 </resources>

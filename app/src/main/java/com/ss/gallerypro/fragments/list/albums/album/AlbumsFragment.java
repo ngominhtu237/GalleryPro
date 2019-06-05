@@ -32,7 +32,7 @@ import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.AlbumHelper;
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.LayoutType;
-import com.ss.gallerypro.data.filter.AlbumFilter;
+import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Bucket;
@@ -234,7 +234,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 case NAME:
                     menu.findItem(R.id.name_sort_mode).setChecked(true);
                     break;
-                case DATE:
+                case DATE_TAKEN:
                     menu.findItem(R.id.date_taken_sort_mode).setChecked(true);
                     break;
                 case SIZE:
@@ -262,8 +262,8 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 return true;
 
             case R.id.date_taken_sort_mode:
-                albumsAdapter.changeSortingMode(SortingMode.DATE);
-                AlbumHelper.setSortingMode(SortingMode.DATE);
+                albumsAdapter.changeSortingMode(SortingMode.DATE_TAKEN);
+                AlbumHelper.setSortingMode(SortingMode.DATE_TAKEN);
                 item.setChecked(true);
                 return true;
 
@@ -345,7 +345,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     private void showMultiChoiceDialog() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
         mBuilder.setTitle(R.string.title_dialog_album_filter);
-        int n = AlbumFilter.values().length;
+        int n = MediaFilter.values().length;
         boolean[] checkedItem = new boolean[n];
 
         // get from pref => save to checkedItem (set("0", "1") -> index(0, 1) -> boolean in 'index' position)
@@ -355,7 +355,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         }
         boolean[] newCheckedItem = Arrays.copyOf(checkedItem, n);
 
-        mBuilder.setMultiChoiceItems(AlbumFilter.getNames(), newCheckedItem, (dialogInterface, position, checked) -> {
+        mBuilder.setMultiChoiceItems(MediaFilter.getNames(), newCheckedItem, (dialogInterface, position, checked) -> {
             newCheckedItem[position] = checked;
         }).setPositiveButton(R.string.ok_action, (dialogInterface, position) -> {
             if(!Arrays.equals(checkedItem, newCheckedItem)) {

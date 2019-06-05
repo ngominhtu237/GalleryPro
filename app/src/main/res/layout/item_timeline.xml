@@ -16,7 +16,6 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/timelineNestRecycleView"
         android:layout_below="@+id/tv_timeline_header"
-        android:background="@color/md_dark_cards"
         android:layout_marginTop="@dimen/ten_dp"
         android:nestedScrollingEnabled="false"
         android:layout_width="match_parent"
