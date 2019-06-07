@@ -7,9 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.fragments.list.albums.album.AlbumsAdapter;
+import com.ss.gallerypro.fragments.list.normal.albums.AlbumsAdapter;
 import com.ss.gallerypro.data.Bucket;
-import com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;
+import com.ss.gallerypro.fragments.list.normal.albums.AlbumsFragment;
 
 import java.util.ArrayList;
 

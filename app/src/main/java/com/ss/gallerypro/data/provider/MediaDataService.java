@@ -20,8 +20,8 @@ import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.list.split.OnMediaDataNotify;
-import com.ss.gallerypro.fragments.listHeader.abstraction.OnTimelineDataNotify;
-import com.ss.gallerypro.fragments.listHeader.abstraction.model.IItem;
+import com.ss.gallerypro.fragments.list.section.abstraction.OnTimelineDataNotify;
+import com.ss.gallerypro.fragments.list.section.abstraction.model.IItem;
 
 import java.util.ArrayList;
 

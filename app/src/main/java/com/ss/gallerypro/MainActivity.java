@@ -18,7 +18,7 @@ import android.view.View;
 
 import com.ss.gallerypro.fragments.AboutUsFragment;
 import com.ss.gallerypro.fragments.home.HomeFragment;
-import com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;
+import com.ss.gallerypro.fragments.list.normal.albums.AlbumsFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker {
 

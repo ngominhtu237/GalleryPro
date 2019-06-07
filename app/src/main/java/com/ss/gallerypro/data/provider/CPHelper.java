@@ -14,9 +14,9 @@ import com.ss.gallerypro.data.Function;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.data.sort.SortingMode;
-import com.ss.gallerypro.fragments.listHeader.abstraction.model.ContentModel;
-import com.ss.gallerypro.fragments.listHeader.abstraction.model.HeaderModel;
-import com.ss.gallerypro.fragments.listHeader.abstraction.model.IItem;
+import com.ss.gallerypro.fragments.list.section.abstraction.model.ContentModel;
+import com.ss.gallerypro.fragments.list.section.abstraction.model.HeaderModel;
+import com.ss.gallerypro.fragments.list.section.abstraction.model.IItem;
 import com.ss.gallerypro.utils.Convert;
 
 import java.io.File;

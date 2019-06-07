@@ -16,7 +16,7 @@ import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
-import com.ss.gallerypro.fragments.list.abstraction.BaseListViewAdapter;
+import com.ss.gallerypro.fragments.list.normal.abstraction.BaseListViewAdapter;
 import com.ss.gallerypro.utils.Convert;
 
 import java.util.ArrayList;
