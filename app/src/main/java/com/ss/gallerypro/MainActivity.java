@@ -1,31 +1,35 @@
 package com.ss.gallerypro;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.ss.gallerypro.fragments.AboutUsFragment;
+import com.ss.gallerypro.activity.AboutActivity;
 import com.ss.gallerypro.fragments.home.HomeFragment;
-import com.ss.gallerypro.fragments.list.normal.albums.AlbumsFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker {
 
+    public static final int ABOUT_REQUEST_CODE = 1;
     private DrawerLayout drawer;
     private HeaderViewHolder mHeaderViewHolder;
     private FragmentManager mFragmentManager;
     private ActionBarDrawerToggle toggle;
+
+    private static int lastClicked = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,11 +90,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         if (savedInstanceState == null) {
-//            startAlbumView();
-//            navigationView.setCheckedItem(R.id.nav_albums);
             startHomeFragment();
             navigationView.setCheckedItem(R.id.nav_home);
         }
+
+        lastClicked = getCheckedItem(navigationView);
+    }
+
+    private int getCheckedItem(NavigationView navigationView) {
+        Menu menu = navigationView.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            if (item.isChecked()) {
+                return item.getItemId();
+            }
+        }
+        return -1;
     }
 
     public Fragment getCurrentFragment() {
@@ -118,37 +133,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_home:
+        int currentItem = item.getItemId();
+        if(currentItem != lastClicked) {
+            if(currentItem == R.id.nav_home) {
                 HomeFragment homeFragment= new HomeFragment();
                 mFragmentManager.beginTransaction().replace(R.id.fragment_container, homeFragment,"HomeFragment")
                         .commit();
-                break;
+                lastClicked = currentItem;
+            }
 
-//            case R.id.nav_albums:
-//                AlbumsFragment albumsFragment = new AlbumsFragment();
-//                mFragmentManager.beginTransaction()
-//                        //.replace(R.id.fragment_container, new AlbumsFragment())
-//                        .replace(R.id.fragment_container, albumsFragment, "AlbumsFragment")
-//                        .commit();
-//                break;
-//
-//            case R.id.nav_videos:
-//                mFragmentManager.beginTransaction().replace(R.id.fragment_container, new VideosFragment())
-//                        .commit();
-//                break;
-
-            case R.id.nav_about_us:
-                AboutUsFragment aboutUsFragment = new AboutUsFragment();
-                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, aboutUsFragment, "AboutUsFragment");
-
-                // Add fragment one in back stack. So it will not be destroyed. Press back menu can pop it up from the stack.
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                break;
+            if(currentItem == R.id.nav_about_us) {
+                startActivityForResult(new Intent(this, AboutActivity.class), ABOUT_REQUEST_CODE);
+                return false;
+            }
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -156,12 +154,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void startHomeFragment() {
         HomeFragment homeFragment= new HomeFragment();
         mFragmentManager.beginTransaction().replace(R.id.fragment_container, homeFragment,"HomeFragment")
-                .commit();
-    }
-
-    private void startAlbumView() {
-        AlbumsFragment albumsFragment = new AlbumsFragment();
-        mFragmentManager.beginTransaction().replace(R.id.fragment_container, albumsFragment,"AlbumsFragment")
                 .commit();
     }
 
@@ -175,5 +167,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
         drawer.setDrawerLockMode(lockMode);
         toggle.setDrawerIndicatorEnabled(enabled);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ABOUT_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_CANCELED) {
+//                drawer.closeDrawer(Gravity.START, false);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
