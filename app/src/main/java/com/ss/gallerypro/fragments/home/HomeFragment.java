@@ -60,7 +60,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new TimelineFragment(), "Pictures");
         adapter.addFragment(new VideoFragment(), "Videos");
         adapter.addFragment(new AlbumsFragment(), "Albums");
