@@ -21,6 +21,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 import com.ss.gallerypro.DrawerLocker;
@@ -80,6 +81,9 @@ public abstract class BaseTimelineFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         ((DrawerLocker) mAttachedActivity).setDrawerEnabled(false);
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setOnRefreshListener(listener);
+        }
 
         initRecycleView();
         return view;
@@ -136,9 +140,11 @@ public abstract class BaseTimelineFragment extends BaseFragment {
                 return true;
 
             case R.id.action_timeline_about:
+                Toast.makeText(mAttachedActivity, "Open About Activity", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.action_timeline_setting:
+                Toast.makeText(mAttachedActivity, "Open Setting Activity", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.action_timeline_delete:
@@ -146,6 +152,10 @@ public abstract class BaseTimelineFragment extends BaseFragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    protected final SwipeRefreshLayout.OnRefreshListener listener = this::createSwipeEvent;
+
+    protected abstract void createSwipeEvent();
 
 
     public ActionMode getActionMode() {

@@ -51,7 +51,13 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  super.onCreateView(inflater, container, savedInstanceState);
-        presenter.getMedias(MediaFilter.IMAGE);
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.post(() -> {
+                mSwipeRefreshLayout.setRefreshing(true);
+                listener.onRefresh();
+            });
+        }
+        //presenter.getMedias(MediaFilter.IMAGE);
         return view;
     }
 
@@ -76,6 +82,11 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     }
 
     @Override
+    protected void createSwipeEvent() {
+        presenter.getMedias(MediaFilter.IMAGE);
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.fragment_timeline;
     }
@@ -83,7 +94,7 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.timeline_menu, menu);
+        mAttachedActivity.getMenuInflater().inflate(R.menu.timeline_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -98,6 +109,9 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     public void onGetTimelineSuccess(ArrayList<MediaItem> mediaItems) {
         adapter.setMediaItems(mediaItems);
         adapter.changeSorting(getSortingMode(), getSortingOrder());
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
