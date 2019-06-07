@@ -8,19 +8,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.filter.MediaFilter;
-import com.ss.gallerypro.data.provider.CPHelper;
-import com.ss.gallerypro.data.sort.SortingMode;
-import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.listHeader.abstraction.BaseTimelineAdapter;
 import com.ss.gallerypro.fragments.listHeader.abstraction.BaseTimelineFragment;
-import com.ss.gallerypro.fragments.listHeader.abstraction.model.IItem;
 import com.ss.gallerypro.fragments.listHeader.abstraction.model.ITimelineRepository;
 import com.ss.gallerypro.fragments.listHeader.abstraction.presenter.ITimelinePresenter;
 import com.ss.gallerypro.fragments.listHeader.abstraction.view.ITimelineView;
@@ -56,7 +51,7 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  super.onCreateView(inflater, container, savedInstanceState);
-        adapter.setData(getListDataFromDB());
+        presenter.getMedias(MediaFilter.IMAGE);
         return view;
     }
 
@@ -72,16 +67,12 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
 
     @Override
     protected BaseTimelineAdapter createAdapter() {
-        return new TimelineAdapter(mAttachedActivity);
+        return new TimelineAdapter(mAttachedActivity, getSortingMode(), getSortingOrder());
     }
 
     @Override
     protected int getColumnRecycleView() {
         return 3;
-    }
-
-    private ArrayList<IItem> getListDataFromDB() {
-        return CPHelper.getMediaTimeline(mAttachedActivity, MediaFilter.IMAGE, SortingMode.SIZE, SortingOrder.ASCENDING);
     }
 
     @Override
@@ -104,26 +95,9 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_timeline_camera:
-                return true;
-
-            case R.id.action_timeline_about:
-                return true;
-
-            case R.id.action_timeline_setting:
-                return true;
-
-            case R.id.action_timeline_delete:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onGetTimelineSuccess(ArrayList<MediaItem> mediaItems) {
-
+        adapter.setMediaItems(mediaItems);
+        adapter.changeSorting(getSortingMode(), getSortingOrder());
     }
 
     @Override

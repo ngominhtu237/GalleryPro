@@ -13,9 +13,7 @@ import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.Function;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.filter.MediaFilter;
-import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
-import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.listHeader.abstraction.model.ContentModel;
 import com.ss.gallerypro.fragments.listHeader.abstraction.model.HeaderModel;
 import com.ss.gallerypro.fragments.listHeader.abstraction.model.IItem;
@@ -205,7 +203,7 @@ public class CPHelper {
         return mVideoList;
     }
 
-    public static ArrayList<IItem> getMediaTimeline(Context context, MediaFilter mediaFilter, SortingMode sortingMode, SortingOrder sortingOrder) {
+    public static ArrayList<MediaItem> getMediaTimeline(Context context, MediaFilter mediaFilter) {
         ArrayList<MediaItem> mediaItems = new ArrayList<>();
         Uri uriExternal = MediaStore.Files.getContentUri("external");
         String selection = "media_type = " + mediaFilter.getValue();
@@ -233,8 +231,7 @@ public class CPHelper {
             item.setDuration(duration);
             mediaItems.add(item);
         }
-        mediaItems.sort(PhotoComparators.getComparator(sortingMode, sortingOrder));
-        return getListData(mediaItems, sortingMode);
+        return mediaItems;
     }
 
     private static ArrayList<IItem> getListData(ArrayList<MediaItem> mediaItems, SortingMode sortingMode) {
@@ -252,7 +249,7 @@ public class CPHelper {
         return null;
     }
 
-    private static TreeMap<Integer, String> sizeSortAsc = new TreeMap<Integer, String>() {{
+    public static TreeMap<Integer, String> sizeSortAsc = new TreeMap<Integer, String>() {{
         put(0, "Very Tiny Size (<1MB)");
         put(1, "Tiny Size (>=1MB & <5MB)");
         put(2, "Very Small Size (>=5MB & <50MB)");
@@ -261,7 +258,7 @@ public class CPHelper {
     }};
 
 
-    private static ArrayList<IItem> createDataSortBySize(ArrayList<MediaItem> mediaItems) {
+    public static ArrayList<IItem> createDataSortBySize(ArrayList<MediaItem> mediaItems) {
         ArrayList<IItem> list = new ArrayList<>();
         boolean c1 = false, c2 = false, c3 = false, c4 = false, c5 = false;
         for (int i = 0; i < mediaItems.size(); i++) {
@@ -315,7 +312,7 @@ public class CPHelper {
         return list;
     }
 
-    private static ArrayList<IItem> createDataSortByName(ArrayList<MediaItem> mediaItems) {
+    public static ArrayList<IItem> createDataSortByName(ArrayList<MediaItem> mediaItems) {
         ArrayList<IItem> list = new ArrayList<>();
         char currentName = '@';
         for (int i = 0; i < mediaItems.size(); i++) {
@@ -335,7 +332,7 @@ public class CPHelper {
         return list;
     }
 
-    private static ArrayList<IItem> createDataSortByLastModified(ArrayList<MediaItem> mediaItems) {
+    public static ArrayList<IItem> createDataSortByLastModified(ArrayList<MediaItem> mediaItems) {
         ArrayList<IItem> list = new ArrayList<>();
         String currentLastModified = "-1";
         for (int i = 0; i < mediaItems.size(); i++) {
@@ -355,7 +352,7 @@ public class CPHelper {
         return list;
     }
 
-    private static ArrayList<IItem> createDataSortByDateTaken(ArrayList<MediaItem> mediaItems) {
+    public static ArrayList<IItem> createDataSortByDateTaken(ArrayList<MediaItem> mediaItems) {
         ArrayList<IItem> list = new ArrayList<>();
         String currentDateTaken = "-1";
         for (int i = 0; i < mediaItems.size(); i++) {

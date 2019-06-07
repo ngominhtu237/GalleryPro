@@ -1,6 +1,7 @@
 package com.ss.gallerypro.fragments.listHeader.timeline;
 
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.fragments.listHeader.abstraction.OnTimelineDataNotify;
 import com.ss.gallerypro.fragments.listHeader.abstraction.model.ITimelineRepository;
 import com.ss.gallerypro.fragments.listHeader.abstraction.presenter.ITimelinePresenter;
@@ -12,14 +13,14 @@ public class TimelinePresenter implements ITimelinePresenter {
     private ITimelineView mView;
     private ITimelineRepository mModel;
 
-    public TimelinePresenter(ITimelineView view, ITimelineRepository model) {
+    TimelinePresenter(ITimelineView view, ITimelineRepository model) {
         this.mView = view;
         this.mModel = model;
     }
 
     @Override
-    public void getMedias() {
-
+    public void getMedias(MediaFilter mediaFilter) {
+        mModel.getDataTimeline(mediaFilter, getCallback);
     }
 
     @Override

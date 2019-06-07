@@ -3,6 +3,7 @@ package com.ss.gallerypro.fragments.listHeader.timeline;
 import android.content.Context;
 
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.data.provider.MediaDataService;
 import com.ss.gallerypro.fragments.listHeader.abstraction.OnTimelineDataNotify;
 import com.ss.gallerypro.fragments.listHeader.abstraction.model.ITimelineRepository;
@@ -17,8 +18,8 @@ public class TimelineRepository implements ITimelineRepository {
     }
 
     @Override
-    public void getDataTimeline(OnTimelineDataNotify.Get callback) {
-        mMediaDataService.getDataTimeline(callback);
+    public void getDataTimeline(MediaFilter mediaFilter, OnTimelineDataNotify.Get callback) {
+        mMediaDataService.getDataTimeline(mediaFilter, callback);
     }
 
     @Override

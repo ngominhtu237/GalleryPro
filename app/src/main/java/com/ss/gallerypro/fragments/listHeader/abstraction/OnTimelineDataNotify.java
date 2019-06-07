@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface OnTimelineDataNotify {
     interface Get {
-        void onResponse(ArrayList<MediaItem> buckets);
+        void onResponse(ArrayList<MediaItem> list);
 
         void onError(String errMsg);
     }

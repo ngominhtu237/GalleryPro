@@ -11,6 +11,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.data.provider.CPHelper;
+import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.listHeader.abstraction.model.ContentModel;
@@ -22,15 +25,16 @@ import java.util.ArrayList;
 
 public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, CONTENT extends BaseContentViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<IItem> mListData = new ArrayList<>();
+    protected ArrayList<MediaItem> mediaItems = new ArrayList<>();
+    protected ArrayList<IItem> mListData = new ArrayList<>();
     WeakReference<Context> mContextWeakReference;
-    protected SortingOrder mSortingOrder;
-    protected SortingMode mSortingMode;
+    private SortingOrder mSortingOrder;
+    private SortingMode mSortingMode;
 
     public BaseTimelineAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder ) {
         this.mContextWeakReference = new WeakReference<>(context);
-        mSortingMode = sortingMode;
-        mSortingOrder = sortingOrder;
+        this.mSortingMode = sortingMode;
+        this.mSortingOrder = sortingOrder;
     }
 
     @NonNull
@@ -92,6 +96,13 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
                 .into(contentHolder.ivTimelineThumbnail);
     }
 
+    public SortingOrder getSortingOrder() {
+        return mSortingOrder;
+    }
+
+    public SortingMode getSortingMode() {
+        return mSortingMode;
+    }
 
     @Override
     public int getItemCount() {
@@ -99,13 +110,32 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
         return mListData.size();
     }
 
-    public void setData(ArrayList<IItem> dataList) {
+    public void setMediaItems(ArrayList<MediaItem> mediaItems) {
+        this.mediaItems = mediaItems;
+    }
+
+    public void changeSorting(SortingMode sortingMode, SortingOrder sortingOrder){
+        this.mSortingMode = sortingMode;
+        this.mSortingOrder = sortingOrder;
+        mediaItems.sort(PhotoComparators.getComparator(mSortingMode, mSortingOrder));
+
+        // create data structure for adapter
         mListData.clear();
-        mListData.addAll(dataList);
+        mListData = createDataForAdapter(mediaItems, sortingMode);
         notifyDataSetChanged();
     }
 
-    public ArrayList<IItem> getData() {
-        return mListData;
+    private ArrayList<IItem> createDataForAdapter(ArrayList<MediaItem> mediaItems, SortingMode sortingMode) {
+        switch (sortingMode) {
+            case DATE_TAKEN:
+                return CPHelper.createDataSortByDateTaken(mediaItems);
+            case LAST_MODIFIED:
+                return CPHelper.createDataSortByLastModified(mediaItems);
+            case NAME:
+                return CPHelper.createDataSortByName(mediaItems);
+            case SIZE:
+                return CPHelper.createDataSortBySize(mediaItems);
+        }
+        return null;
     }
 }

@@ -22,4 +22,11 @@ public class Convert {
     public static String Epoch2DateString(long epochSeconds) {
         return new SimpleDateFormat("MMM dd, yyyy").format(new java.util.Date (epochSeconds));
     }
+
+    public static String formatEnumStringDialog(String inputString) {
+        String str = inputString.replace('_',' ');
+        str = str.toLowerCase();
+        str = str.substring(0,1).toUpperCase() + str.substring(1).toLowerCase();
+        return str;
+    }
 }

@@ -15,11 +15,13 @@ import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.MediaHelper;
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.list.split.OnMediaDataNotify;
 import com.ss.gallerypro.fragments.listHeader.abstraction.OnTimelineDataNotify;
+import com.ss.gallerypro.fragments.listHeader.abstraction.model.IItem;
 
 import java.util.ArrayList;
 
@@ -28,8 +30,12 @@ public class MediaDataService {
     private ArrayList<MediaItem> mMedias;
     private OnMediaDataNotify.GetMedia getMediaCallback;
     private OnMediaDataNotify.DeleteMedia deleteMediaCallback;
+
+    // Timeline
+    private ArrayList<IItem> list;
     private OnTimelineDataNotify.Get getTimelineDataCb;
     private OnTimelineDataNotify.Delete deleteTimelineDataCb;
+    private MediaFilter mediaFilter;
 
     public MediaDataService(Context context) {
         this.mContext = context;
@@ -50,12 +56,35 @@ public class MediaDataService {
         new DeleteMediaTask().execute(medias);
     }
 
-    public void getDataTimeline(OnTimelineDataNotify.Get callback) {
-
+    public void getDataTimeline(MediaFilter mediaFilter, OnTimelineDataNotify.Get callback) {
+        this.mediaFilter = mediaFilter;
+        getTimelineDataCb = callback;
+        new GetTimelineImageTask().execute();
     }
 
     public void deleteDataTimeline(ArrayList<MediaItem> medias, OnTimelineDataNotify.Delete callback) {
 
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class GetTimelineImageTask extends AsyncTask<Void, Integer, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mMedias = CPHelper.getMediaTimeline(mContext, mediaFilter);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            getTimelineDataCb.onResponse(mMedias);
+            super.onPostExecute(aVoid);
+        }
     }
 
     @SuppressLint("StaticFieldLeak")

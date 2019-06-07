@@ -84,6 +84,7 @@
 
     <!-- ACTIONS -->
     <string name="sort">Sort</string>
+    <string name="sort_by">Sort by</string>
     <string name="camera">Camera</string>
 
     <string name="cancel">Cancel</string>
@@ -108,6 +109,7 @@
     <string name="name">Name</string>
     <string name="date">Date</string>
     <string name="date_taken">Date taken</string>
+    <string name="last_modified">Last modified</string>
 
     <string name="delete_error">Unable to delete this file</string>
     <string name="rename_error">Unable to rename this file</string>

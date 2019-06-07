@@ -17,6 +17,8 @@
     <dimen name="fifteen_dp">15dp</dimen>
     <dimen name="eighteen_dp">18dp</dimen>
     <dimen name="five_dp">5dp</dimen>
+    <dimen name="six_dp">6dp</dimen>
+    <dimen name="seven_dp">7dp</dimen>
     <dimen name="three_dp">3dp</dimen>
     <dimen name="two_dp">2dp</dimen>
     <dimen name="thirty_dp">30dp</dimen>

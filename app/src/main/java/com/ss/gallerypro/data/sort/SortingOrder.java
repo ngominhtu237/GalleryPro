@@ -1,11 +1,13 @@
 package com.ss.gallerypro.data.sort;
 
+import java.util.stream.Stream;
+
 /**
  * Created by Tu on 6/24/2018.
  */
 
 public enum SortingOrder {
-    ASCENDING(1), DESCENDING(0);
+    ASCENDING(0), DESCENDING(1);
 
     int value;
 
@@ -26,6 +28,10 @@ public enum SortingOrder {
     }
 
     public static SortingOrder fromValue(int value) {
-        return value == 0 ? DESCENDING : ASCENDING;
+        return value == 0 ? ASCENDING : DESCENDING;
+    }
+
+    public static String[] getNames() {
+        return Stream.of(SortingOrder.values()).map(SortingOrder::name).toArray(String[]::new);
     }
 }

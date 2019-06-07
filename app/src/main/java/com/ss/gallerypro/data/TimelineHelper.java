@@ -10,20 +10,20 @@ import com.ss.gallerypro.utils.preferences.Prefs;
 public class TimelineHelper {
     @NonNull
     public static SortingMode getSortingMode() {
-        return Prefs.getAlbumSortingMode();
+        return Prefs.getTimelineSortingMode();
     }
 
     @NonNull
     public static SortingOrder getSortingOrder() {
-        return Prefs.getAlbumSortingOrder();
+        return Prefs.getTimelineSortingOrder();
     }
 
     public static void setSortingMode(@NonNull SortingMode sortingMode) {
-        Prefs.setAlbumSortingMode(sortingMode);
+        Prefs.setTimelineSortingMode(sortingMode);
     }
 
     public static void setSortingOrder(@NonNull SortingOrder sortingOrder) {
-        Prefs.setAlbumSortingOrder(sortingOrder);
+        Prefs.setTimelineSortingOrder(sortingOrder);
     }
 
     public static int getNumbColumnPort(Activity activity) {

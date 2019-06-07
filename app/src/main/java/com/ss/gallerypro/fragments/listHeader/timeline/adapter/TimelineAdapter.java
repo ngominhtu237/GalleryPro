@@ -4,14 +4,16 @@ import android.content.Context;
 import android.view.View;
 
 import com.ss.gallerypro.R;
+import com.ss.gallerypro.data.sort.SortingMode;
+import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.listHeader.abstraction.BaseTimelineAdapter;
 import com.ss.gallerypro.fragments.listHeader.timeline.holder.ContentViewHolder;
 import com.ss.gallerypro.fragments.listHeader.timeline.holder.HeaderViewHolder;
 
 public class TimelineAdapter extends BaseTimelineAdapter<HeaderViewHolder, ContentViewHolder> {
 
-    public TimelineAdapter(Context context) {
-        super(context);
+    public TimelineAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder) {
+        super(context, sortingMode, sortingOrder);
     }
 
     @Override
