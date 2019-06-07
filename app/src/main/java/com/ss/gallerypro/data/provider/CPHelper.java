@@ -206,7 +206,12 @@ public class CPHelper {
     public static ArrayList<MediaItem> getMediaTimeline(Context context, MediaFilter mediaFilter) {
         ArrayList<MediaItem> mediaItems = new ArrayList<>();
         Uri uriExternal = MediaStore.Files.getContentUri("external");
-        String selection = "media_type = " + mediaFilter.getValue();
+        String selection;
+        if(mediaFilter == MediaFilter.IMAGE) {
+            selection = "media_type = 1";
+        } else {
+            selection = "media_type = 3";
+        }
         Cursor cursor = context.getContentResolver().query(uriExternal, MediaItem.getProjection(), selection, null, null);
         MediaItem item;
         while (cursor != null && cursor.moveToNext()) {

@@ -62,7 +62,7 @@ abstract public class BaseListFragment extends BaseFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         initRecycleView(view);
         implementRecyclerViewClickListeners();
-        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(false);
+        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(true);
         return view;
     }
 

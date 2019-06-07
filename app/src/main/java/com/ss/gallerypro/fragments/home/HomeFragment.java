@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.fragments.BaseFragment;
-import com.ss.gallerypro.fragments.listHeader.timeline.TimelineFragment;
 import com.ss.gallerypro.fragments.list.albums.album.AlbumsFragment;
-import com.ss.gallerypro.fragments.list.split.video.VideosFragment;
+import com.ss.gallerypro.fragments.listHeader.timeline.TimelineFragment;
+import com.ss.gallerypro.fragments.listHeader.video.VideoFragment;
 
 import butterknife.BindView;
 
@@ -62,8 +62,8 @@ public class HomeFragment extends BaseFragment {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
         adapter.addFragment(new TimelineFragment(), "Pictures");
+        adapter.addFragment(new VideoFragment(), "Videos");
         adapter.addFragment(new AlbumsFragment(), "Albums");
-        adapter.addFragment(new VideosFragment(), "Videos");
         viewPager.setAdapter(adapter);
     }
 }

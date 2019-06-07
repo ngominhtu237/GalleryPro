@@ -31,6 +31,9 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
     private SortingOrder mSortingOrder;
     private SortingMode mSortingMode;
 
+    protected HEADER headerHolder;
+    protected CONTENT contentHolder;
+
     public BaseTimelineAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder ) {
         this.mContextWeakReference = new WeakReference<>(context);
         this.mSortingMode = sortingMode;
@@ -74,13 +77,13 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
         }
 
         if(ViewType.HEADER_VIEW_TYPE == getItemViewType(position)) {
-            HEADER sectionHolder = (HEADER) holder;
+            headerHolder = (HEADER) holder;
             HeaderModel sModel = (HeaderModel) mListData.get(position);
-            sectionHolder.tvTitle.setText(sModel.title);
+            headerHolder.tvTitle.setText(sModel.title);
             return;
         }
 
-        CONTENT contentHolder = (CONTENT) holder;
+        contentHolder = (CONTENT) holder;
         ContentModel cModel = (ContentModel) mListData.get(position);
 
         RequestOptions options = new RequestOptions()

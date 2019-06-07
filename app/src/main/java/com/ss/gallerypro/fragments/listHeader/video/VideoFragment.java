@@ -1,10 +1,8 @@
-package com.ss.gallerypro.fragments.listHeader.timeline;
-
+package com.ss.gallerypro.fragments.listHeader.video;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,12 +20,8 @@ import com.ss.gallerypro.fragments.listHeader.abstraction.view.ITimelineView;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class TimelineFragment extends BaseTimelineFragment implements ITimelineView {
-
-    public TimelineFragment() {
+public class VideoFragment extends BaseTimelineFragment implements ITimelineView {
+    public VideoFragment() {
         // Required empty public constructor
     }
 
@@ -38,12 +32,12 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
 
     @Override
     protected ITimelineRepository createModel() {
-        return new TimelineRepository(mAttachedActivity);
+        return new VideoRepository(mAttachedActivity);
     }
 
     @Override
     protected ITimelinePresenter createPresenter(ITimelineRepository model) {
-        return new TimelinePresenter(this, model);
+        return new VideoPresenter(this, model);
     }
 
     @Override
@@ -56,7 +50,6 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
                 listener.onRefresh();
             });
         }
-        //presenter.getMedias(MediaFilter.IMAGE);
         return view;
     }
 
@@ -72,7 +65,7 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
 
     @Override
     protected BaseTimelineAdapter createAdapter() {
-        return new TimelineAdapter(mAttachedActivity, getSortingMode(), getSortingOrder());
+        return new VideoAdapter(mAttachedActivity, getSortingMode(), getSortingOrder());
     }
 
     @Override
@@ -82,7 +75,7 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
 
     @Override
     protected void createSwipeEvent() {
-        presenter.getMedias(MediaFilter.IMAGE);
+        presenter.getMedias(MediaFilter.VIDEO);
     }
 
     @Override

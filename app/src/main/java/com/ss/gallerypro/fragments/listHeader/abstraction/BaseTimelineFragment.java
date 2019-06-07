@@ -80,7 +80,7 @@ public abstract class BaseTimelineFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(false);
+        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(true);
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(listener);
         }

@@ -1,4 +1,4 @@
-package com.ss.gallerypro.fragments.listHeader.timeline.adapter;
+package com.ss.gallerypro.fragments.listHeader.timeline;
 
 import android.content.Context;
 import android.view.View;

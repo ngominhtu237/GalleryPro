@@ -59,7 +59,7 @@ public class MediaDataService {
     public void getDataTimeline(MediaFilter mediaFilter, OnTimelineDataNotify.Get callback) {
         this.mediaFilter = mediaFilter;
         getTimelineDataCb = callback;
-        new GetTimelineImageTask().execute();
+        new GetTimelineDataTask().execute();
     }
 
     public void deleteDataTimeline(ArrayList<MediaItem> medias, OnTimelineDataNotify.Delete callback) {
@@ -67,7 +67,7 @@ public class MediaDataService {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class GetTimelineImageTask extends AsyncTask<Void, Integer, Void> {
+    private class GetTimelineDataTask extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected void onPreExecute() {

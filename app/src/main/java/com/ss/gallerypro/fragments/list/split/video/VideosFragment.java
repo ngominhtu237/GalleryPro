@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.MediaItem;
@@ -75,7 +74,6 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         presenter.getVideoList();
-        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(true);
         return rootView;
     }
 
