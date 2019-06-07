@@ -13,7 +13,10 @@ import android.view.ViewGroup;
 
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.data.TimelineHelper;
 import com.ss.gallerypro.data.filter.MediaFilter;
+import com.ss.gallerypro.data.sort.SortingMode;
+import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.listHeader.abstraction.BaseTimelineAdapter;
 import com.ss.gallerypro.fragments.listHeader.abstraction.BaseTimelineFragment;
 import com.ss.gallerypro.fragments.listHeader.abstraction.model.ITimelineRepository;
@@ -56,7 +59,6 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
                 listener.onRefresh();
             });
         }
-        //presenter.getMedias(MediaFilter.IMAGE);
         return view;
     }
 
@@ -83,6 +85,26 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     @Override
     protected void createSwipeEvent() {
         presenter.getMedias(MediaFilter.IMAGE);
+    }
+
+    @Override
+    protected SortingMode getSortModeFromPref() {
+        return TimelineHelper.getSortingMode();
+    }
+
+    @Override
+    protected SortingOrder getSortOrderFromPref() {
+        return TimelineHelper.getSortingOrder();
+    }
+
+    @Override
+    protected void setSortModeToPref(SortingMode sortingMode) {
+        TimelineHelper.setSortingMode(sortingMode);
+    }
+
+    @Override
+    protected void setSortOrderToPref(SortingOrder sortingOrder) {
+        TimelineHelper.setSortingOrder(sortingOrder);
     }
 
     @Override

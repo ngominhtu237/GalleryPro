@@ -47,6 +47,16 @@ public class Prefs {
     }
 
     @NonNull
+    public static SortingMode getVideoSortingMode() {
+        return SortingMode.fromValue(getPrefs().get(Keys.VIDEO_SORTING_MODE, Defaults.VIDEO_SORTING_MODE));
+    }
+
+    @NonNull
+    public static SortingOrder getVideoSortingOrder() {
+        return SortingOrder.fromValue(getPrefs().get(Keys.VIDEO_SORTING_ORDER, Defaults.VIDEO_SORTING_ORDER));
+    }
+
+    @NonNull
     public static LayoutType getAlbumLayoutType() {
         return LayoutType.fromValue(getPrefs().get(Keys.ALBUM_LAYOUT_TYPE, Defaults.ALBUM_LAYOUT_TYPE));
     }
@@ -78,6 +88,14 @@ public class Prefs {
 
     public static void setTimelineSortingOrder(@NonNull SortingOrder sortingOrder) {
         getPrefs().put(Keys.TIMELINE_SORTING_ORDER, sortingOrder.getValue());
+    }
+
+    public static void setVideoSortingMode(@NonNull SortingMode sortingMode) {
+        getPrefs().put(Keys.VIDEO_SORTING_MODE, sortingMode.getValue());
+    }
+
+    public static void setVideoSortingOrder(@NonNull SortingOrder sortingOrder) {
+        getPrefs().put(Keys.VIDEO_SORTING_ORDER, sortingOrder.getValue());
     }
 
     public static void setTimelineColumnPortrait(int column) {

@@ -27,7 +27,6 @@ import com.jetradar.desertplaceholder.DesertPlaceholder;
 import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
-import com.ss.gallerypro.data.TimelineHelper;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
@@ -89,12 +88,18 @@ public abstract class BaseTimelineFragment extends BaseFragment {
         return view;
     }
 
+    /**
+     *
+     * Có 2 cách để tạo Base: 1 là tạo abstract method in base sau đó impl ở bên ngoài từng thằng con
+     * 2 là truyền kiểu dữ liệu base vào khi khởi tạo lớp
+     */
+
     protected SortingMode getSortingMode() {
-        return adapter != null ? adapter.getSortingMode() : TimelineHelper.getSortingMode();
+        return adapter != null ? adapter.getSortingMode() : getSortModeFromPref();
     }
 
     protected SortingOrder getSortingOrder() {
-        return adapter != null ? adapter.getSortingOrder() : TimelineHelper.getSortingOrder();
+        return adapter != null ? adapter.getSortingOrder() : getSortOrderFromPref();
     }
 
     private void initRecycleView() {
@@ -225,9 +230,17 @@ public abstract class BaseTimelineFragment extends BaseFragment {
             int i1 = rgSortingMode.getCheckedRadioButtonId();
             int i2 = rgSortingOrder.getCheckedRadioButtonId();
             adapter.changeSorting(SortingMode.fromValue(i1), SortingOrder.fromValue(i2));
-            TimelineHelper.setSortingMode(SortingMode.fromValue(i1));
-            TimelineHelper.setSortingOrder(SortingOrder.fromValue(i2));
+            setSortModeToPref(SortingMode.fromValue(i1));
+            setSortOrderToPref(SortingOrder.fromValue(i2));
             dialog.dismiss();
         });
     }
+
+    protected abstract SortingMode getSortModeFromPref();
+
+    protected abstract SortingOrder getSortOrderFromPref();
+
+    protected abstract void setSortModeToPref(SortingMode sortingMode);
+
+    protected abstract void setSortOrderToPref(SortingOrder sortingOrder);
 }

@@ -11,7 +11,10 @@ import android.view.ViewGroup;
 
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.data.VideoHelper;
 import com.ss.gallerypro.data.filter.MediaFilter;
+import com.ss.gallerypro.data.sort.SortingMode;
+import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.listHeader.abstraction.BaseTimelineAdapter;
 import com.ss.gallerypro.fragments.listHeader.abstraction.BaseTimelineFragment;
 import com.ss.gallerypro.fragments.listHeader.abstraction.model.ITimelineRepository;
@@ -76,6 +79,26 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     @Override
     protected void createSwipeEvent() {
         presenter.getMedias(MediaFilter.VIDEO);
+    }
+
+    @Override
+    protected SortingMode getSortModeFromPref() {
+        return VideoHelper.getSortingMode();
+    }
+
+    @Override
+    protected SortingOrder getSortOrderFromPref() {
+        return VideoHelper.getSortingOrder();
+    }
+
+    @Override
+    protected void setSortModeToPref(SortingMode sortingMode) {
+        VideoHelper.setSortingMode(sortingMode);
+    }
+
+    @Override
+    protected void setSortOrderToPref(SortingOrder sortingOrder) {
+        VideoHelper.setSortingOrder(sortingOrder);
     }
 
     @Override

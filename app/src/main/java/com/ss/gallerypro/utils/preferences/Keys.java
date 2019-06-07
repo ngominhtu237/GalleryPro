@@ -37,4 +37,7 @@ public class Keys {
     public static final String TIMELINE_SORTING_ORDER = "timeline_sorting_order";
     public static final String TIMELINE_COLUMN_PORTRAIT = "timeline_column_portrait";
     public static final String TIMELINE_COLUMN_LANDSCAPE = "timeline_column_landscape";
+
+    public static final String VIDEO_SORTING_MODE = "video_sorting_mode";
+    public static final String VIDEO_SORTING_ORDER = "video_sorting_order";
 }

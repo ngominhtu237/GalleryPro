@@ -16,4 +16,7 @@ public class Defaults {
 
     public static final int TIMELINE_SORTING_MODE = SortingMode.DATE_TAKEN.getValue();
     public static final int TIMELINE_SORTING_ORDER = SortingOrder.DESCENDING.getValue();
+
+    public static final int VIDEO_SORTING_MODE = SortingMode.DATE_TAKEN.getValue();
+    public static final int VIDEO_SORTING_ORDER = SortingOrder.DESCENDING.getValue();
 }
