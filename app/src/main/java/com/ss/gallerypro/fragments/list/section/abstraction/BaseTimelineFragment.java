@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,15 +31,20 @@ import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
+import com.ss.gallerypro.fragments.ICheckedItem;
+import com.ss.gallerypro.fragments.RecycleViewClickListener;
+import com.ss.gallerypro.fragments.list.section.abstraction.actionmode.BaseActionMode;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepository;
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
 import com.ss.gallerypro.utils.Convert;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public abstract class BaseTimelineFragment extends BaseFragment {
+public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem{
     @BindView(R.id.timelineRecycleView)
     protected RecyclerView mRecyclerView;
 
@@ -52,12 +58,14 @@ public abstract class BaseTimelineFragment extends BaseFragment {
     protected Activity mAttachedActivity;
 
     protected GridLayoutManager mLayoutManager;
-    private ActionMode mActionMode;
+    protected ActionMode mActionMode;
     protected int NUM_COLUMN;
 
-    protected BaseTimelineAdapter adapter;
+    private BaseTimelineAdapter adapter;
     protected ITimelinePresenter presenter;
     protected ITimelineRepository model;
+
+    protected BaseActionMode actionMode;
 
     public BaseTimelineFragment() {
     }
@@ -68,8 +76,11 @@ public abstract class BaseTimelineFragment extends BaseFragment {
         mAttachedActivity = getActivity();
         model = createModel();
         presenter = createPresenter(model);
+        actionMode = createActionMode();
         super.onCreate(savedInstanceState);
     }
+
+    protected abstract BaseActionMode createActionMode();
 
     protected abstract ITimelineRepository createModel();
 
@@ -113,6 +124,8 @@ public abstract class BaseTimelineFragment extends BaseFragment {
         mRecyclerView.setLayoutAnimation(animation);
         mRecyclerView.setItemAnimator(new LandingAnimator());
         adapter = createAdapter();
+        adapter.setRecycleViewClickListener(this);
+        adapter.setCheckedItemListener(this);
         mRecyclerView.setAdapter(adapter);
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -243,4 +256,31 @@ public abstract class BaseTimelineFragment extends BaseFragment {
     protected abstract void setSortModeToPref(SortingMode sortingMode);
 
     protected abstract void setSortOrderToPref(SortingOrder sortingOrder);
+
+    public BaseTimelineAdapter getAdapter() {
+        return adapter;
+    }
+
+    @Override
+    public void change(int number) {
+        // call change menu in ActionMode
+        if(actionMode != null) {
+            actionMode.changeMenu(number);
+        }
+    }
+
+    public void onListItemSelect(int position) {
+        adapter.toggleSelection(position);
+        boolean hasCheckedItems = adapter.getSelectedCount() > 0;
+
+        if (hasCheckedItems && mActionMode == null) {
+            mActionMode = ((AppCompatActivity) Objects.requireNonNull(getActivity())).startSupportActionMode(actionMode);
+        } else if (!hasCheckedItems && mActionMode != null) {
+            mActionMode.finish();
+        }
+
+        if (mActionMode != null) {
+            mActionMode.setTitle(String.valueOf(getAdapter().getSelectedCount()) + " selected");
+        }
+    }
 }

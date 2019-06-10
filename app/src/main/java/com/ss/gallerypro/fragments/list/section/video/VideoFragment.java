@@ -17,6 +17,7 @@ import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.list.section.abstraction.BaseTimelineAdapter;
 import com.ss.gallerypro.fragments.list.section.abstraction.BaseTimelineFragment;
+import com.ss.gallerypro.fragments.list.section.abstraction.actionmode.BaseActionMode;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepository;
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
 import com.ss.gallerypro.fragments.list.section.abstraction.view.ITimelineView;
@@ -31,6 +32,11 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected BaseActionMode createActionMode() {
+        return new VideoActionMode(this);
     }
 
     @Override
@@ -122,8 +128,8 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
     @Override
     public void onGetTimelineSuccess(ArrayList<MediaItem> mediaItems) {
-        adapter.setMediaItems(mediaItems);
-        adapter.changeSorting(getSortingMode(), getSortingOrder());
+        getAdapter().setMediaItems(mediaItems);
+        getAdapter().changeSorting(getSortingMode(), getSortingOrder());
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -132,5 +138,24 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     @Override
     public void onDeleteTimelineSuccess() {
 
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        if (mActionMode != null) {
+            onListItemSelect(position);
+        } else {
+//            Intent intent = new Intent(getContext(), PicturePreview.class);
+//            intent.putExtra("current_image_position", position);
+//            intent.putExtra("album_path", mReceiveBucket.getPathToAlbum());
+//            intent.putExtra("list_image", adapter.getMediaList());
+//            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onLongClick(View view, int position) {
+        setEnableSwipeRefresh(false);
+        onListItemSelect(position);
     }
 }

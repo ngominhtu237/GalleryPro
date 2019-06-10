@@ -3,6 +3,7 @@ package com.ss.gallerypro.fragments.list.section.abstraction;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.ss.gallerypro.data.provider.CPHelper;
 import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
+import com.ss.gallerypro.fragments.ICheckedItem;
+import com.ss.gallerypro.fragments.RecycleViewClickListener;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ContentModel;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.HeaderModel;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.IItem;
@@ -34,10 +37,15 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
     protected HEADER headerHolder;
     protected CONTENT contentHolder;
 
+    private RecycleViewClickListener recycleViewClickListener;
+    protected SparseBooleanArray mSelectedItemsIds;
+    private ICheckedItem checkedItemListener;
+
     public BaseTimelineAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder ) {
         this.mContextWeakReference = new WeakReference<>(context);
         this.mSortingMode = sortingMode;
         this.mSortingOrder = sortingOrder;
+        mSelectedItemsIds = new SparseBooleanArray();
     }
 
     @NonNull
@@ -97,6 +105,15 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(options)
                 .into(contentHolder.ivTimelineThumbnail);
+
+        contentHolder.ivTimelineCheckbox.setVisibility(mSelectedItemsIds.get(position) ? View.VISIBLE : View.GONE);
+
+        holder.itemView.setOnClickListener(view -> recycleViewClickListener.onClick(view, holder.getAdapterPosition()));
+
+        holder.itemView.setOnLongClickListener(view -> {
+            recycleViewClickListener.onLongClick(view, holder.getAdapterPosition());
+            return true;
+        });
     }
 
     public SortingOrder getSortingOrder() {
@@ -140,5 +157,43 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
                 return CPHelper.createDataSortBySize(mediaItems);
         }
         return null;
+    }
+
+    public void setRecycleViewClickListener(RecycleViewClickListener recycleViewClickListener) {
+        this.recycleViewClickListener = recycleViewClickListener;
+    }
+
+    public void setCheckedItemListener(ICheckedItem checkedItemListener) {
+        this.checkedItemListener = checkedItemListener;
+    }
+
+    /***
+     * Methods required for do selections, remove selections, etc.
+     */
+
+    public void toggleSelection(int position) {
+        selectView(position, !mSelectedItemsIds.get(position));
+    }
+
+    public void removeSelection() {
+        mSelectedItemsIds = new SparseBooleanArray();
+        notifyDataSetChanged();
+    }
+
+    private void selectView(int position, boolean value) {
+        if (value)
+            mSelectedItemsIds.put(position, value);
+        else
+            mSelectedItemsIds.delete(position);
+        checkedItemListener.change(mSelectedItemsIds.size());
+        notifyDataSetChanged();
+    }
+
+    public int getSelectedCount() {
+        return mSelectedItemsIds.size();
+    }
+
+    public SparseBooleanArray getSelectedIds() {
+        return mSelectedItemsIds;
     }
 }
