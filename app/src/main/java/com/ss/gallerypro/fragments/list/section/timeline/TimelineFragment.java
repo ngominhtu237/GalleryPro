@@ -55,7 +55,7 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
         View view =  super.onCreateView(inflater, container, savedInstanceState);
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.post(() -> {
-                mSwipeRefreshLayout.setRefreshing(true);
+                if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
                 listener.onRefresh();
             });
         }

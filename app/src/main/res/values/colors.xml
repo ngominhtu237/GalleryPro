@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">@color/accent_teal</color>
     <color name="colorPrimaryStatusTransparent">@color/accent_teal_transparent</color>
+    <color name="colorAccent">@color/md_light_statusbar</color>
     <color name="themeText">@color/accent_black</color>
     <color name="themeBackground">@color/white</color>
 

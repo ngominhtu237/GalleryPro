@@ -65,5 +65,6 @@ public class HomeFragment extends BaseFragment {
         adapter.addFragment(new VideoFragment(), "Videos");
         adapter.addFragment(new AlbumsFragment(), "Albums");
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(2);
     }
 }

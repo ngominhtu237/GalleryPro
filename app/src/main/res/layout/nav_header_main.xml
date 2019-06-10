@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/nav_header_photos"
                 android:textSize="@dimen/nav_size_label"
-                android:textColor="@color/colorHighlight"/>
+                android:textColor="@color/md_light_statusbar"/>
             <TextView
                 android:id="@+id/tvPhotoCount"
                 android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:text="239.2 MB"
                 android:textSize="@dimen/nav_size_label"
-                android:textColor="@color/colorHighlight"/>
+                android:textColor="@color/md_light_statusbar"/>
         </LinearLayout>
 
         <LinearLayout
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/nav_header_videos"
                 android:textSize="@dimen/nav_size_label"
-                android:textColor="@color/colorHighlight"/>
+                android:textColor="@color/md_light_statusbar"/>
             <TextView
                 android:id="@+id/tvVideoCount"
                 android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:text="0 MB"
                 android:textSize="@dimen/nav_size_label"
-                android:textColor="@color/colorHighlight"/>
+                android:textColor="@color/md_light_statusbar"/>
         </LinearLayout>
 
         <LinearLayout
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/nav_header_albums"
                 android:textSize="@dimen/nav_size_label"
-                android:textColor="@color/colorHighlight"/>
+                android:textColor="@color/md_light_statusbar"/>
             <TextView
                 android:id="@+id/tvCountAlbum"
                 android:layout_width="wrap_content"
@@ -133,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:text="239.2 MB"
                 android:textSize="@dimen/nav_size_label"
-                android:textColor="@color/colorHighlight"/>
+                android:textColor="@color/md_light_statusbar"/>
         </LinearLayout>
     </LinearLayout>
 
