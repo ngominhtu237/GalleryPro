@@ -134,6 +134,10 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
         this.mediaItems = mediaItems;
     }
 
+    public ArrayList<MediaItem> getMediaItems() {
+        return mediaItems;
+    }
+
     public void changeSorting(SortingMode sortingMode, SortingOrder sortingOrder){
         this.mSortingMode = sortingMode;
         this.mSortingOrder = sortingOrder;

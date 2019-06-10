@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ss.gallerypro.R;
+import com.ss.gallerypro.activity.PicturePreview;
 import com.ss.gallerypro.adapter.ImageViewPagerAdapter;
 import com.ss.gallerypro.animation.DepthPageTransformer;
 import com.ss.gallerypro.customComponent.ViewPagerFixed;
@@ -24,7 +25,6 @@ public class SlideShowFragment extends Fragment {
     private ImageViewPagerAdapter viewPagerAdapter;
     private ViewPagerFixed mViewPager;
     int selectedImagePosition;
-    private static int currentPage = 0;
 
     public SlideShowFragment() {
         // Required empty public constructor
@@ -33,10 +33,9 @@ public class SlideShowFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent receivedIntent = getActivity().getIntent();
         selectedImagePosition = receivedIntent.getIntExtra("current_image_position", 0);
-        mImageList = (ArrayList<MediaItem>) receivedIntent.getSerializableExtra("list_image");
+        mImageList = PicturePreview.mImageList;
     }
 
     @Override
@@ -56,7 +55,6 @@ public class SlideShowFragment extends Fragment {
 
     private void setCurrentImage(int selectedImagePosition) {
         mViewPager.setCurrentItem(selectedImagePosition, false);
-//        displayMetaInfo(selectedImagePosition);
     }
 
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {

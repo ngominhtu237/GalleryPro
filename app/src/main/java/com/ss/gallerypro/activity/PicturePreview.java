@@ -1,5 +1,6 @@
 package com.ss.gallerypro.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -19,28 +20,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
 public class PicturePreview extends AppCompatActivity {
 
-    private ArrayList<MediaItem> mImageList;
+    public static ArrayList<MediaItem> mImageList;
     private int selectedImagePosition;
-    private String albumPath;
-    private TextView tvItemDate, tvItemSize, tvItemPath, tvItemTitle, tvItemResolution;
-    private Button btOK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
         setContentView(R.layout.activity_picture_preview);
 
         Intent receivedIntent = getIntent();
         selectedImagePosition = receivedIntent.getIntExtra("current_image_position", 0);
-        mImageList = (ArrayList<MediaItem>) receivedIntent.getSerializableExtra("list_image");
-        albumPath = receivedIntent.getStringExtra("album_path");
     }
 
     @Override
@@ -60,6 +57,7 @@ public class PicturePreview extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -67,12 +65,12 @@ public class PicturePreview extends AppCompatActivity {
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 //then we will inflate the custom alert dialog xml that we created
                 View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_picture_details, viewGroup, false);
-                tvItemDate = dialogView.findViewById(R.id.tvItemDate);
-                tvItemSize = dialogView.findViewById(R.id.tvItemSize);
-                tvItemResolution = dialogView.findViewById(R.id.tvItemResolution);
-                tvItemPath = dialogView.findViewById(R.id.tvItemPath);
-                tvItemTitle = dialogView.findViewById(R.id.tvItemTitle);
-                btOK = dialogView.findViewById(R.id.buttonOk);
+                TextView tvItemDate = dialogView.findViewById(R.id.tvItemDate);
+                TextView tvItemSize = dialogView.findViewById(R.id.tvItemSize);
+                TextView tvItemResolution = dialogView.findViewById(R.id.tvItemResolution);
+                TextView tvItemPath = dialogView.findViewById(R.id.tvItemPath);
+                TextView tvItemTitle = dialogView.findViewById(R.id.tvItemTitle);
+                Button btOK = dialogView.findViewById(R.id.buttonOk);
                 MediaItem mediaItem = mImageList.get(selectedImagePosition);
 
                 String format = "MM-dd-yyyy HH:mm:ss";
@@ -82,8 +80,8 @@ public class PicturePreview extends AppCompatActivity {
 
                 tvItemDate.setText(dateTime);
                 tvItemSize.setText(readableFileSize(Long.valueOf(mediaItem.getSize())));
-                tvItemResolution.setText(mediaItem.getWidth()+"x"+mediaItem.getHeight());
-                tvItemPath.setText(albumPath);
+                tvItemResolution.setText(mediaItem.getWidth() + "x" + mediaItem.getHeight());
+                tvItemPath.setText(mediaItem.getPathMediaItem());
                 tvItemTitle.setText(mediaItem.getName() + mediaItem.getPathMediaItem().substring(mediaItem.getPathMediaItem().lastIndexOf(".")));
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);

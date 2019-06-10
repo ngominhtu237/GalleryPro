@@ -1,6 +1,7 @@
 package com.ss.gallerypro.fragments.list.section.timeline;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ss.gallerypro.R;
+import com.ss.gallerypro.activity.PicturePreview;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.TimelineHelper;
 import com.ss.gallerypro.data.filter.MediaFilter;
@@ -151,11 +153,10 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
         if (mActionMode != null) {
             onListItemSelect(position);
         } else {
-//            Intent intent = new Intent(getContext(), PicturePreview.class);
-//            intent.putExtra("current_image_position", position);
-//            intent.putExtra("album_path", mReceiveBucket.getPathToAlbum());
-//            intent.putExtra("list_image", adapter.getMediaList());
-//            startActivity(intent);
+            PicturePreview.mImageList = getAdapter().getMediaItems();
+            Intent intent = new Intent(getContext(), PicturePreview.class);
+            intent.putExtra("current_image_position", position);
+            startActivity(intent);
         }
     }
 

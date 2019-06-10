@@ -110,7 +110,6 @@ public class PhotoSplitView extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent(PhotoSplitView.this, PicturePreview.class);
                     intent.putExtra("current_image_position", position);
-                    intent.putExtra("album_path", mReceiveBucket.getPathToAlbum());
                     intent.putExtra("list_image", mImageList);
                     startActivity(intent);
                 }

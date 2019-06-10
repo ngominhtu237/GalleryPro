@@ -156,10 +156,9 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         if (mActionMode != null) {
             onListItemSelect(position);
         } else {
+            PicturePreview.mImageList = adapter.getMediaList();
             Intent intent = new Intent(getContext(), PicturePreview.class);
             intent.putExtra("current_image_position", position);
-            intent.putExtra("album_path", mReceiveBucket.getPathToAlbum());
-            intent.putExtra("list_image", adapter.getMediaList());
             startActivity(intent);
         }
     }
