@@ -25,7 +25,8 @@
         </activity>
         <activity
             android:name=".activity.PicturePreview"
-            android:theme="@style/PictureView" />
+            android:theme="@style/PictureView"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SplashScreen"
             android:label="@string/app_name"
@@ -37,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.AboutActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

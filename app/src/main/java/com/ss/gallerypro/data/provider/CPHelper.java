@@ -12,6 +12,7 @@ import com.ss.gallerypro.data.AlbumHelper;
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.Function;
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.data.StatisticModel;
 import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ContentModel;
@@ -375,5 +376,59 @@ public class CPHelper {
             }
         }
         return list;
+    }
+
+    public static StatisticModel getStatisticsImage(Context context, MediaFilter mediaFilter) {
+        Uri uriExternal = MediaStore.Files.getContentUri("external");
+
+        String projection[] = new String[]{
+                "count(_id)",
+                "sum(" + MediaStore.MediaColumns.SIZE + ")"
+        };
+
+        String selection;
+        if(mediaFilter == MediaFilter.IMAGE) {
+            selection = "media_type = 1";
+        } else {
+            selection = "media_type = 3";
+        }
+
+        Cursor cursor = context.getContentResolver().query(uriExternal, projection, selection, null, null);
+        StatisticModel item = null;
+        while (cursor != null && cursor.moveToNext()) {
+            item = new StatisticModel();
+            int count = cursor.getInt(0);
+            long sum = cursor.getLong(1);
+            item.setCount(count);
+            item.setSize(sum);
+        }
+        return item;
+    }
+
+    public static StatisticModel getStatisticsAlbum(Context context) {
+        Uri uriExternal = MediaStore.Files.getContentUri("external");
+
+        String projectionSize[] = new String[]{
+                "sum(" + MediaStore.MediaColumns.SIZE + ")"
+        };
+        String s = "media_type = 1 or media_type = 3";
+
+        Cursor c = context.getContentResolver().query(uriExternal, projectionSize, s, null, null);
+        StatisticModel item = new StatisticModel();
+        if (c != null && c.moveToNext()) {
+            long sum = c.getLong(0);
+            item.setSize(sum);
+        }
+
+        String projectionCount[] = new String[]{
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                //"count(" + MediaStore.Images.Media.BUCKET_DISPLAY_NAME + ")"
+        };
+        String s1 = "media_type = 1 or media_type = 3 ) group by ( parent";
+        Cursor c1 = context.getContentResolver().query(uriExternal, projectionCount, s1, null, null);
+        if (c1 != null) {
+            item.setCount(c1.getCount());
+        }
+        return item;
     }
 }

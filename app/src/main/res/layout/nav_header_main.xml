@@ -69,6 +69,7 @@
                 android:layout_marginBottom="@dimen/nav_padding_label_count"
                 android:textColor="@color/white"/>
             <TextView
+                android:id="@+id/tvPhotoSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="239.2 MB"
@@ -99,6 +100,7 @@
                 android:layout_marginBottom="@dimen/nav_padding_label_count"
                 android:textColor="@color/white"/>
             <TextView
+                android:id="@+id/tvVideoSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0 MB"
@@ -129,6 +131,7 @@
                 android:layout_marginBottom="@dimen/nav_padding_label_count"
                 android:textColor="@color/white"/>
             <TextView
+                android:id="@+id/tvAlbumSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="239.2 MB"

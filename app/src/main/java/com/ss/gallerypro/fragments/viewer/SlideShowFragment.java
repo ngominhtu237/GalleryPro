@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class SlideShowFragment extends Fragment {
 
     private ArrayList<MediaItem> mImageList;
-    private ImageViewPagerAdapter viewPagerAdapter;
     private ViewPagerFixed mViewPager;
     int selectedImagePosition;
 
@@ -44,7 +43,7 @@ public class SlideShowFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_slide_show, container, false);
         mViewPager = view.findViewById(R.id.viewPager);
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
-        viewPagerAdapter = new ImageViewPagerAdapter(getActivity(), mImageList, selectedImagePosition);
+        ImageViewPagerAdapter viewPagerAdapter = new ImageViewPagerAdapter(getActivity(), mImageList);
         mViewPager.setAdapter(viewPagerAdapter);
         mViewPager.setPageMargin(10);
         mViewPager.addOnPageChangeListener(viewPagerPageChangeListener);
@@ -59,9 +58,7 @@ public class SlideShowFragment extends Fragment {
 
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
         @Override
         public void onPageSelected(int position) {
@@ -69,9 +66,7 @@ public class SlideShowFragment extends Fragment {
         }
 
         @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
+        public void onPageScrollStateChanged(int state) { }
     };
 
     @Override

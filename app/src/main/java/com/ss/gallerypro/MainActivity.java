@@ -19,7 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ss.gallerypro.activity.AboutActivity;
+import com.ss.gallerypro.data.StatisticModel;
+import com.ss.gallerypro.data.filter.MediaFilter;
+import com.ss.gallerypro.data.provider.CPHelper;
 import com.ss.gallerypro.fragments.home.HomeFragment;
+
+import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker {
 
@@ -44,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         mHeaderViewHolder = new HeaderViewHolder(navigationView.getHeaderView(0));
-
         initNavHeader();
 
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -117,6 +121,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String left = getEmojiByUnicode(0x1F603) + getEmojiByUnicode(0x1F604);
         String right = getEmojiByUnicode(0x1F60D) + getEmojiByUnicode(0x1F618);
         mHeaderViewHolder.mTitle.setText(left + " Gallery " + right);
+
+        StatisticModel image = CPHelper.getStatisticsImage(this, MediaFilter.IMAGE);
+        mHeaderViewHolder.tvPhotoCount.setText(String.valueOf(image.getCount()));
+        mHeaderViewHolder.tvPhotoSize.setText(readableFileSize(image.getSize()));
+
+        StatisticModel video = CPHelper.getStatisticsImage(this, MediaFilter.VIDEO);
+        mHeaderViewHolder.tvVideoCount.setText(String.valueOf(video.getCount()));
+        mHeaderViewHolder.tvVideoSize.setText(readableFileSize(video.getSize()));
+
+        StatisticModel album = CPHelper.getStatisticsAlbum(this);
+        mHeaderViewHolder.tvAlbumCount.setText(String.valueOf(album.getCount()));
+        mHeaderViewHolder.tvAlbumSize.setText(readableFileSize(album.getSize()));
     }
 
 
