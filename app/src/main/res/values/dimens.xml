@@ -23,6 +23,8 @@
     <dimen name="two_dp">2dp</dimen>
     <dimen name="thirty_dp">30dp</dimen>
     <dimen name="twenty_sp">20sp</dimen>
+    <dimen name="nineteen_sp">19sp</dimen>
+    <dimen name="eighteen_sp">18sp</dimen>
     <dimen name="sixteen_sp">16sp</dimen>
 
 

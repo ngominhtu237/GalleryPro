@@ -1,11 +1,11 @@
 package com.ss.gallerypro.fragments.list.section.timeline;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.activity.PicturePreview;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.TimelineHelper;
 import com.ss.gallerypro.data.filter.MediaFilter;
@@ -25,20 +24,25 @@ import com.ss.gallerypro.fragments.list.section.abstraction.actionmode.BaseActio
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepository;
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
 import com.ss.gallerypro.fragments.list.section.abstraction.view.ITimelineView;
+import com.ss.gallerypro.fragments.viewer.ImagePagerFragment;
+import com.ss.gallerypro.view.SquareImageView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class TimelineFragment extends BaseTimelineFragment implements ITimelineView {
 
+    private static final String TAG = "TimelineFragment";
+
     public TimelineFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
@@ -58,13 +62,14 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  super.onCreateView(inflater, container, savedInstanceState);
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.post(() -> {
                 if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
                 listener.onRefresh();
+                Log.v(TAG, "load data.");
             });
         }
         return view;
@@ -82,7 +87,7 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
 
     @Override
     protected BaseTimelineAdapter createAdapter() {
-        return new TimelineAdapter(mAttachedActivity, getSortingMode(), getSortingOrder());
+        return new TimelineAdapter(this, mAttachedActivity, getSortingMode(), getSortingOrder());
     }
 
     @Override
@@ -153,10 +158,25 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
         if (mActionMode != null) {
             onListItemSelect(position);
         } else {
-            PicturePreview.mImageList = getAdapter().getMediaItems();
-            Intent intent = new Intent(getContext(), PicturePreview.class);
-            intent.putExtra("current_image_position", position);
-            startActivity(intent);
+            ((TransitionSet) getExitTransition()).excludeTarget(view, true);
+
+            ImagePagerFragment.mImageList = getAdapter().getMediaItems();
+            SquareImageView transitioningView = view.findViewById(R.id.ivTimelineThumbnail);
+            FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+            ImagePagerFragment pagerFragment = (ImagePagerFragment) fragmentManager.findFragmentByTag("ImagePagerFragment");
+            if(pagerFragment == null) {
+                pagerFragment = new ImagePagerFragment();
+                Bundle args = new Bundle();
+                args.putInt("currentPosition", position);
+                pagerFragment.setArguments(args);
+            }
+
+            fragmentManager
+                    .beginTransaction()
+                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
+                    .add(R.id.fragment_container, pagerFragment, ImagePagerFragment.class.getSimpleName())
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
@@ -164,5 +184,10 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     public void onLongClick(View view, int position) {
         setEnableSwipeRefresh(false);
         onListItemSelect(position);
+    }
+
+    @Override
+    public void onLoadCompleted() {
+        startPostponedEnterTransition();
     }
 }

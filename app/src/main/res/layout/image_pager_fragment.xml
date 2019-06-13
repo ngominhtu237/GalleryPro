@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".fragments.viewer.ImagePagerFragment">
+
+
+    <com.ss.gallerypro.customComponent.ViewPagerFixed
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/accent_black"/>
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tvDate"
+        android:layout_marginStart="@dimen/ten_dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/eighteen_sp"
+        android:text="20190609_204948"/>
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/colorHighlight"
+        android:layout_marginBottom="@dimen/ten_dp"
+        android:layout_marginStart="@dimen/ten_dp"
+        android:text="Jun 09, 2019 08:39:48 PM"/>
+</RelativeLayout>

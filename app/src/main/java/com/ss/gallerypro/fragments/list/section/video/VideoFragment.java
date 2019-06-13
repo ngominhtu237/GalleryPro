@@ -76,7 +76,7 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
     @Override
     protected BaseTimelineAdapter createAdapter() {
-        return new VideoAdapter(mAttachedActivity, getSortingMode(), getSortingOrder());
+        return new VideoAdapter(this, mAttachedActivity, getSortingMode(), getSortingOrder());
     }
 
     @Override
@@ -158,5 +158,10 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     public void onLongClick(View view, int position) {
         setEnableSwipeRefresh(false);
         onListItemSelect(position);
+    }
+
+    @Override
+    public void onLoadCompleted() {
+
     }
 }

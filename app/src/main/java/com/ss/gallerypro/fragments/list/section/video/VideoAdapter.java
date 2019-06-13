@@ -2,6 +2,7 @@ package com.ss.gallerypro.fragments.list.section.video;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -16,8 +17,8 @@ import com.ss.gallerypro.fragments.list.section.video.holder.VideoContentViewHol
 import com.ss.gallerypro.utils.Convert;
 
 public class VideoAdapter extends BaseTimelineAdapter<HeaderViewHolder, VideoContentViewHolder> {
-    VideoAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder) {
-        super(context, sortingMode, sortingOrder);
+    VideoAdapter(Fragment fragment, Context context, SortingMode sortingMode, SortingOrder sortingOrder) {
+        super(fragment, context, sortingMode, sortingOrder);
     }
 
     @Override

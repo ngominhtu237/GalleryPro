@@ -12,6 +12,7 @@
     android:focusable="true">
 
     <com.ss.gallerypro.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/card_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/md_dark_dividers">
@@ -20,7 +21,7 @@
             android:id="@+id/ivTimelineThumbnail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_holder"
+            android:background="@color/md_dark_appbar"
             android:scaleType="centerCrop" />
 
         <ImageView

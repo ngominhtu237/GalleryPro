@@ -4,11 +4,10 @@
     android:id="@+id/picture_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/accent_black"
     tools:context=".activity.PicturePreview">
 
     <uk.co.senab.photoview.PhotoView
-        android:id="@+id/ivPictureGif"
+        android:id="@+id/ivPhotoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
@@ -16,13 +15,22 @@
         android:visibility="gone"/>
 
     <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/ivPictureNormal"
+        android:id="@+id/ivSubSamplingView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"/>
 
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminateDrawable="@drawable/custom_progress_bar"
+        android:visibility="visible" />
+
     <ImageView
-        android:id="@+id/ivPlayDetail"
+        android:id="@+id/ivPlayIcon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"

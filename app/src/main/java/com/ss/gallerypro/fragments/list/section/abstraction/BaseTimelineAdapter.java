@@ -1,7 +1,10 @@
 package com.ss.gallerypro.fragments.list.section.abstraction;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -9,9 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.provider.CPHelper;
 import com.ss.gallerypro.data.sort.PhotoComparators;
@@ -19,6 +26,7 @@ import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.ICheckedItem;
 import com.ss.gallerypro.fragments.RecycleViewClickListener;
+import com.ss.gallerypro.fragments.ViewHolderListener;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ContentModel;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.HeaderModel;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.IItem;
@@ -28,6 +36,7 @@ import java.util.ArrayList;
 
 public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, CONTENT extends BaseContentViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String TAG = "BaseTimelineAdapter";
     protected ArrayList<MediaItem> mediaItems = new ArrayList<>();
     protected ArrayList<IItem> mListData = new ArrayList<>();
     WeakReference<Context> mContextWeakReference;
@@ -38,10 +47,12 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
     protected CONTENT contentHolder;
 
     private RecycleViewClickListener recycleViewClickListener;
-    protected SparseBooleanArray mSelectedItemsIds;
+    private SparseBooleanArray mSelectedItemsIds;
     private ICheckedItem checkedItemListener;
 
-    public BaseTimelineAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder ) {
+    private ViewHolderListener viewHolderListener;
+
+    public BaseTimelineAdapter(Fragment fragment, Context context, SortingMode sortingMode, SortingOrder sortingOrder ) {
         this.mContextWeakReference = new WeakReference<>(context);
         this.mSortingMode = sortingMode;
         this.mSortingOrder = sortingOrder;
@@ -104,16 +115,52 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
                 .thumbnail(0.1f)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(options)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                                Target<Drawable> target, boolean isFirstResource) {
+                        viewHolderListener.onLoadCompleted();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable>
+                            target, DataSource dataSource, boolean isFirstResource) {
+                        viewHolderListener.onLoadCompleted();
+                        return false;
+                    }
+                })
                 .into(contentHolder.ivTimelineThumbnail);
+
+        contentHolder.ivTimelineThumbnail.setTransitionName(cModel.mMediaItem.getPathMediaItem());
 
         contentHolder.ivTimelineCheckbox.setVisibility(mSelectedItemsIds.get(position) ? View.VISIBLE : View.GONE);
 
-        holder.itemView.setOnClickListener(view -> recycleViewClickListener.onClick(view, holder.getAdapterPosition()));
+
+        int positionInSection = getPositionInSection(holder.getAdapterPosition());
+        holder.itemView.setOnClickListener((View view) -> {
+            recycleViewClickListener.onClick(view, positionInSection);
+        });
 
         holder.itemView.setOnLongClickListener(view -> {
-            recycleViewClickListener.onLongClick(view, holder.getAdapterPosition());
+            recycleViewClickListener.onLongClick(view, positionInSection);
             return true;
         });
+    }
+
+    /**
+     * Return the item position relative to the section.
+     *
+     * @param position position of the item in the adapter
+     * @return position of the item in the section
+     */
+    private int getPositionInSection(int position) {
+        int currentPos = 0;
+        for(int i=0; i<position; i++) {
+            if(mListData.get(i) instanceof ContentModel) currentPos++;
+        }
+
+        return currentPos;
     }
 
     public SortingOrder getSortingOrder() {
@@ -136,6 +183,10 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
 
     public ArrayList<MediaItem> getMediaItems() {
         return mediaItems;
+    }
+
+    public ArrayList<IItem> getListData() {
+        return mListData;
     }
 
     public void changeSorting(SortingMode sortingMode, SortingOrder sortingOrder){
@@ -169,6 +220,10 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
 
     public void setCheckedItemListener(ICheckedItem checkedItemListener) {
         this.checkedItemListener = checkedItemListener;
+    }
+
+    public void setViewHolderListener(ViewHolderListener viewHolderListener) {
+        this.viewHolderListener = viewHolderListener;
     }
 
     /***

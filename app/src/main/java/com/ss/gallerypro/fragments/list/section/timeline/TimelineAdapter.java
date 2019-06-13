@@ -1,6 +1,7 @@
 package com.ss.gallerypro.fragments.list.section.timeline;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.ss.gallerypro.R;
@@ -12,8 +13,8 @@ import com.ss.gallerypro.fragments.list.section.timeline.holder.HeaderViewHolder
 
 public class TimelineAdapter extends BaseTimelineAdapter<HeaderViewHolder, ContentViewHolder> {
 
-    public TimelineAdapter(Context context, SortingMode sortingMode, SortingOrder sortingOrder) {
-        super(context, sortingMode, sortingOrder);
+    TimelineAdapter(Fragment fragment, Context context, SortingMode sortingMode, SortingOrder sortingOrder) {
+        super(fragment, context, sortingMode, sortingOrder);
     }
 
     @Override

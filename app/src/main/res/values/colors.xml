@@ -37,6 +37,7 @@
     <color name="md_black_1000">#000000</color>
     <color name="md_black_1000_transparent">#64000000</color>
     <color name="md_black_00_transparent">#00000000</color>
+    <color name="md_white_00_transparent">#00FFFFFF</color>
     <color name="md_album_color">@color/md_grey_50</color>
     <color name="md_album_color_2">#2B2B2B</color>
 

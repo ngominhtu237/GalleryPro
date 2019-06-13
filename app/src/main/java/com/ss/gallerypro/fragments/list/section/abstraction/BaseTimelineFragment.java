@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.fragments.ICheckedItem;
 import com.ss.gallerypro.fragments.RecycleViewClickListener;
+import com.ss.gallerypro.fragments.ViewHolderListener;
 import com.ss.gallerypro.fragments.list.section.abstraction.actionmode.BaseActionMode;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepository;
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
@@ -44,7 +46,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem{
+public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem, ViewHolderListener {
     @BindView(R.id.timelineRecycleView)
     protected RecyclerView mRecyclerView;
 
@@ -94,8 +96,10 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(listener);
         }
-
         initRecycleView();
+
+        prepareTransitions();
+        postponeEnterTransition();
         return view;
     }
 
@@ -126,6 +130,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         adapter = createAdapter();
         adapter.setRecycleViewClickListener(this);
         adapter.setCheckedItemListener(this);
+        adapter.setViewHolderListener(this);
         mRecyclerView.setAdapter(adapter);
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -282,5 +287,10 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         if (mActionMode != null) {
             mActionMode.setTitle(String.valueOf(getAdapter().getSelectedCount()) + " selected");
         }
+    }
+
+    private void prepareTransitions() {
+        setExitTransition(TransitionInflater.from(getContext())
+                .inflateTransition(R.transition.grid_exit_transition));
     }
 }

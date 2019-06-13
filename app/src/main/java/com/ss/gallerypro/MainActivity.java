@@ -36,12 +36,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static int lastClicked = -1;
 
+    public static int currentPosition;
+    private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setToolbarCustom();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (savedInstanceState != null) {
+            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
+            // Return here to prevent adding additional GridFragments when changing orientation.
+            return;
+        }
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -63,13 +74,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onBackStackChanged() {
                 // change navigation selected item on fragment backstack change
                 Fragment current = getCurrentFragment();
-//                if (current instanceof VideosFragment) {
-//                    navigationView.setCheckedItem(R.id.nav_videos);
-//                } else if (current instanceof AboutUsFragment){
-//                    navigationView.setCheckedItem(R.id.nav_about_us);
-//                } else {
-//                    navigationView.setCheckedItem(R.id.nav_albums);
-//                }
+                if (current instanceof HomeFragment) {
+                    setDrawerEnabled(true);
+                }
                 // handler hamburger to arrow and reverse
                 if (mFragmentManager.getBackStackEntryCount() > 0) {
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true); // show back button
@@ -99,6 +106,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         lastClicked = getCheckedItem(navigationView);
+    }
+
+    private void setToolbarCustom() {
+
     }
 
     private int getCheckedItem(NavigationView navigationView) {
@@ -181,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setDrawerEnabled(boolean enabled) {
         int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
                 DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
-        drawer.setDrawerLockMode(lockMode);
+        if(drawer != null) drawer.setDrawerLockMode(lockMode);
         toggle.setDrawerIndicatorEnabled(enabled);
     }
 
@@ -193,5 +204,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_CURRENT_POSITION, currentPosition);
     }
 }
