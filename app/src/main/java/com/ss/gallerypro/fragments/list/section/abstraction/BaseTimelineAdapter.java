@@ -37,7 +37,7 @@ import java.util.ArrayList;
 public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, CONTENT extends BaseContentViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "BaseTimelineAdapter";
-    protected ArrayList<MediaItem> mediaItems = new ArrayList<>();
+    private ArrayList<MediaItem> mediaItems = new ArrayList<>();
     protected ArrayList<IItem> mListData = new ArrayList<>();
     WeakReference<Context> mContextWeakReference;
     private SortingOrder mSortingOrder;
@@ -132,12 +132,12 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
                 })
                 .into(contentHolder.ivTimelineThumbnail);
 
+        int positionInSection = getPositionInSection(holder.getAdapterPosition());
+
         contentHolder.ivTimelineThumbnail.setTransitionName(cModel.mMediaItem.getPathMediaItem());
 
-        contentHolder.ivTimelineCheckbox.setVisibility(mSelectedItemsIds.get(position) ? View.VISIBLE : View.GONE);
+        contentHolder.ivTimelineCheckbox.setVisibility(mSelectedItemsIds.get(positionInSection) ? View.VISIBLE : View.GONE);
 
-
-        int positionInSection = getPositionInSection(holder.getAdapterPosition());
         holder.itemView.setOnClickListener((View view) -> {
             recycleViewClickListener.onClick(view, positionInSection);
         });
@@ -254,5 +254,27 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
 
     public SparseBooleanArray getSelectedIds() {
         return mSelectedItemsIds;
+    }
+
+    // create to use animation
+    public void removeMedia(int position) {
+        int realPos = getRealPosition(position);
+
+        mediaItems.remove(position);
+        mListData.remove(realPos);
+//        notifyItemRemoved(realPos);
+
+        if((mListData.get(realPos - 1) instanceof HeaderModel) && (mListData.get(realPos) instanceof HeaderModel)) {
+            mListData.remove(realPos - 1);
+//            notifyItemRemoved(realPos - 1);
+        }
+        notifyDataSetChanged(); // => need to call this because we need to refresh onBindViewHolder for all item => get positionInSection correctly
+    }
+
+    private int getRealPosition(int position) {
+        for(int i=0; i<mListData.size(); i++) {
+            if(mListData.get(i) instanceof ContentModel && ((ContentModel)mListData.get(i)).mMediaItem.getPathMediaItem().equals(mediaItems.get(position).getPathMediaItem())) return i;
+        }
+        return -1;
     }
 }

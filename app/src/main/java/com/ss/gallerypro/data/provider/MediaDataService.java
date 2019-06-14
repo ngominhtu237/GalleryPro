@@ -63,7 +63,8 @@ public class MediaDataService {
     }
 
     public void deleteDataTimeline(ArrayList<MediaItem> medias, OnTimelineDataNotify.Delete callback) {
-
+        deleteTimelineDataCb = callback;
+        new DeleteTimelineDataTask().execute(medias);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -84,6 +85,48 @@ public class MediaDataService {
         protected void onPostExecute(Void aVoid) {
             getTimelineDataCb.onResponse(mMedias);
             super.onPostExecute(aVoid);
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class DeleteTimelineDataTask extends AsyncTask<ArrayList<MediaItem>, Integer, Integer> {
+
+        Dialog dialog;
+        ProgressBar progressBar;
+        ArrayList<MediaItem> mDeletedItems;
+
+        @Override
+        protected void onPreExecute() {
+            setLockScreenOrientation(true);
+            mDeletedItems = new ArrayList<>();
+            dialog = new Dialog(mContext);
+            dialog.setCancelable(false);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.progressdialog);
+            progressBar = dialog.findViewById(R.id.progressBar1);
+            progressBar.setProgressTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.md_blue_grey_700)));
+            dialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(ArrayList<MediaItem>... items) {
+            mDeletedItems = items[0];
+            for(int i=0; i<mDeletedItems.size(); i++) {
+                if(isCancelled()) break;
+                else {
+                    MediaHelper.deleteMedia(mContext, mDeletedItems.get(i).getPathMediaItem());
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            deleteTimelineDataCb.onResponse();
+            dialog.dismiss();
+            setLockScreenOrientation(false);
         }
     }
 

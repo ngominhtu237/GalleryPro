@@ -24,7 +24,7 @@ public abstract class BaseTimelinePresenter implements ITimelinePresenter  {
 
     @Override
     public void deleteMedias(ArrayList<MediaItem> mediaItems) {
-
+        mModel.deleteDataTimeline(mediaItems, deleteCallback);
     }
 
 

@@ -21,17 +21,19 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
 
 import java.util.Objects;
 
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PictureFragment extends Fragment implements SubsamplingScaleImageView.OnImageEventListener {
+public class PictureFragment extends Fragment implements SubsamplingScaleImageView.OnImageEventListener, View.OnClickListener, PhotoViewAttacher.OnViewTapListener {
 
     private static final String KEY_IMAGE_OBJ = "com.ss.key.imageObj";
     private ProgressBar progressBar;
@@ -47,6 +49,7 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((DrawerLocker) Objects.requireNonNull(getActivity())).setDrawerEnabled(false);
         View v =  inflater.inflate(R.layout.picture_fragment, container, false);
         PhotoView photoView = v.findViewById(R.id.ivPhotoView);
         SubsamplingScaleImageView scaleImageView = v.findViewById(R.id.ivSubSamplingView);
@@ -62,6 +65,10 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
 
         assert item != null;
         v.findViewById(R.id.ivPhotoView).setTransitionName(item.getPathMediaItem());
+
+        PhotoViewAttacher mAttacher = new PhotoViewAttacher(photoView);
+        mAttacher.setOnViewTapListener(this);
+        scaleImageView.setOnClickListener(this);
 
         String mineType = item.getMediaType();
 
@@ -131,5 +138,23 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
     @Override
     public void onPreviewReleased() {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ivSubSamplingView:
+                if (getParentFragment() != null) {
+                    ((ImagePagerFragment )getParentFragment()).blo();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onViewTap(View view, float v, float v1) {
+        if (getParentFragment() != null) {
+            ((ImagePagerFragment )getParentFragment()).blo();
+        }
     }
 }

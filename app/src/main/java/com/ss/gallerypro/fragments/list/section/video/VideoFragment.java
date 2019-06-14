@@ -1,9 +1,10 @@
 package com.ss.gallerypro.fragments.list.section.video;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.activity.PicturePreview;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.VideoHelper;
 import com.ss.gallerypro.data.filter.MediaFilter;
@@ -23,8 +23,11 @@ import com.ss.gallerypro.fragments.list.section.abstraction.actionmode.BaseActio
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepository;
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
 import com.ss.gallerypro.fragments.list.section.abstraction.view.ITimelineView;
+import com.ss.gallerypro.fragments.viewer.ImagePagerFragment;
+import com.ss.gallerypro.view.SquareImageView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class VideoFragment extends BaseTimelineFragment implements ITimelineView {
     public VideoFragment() {
@@ -147,10 +150,26 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
         if (mActionMode != null) {
             onListItemSelect(position);
         } else {
-            PicturePreview.mImageList = getAdapter().getMediaItems();
-            Intent intent = new Intent(getContext(), PicturePreview.class);
-            intent.putExtra("current_image_position", position);
-            startActivity(intent);
+            ((TransitionSet) getExitTransition()).excludeTarget(view, true);
+
+            ImagePagerFragment.mImageList = getAdapter().getMediaItems();
+            SquareImageView transitioningView = view.findViewById(R.id.ivTimelineThumbnail);
+            FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+            ImagePagerFragment pagerFragment = (ImagePagerFragment) fragmentManager.findFragmentByTag("ImagePagerFragment");
+            if(pagerFragment == null) {
+                pagerFragment = new ImagePagerFragment();
+                Bundle args = new Bundle();
+                args.putInt("currentPosition", position);
+                args.putBoolean("isImage", false);
+                pagerFragment.setArguments(args);
+            }
+
+            fragmentManager
+                    .beginTransaction()
+                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
+                    .add(R.id.fragment_container, pagerFragment, ImagePagerFragment.class.getSimpleName())
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
@@ -162,6 +181,12 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
     @Override
     public void onLoadCompleted() {
+
+    }
+
+
+    @Override
+    public void onDelete(ArrayList<Integer> pos, ArrayList<MediaItem> mediaItems) {
 
     }
 }

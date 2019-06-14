@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().show();
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(Gravity.START);
         } else {
             super.onBackPressed();
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
                 DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
         if(drawer != null) drawer.setDrawerLockMode(lockMode);
-        toggle.setDrawerIndicatorEnabled(enabled);
+        if(toggle != null) toggle.setDrawerIndicatorEnabled(enabled);
     }
 
     @Override

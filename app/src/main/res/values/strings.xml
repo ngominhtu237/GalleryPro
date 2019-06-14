@@ -487,4 +487,7 @@ and this could make the media inaccessible from other apps. Use the exclude opti
 
     <!-- Album Dialog -->
     <string name="title_dialog_album_filter">Filter</string>
+
+    <!-- Option menu PictureFragment -->
+    <string name="set_picture_as">Set picture as</string>
 </resources>

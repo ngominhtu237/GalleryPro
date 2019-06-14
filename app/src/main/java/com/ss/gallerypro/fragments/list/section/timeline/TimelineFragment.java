@@ -36,6 +36,8 @@ import java.util.Objects;
 public class TimelineFragment extends BaseTimelineFragment implements ITimelineView {
 
     private static final String TAG = "TimelineFragment";
+//    private ArrayList<Integer> mDeletedItemPosition = new ArrayList<>();
+    private int deletedPosition;
 
     public TimelineFragment() {
         // Required empty public constructor
@@ -149,11 +151,6 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     }
 
     @Override
-    public void onDeleteTimelineSuccess() {
-
-    }
-
-    @Override
     public void onClick(View view, int position) {
         if (mActionMode != null) {
             onListItemSelect(position);
@@ -168,7 +165,9 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
                 pagerFragment = new ImagePagerFragment();
                 Bundle args = new Bundle();
                 args.putInt("currentPosition", position);
+                args.putBoolean("isImage", true);
                 pagerFragment.setArguments(args);
+                pagerFragment.setDeleteCallback(this);
             }
 
             fragmentManager
@@ -189,5 +188,27 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     @Override
     public void onLoadCompleted() {
         startPostponedEnterTransition();
+    }
+
+    /**
+     * callback delete when back from ImagePagerFragment
+     * if have deleted item => refresh
+     * else none
+     * @param mediaItems
+     */
+    @Override
+    public void onDelete(ArrayList<Integer> pos, ArrayList<MediaItem> mediaItems) {
+//        mDeletedItemPosition = pos;
+//        Collections.sort(mDeletedItemPosition);
+//        Collections.reverse(mDeletedItemPosition);
+        if(pos.size() > 0) {
+            deletedPosition = pos.get(0);
+            presenter.deleteMedias(mediaItems);
+        }
+    }
+
+    @Override
+    public void onDeleteTimelineSuccess() {
+        getAdapter().removeMedia(deletedPosition);
     }
 }

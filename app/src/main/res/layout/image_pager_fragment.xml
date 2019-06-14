@@ -13,23 +13,27 @@
         android:layout_height="match_parent"
         android:background="@color/accent_black"/>
 
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/tvDate"
-        android:layout_marginStart="@dimen/ten_dp"
-        android:textColor="@color/white"
-        android:textSize="@dimen/eighteen_sp"
-        android:text="20190609_204948"/>
-
-    <TextView
-        android:id="@+id/tvDate"
+    <LinearLayout
+        android:id="@+id/bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:textColor="@color/colorHighlight"
-        android:layout_marginBottom="@dimen/ten_dp"
-        android:layout_marginStart="@dimen/ten_dp"
-        android:text="Jun 09, 2019 08:39:48 PM"/>
+        android:layout_marginStart="@dimen/twenty_dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/eighteen_sp"
+            android:text="20190609_204948"/>
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorHighlight"
+            android:text="Jun 09, 2019 08:39:48 PM"/>
+    </LinearLayout>
+
 </RelativeLayout>

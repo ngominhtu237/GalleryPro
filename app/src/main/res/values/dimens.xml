@@ -99,4 +99,7 @@
 
     <dimen name="image_size">150dp</dimen>
 
+    <!-- Dialog detail -->
+    <dimen name="dialog_detail_header">15sp</dimen>
+
 </resources>

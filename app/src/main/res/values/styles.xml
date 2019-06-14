@@ -53,4 +53,9 @@
     <style name="TahomaFont" parent="android:Widget.TextView">
         <item name="android:fontFamily">tahoma</item>
     </style>
+
+    <style name="Button2Style" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#E0F2F1</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+    </style>
 </resources>

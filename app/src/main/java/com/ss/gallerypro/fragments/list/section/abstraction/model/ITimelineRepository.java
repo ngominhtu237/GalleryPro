@@ -9,5 +9,5 @@ import java.util.ArrayList;
 public interface ITimelineRepository {
     void getDataTimeline(MediaFilter mediaFilter, OnTimelineDataNotify.Get callback);
 
-    void deleteDataTimeline(ArrayList<MediaItem> albums, OnTimelineDataNotify.Delete callback);
+    void deleteDataTimeline(ArrayList<MediaItem> mediaItems, OnTimelineDataNotify.Delete callback);
 }

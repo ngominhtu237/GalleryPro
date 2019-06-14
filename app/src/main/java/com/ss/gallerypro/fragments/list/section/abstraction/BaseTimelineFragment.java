@@ -38,6 +38,7 @@ import com.ss.gallerypro.fragments.ViewHolderListener;
 import com.ss.gallerypro.fragments.list.section.abstraction.actionmode.BaseActionMode;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepository;
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
+import com.ss.gallerypro.fragments.viewer.DeletedItemCallback;
 import com.ss.gallerypro.utils.Convert;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
 
@@ -46,7 +47,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem, ViewHolderListener {
+public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem, ViewHolderListener, DeletedItemCallback {
     @BindView(R.id.timelineRecycleView)
     protected RecyclerView mRecyclerView;
 
