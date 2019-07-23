@@ -2,10 +2,10 @@ package com.ss.gallerypro.fragments.list.split.pictures;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.activity.PicturePreview;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.MediaItem;
@@ -33,8 +32,10 @@ import com.ss.gallerypro.fragments.list.split.pictures.model.MediaRepositoryImpl
 import com.ss.gallerypro.fragments.list.split.pictures.presenter.IMediaPresenter;
 import com.ss.gallerypro.fragments.list.split.pictures.presenter.MediaPresenterImpl;
 import com.ss.gallerypro.fragments.list.split.pictures.view.IMediaView;
+import com.ss.gallerypro.fragments.viewer.ImagePagerFragment;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
+import com.ss.gallerypro.view.SquareImageView;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -156,10 +157,29 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         if (mActionMode != null) {
             onListItemSelect(position);
         } else {
-            PicturePreview.mImageList = adapter.getMediaList();
-            Intent intent = new Intent(getContext(), PicturePreview.class);
-            intent.putExtra("current_image_position", position);
-            startActivity(intent);
+//            PicturePreview.mImageList = adapter.getMediaList();
+//            Intent intent = new Intent(getContext(), PicturePreview.class);
+//            intent.putExtra("current_image_position", position);
+//            startActivity(intent);
+
+            ImagePagerFragment.mImageList = adapter.getMediaList();
+            SquareImageView transitioningView = view.findViewById(R.id.ivTimelineThumbnail);
+            FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+            ImagePagerFragment pagerFragment = (ImagePagerFragment) fragmentManager.findFragmentByTag("ImagePagerFragment");
+            if(pagerFragment == null) {
+                pagerFragment = new ImagePagerFragment();
+                Bundle args = new Bundle();
+                args.putInt("currentPosition", position);
+                args.putBoolean("isImage", true);
+                pagerFragment.setArguments(args);
+                // pagerFragment.setDeleteCallback(this);
+            }
+
+            fragmentManager
+                    .beginTransaction()
+                    .add(R.id.fragment_container, pagerFragment, ImagePagerFragment.class.getSimpleName())
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 

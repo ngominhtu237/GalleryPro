@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.ss.gallerypro.activity.AboutActivity;
 import com.ss.gallerypro.data.StatisticModel;
@@ -36,9 +35,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static int lastClicked = -1;
 
-    public static int currentPosition;
-    private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +43,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setToolbarCustom();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        if (savedInstanceState != null) {
-            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
-            // Return here to prevent adding additional GridFragments when changing orientation.
-            return;
-        }
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -69,34 +59,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mFragmentManager = getSupportFragmentManager();
 
-        mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                // change navigation selected item on fragment backstack change
-                Fragment current = getCurrentFragment();
-                if (current instanceof HomeFragment) {
-                    setDrawerEnabled(true);
-                }
-                // handler hamburger to arrow and reverse
-                if (mFragmentManager.getBackStackEntryCount() > 0) {
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true); // show back button
-                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onBackPressed();
-                        }
-                    });
-                } else {
-                    //show hamburger
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                    toggle.syncState();
-                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            drawer.openDrawer(GravityCompat.START);
-                        }
-                    });
-                }
+        mFragmentManager.addOnBackStackChangedListener(() -> {
+            // change navigation selected item on fragment backStack change
+            Fragment current = getCurrentFragment();
+            if (current instanceof HomeFragment) {
+                setDrawerEnabled(true);
+            }
+            // handler hamburger to arrow and reverse
+            if (mFragmentManager.getBackStackEntryCount() > 0) {
+                toggle.setDrawerIndicatorEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true); // show back button
+                toolbar.setNavigationOnClickListener(v -> onBackPressed());
+            } else {
+                //show hamburger
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                toggle.syncState();
+                toolbar.setNavigationOnClickListener(v -> drawer.openDrawer(GravityCompat.START));
             }
         });
 
@@ -150,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         getSupportActionBar().setTitle(R.string.app_name);
-        getSupportActionBar().show();
         if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(Gravity.START);
         } else {
@@ -190,9 +167,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void setDrawerEnabled(boolean enabled) {
-        int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
-                DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
-        if(drawer != null) drawer.setDrawerLockMode(lockMode);
         if(toggle != null) toggle.setDrawerIndicatorEnabled(enabled);
     }
 
@@ -204,11 +178,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(KEY_CURRENT_POSITION, currentPosition);
     }
 }
