@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,14 +134,13 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
                 .into(contentHolder.ivTimelineThumbnail);
 
         int positionInSection = getPositionInSection(holder.getAdapterPosition());
+        Log.v("onBindViewHolder positionInSection ", String.valueOf(positionInSection));
 
         contentHolder.ivTimelineThumbnail.setTransitionName(cModel.mMediaItem.getPathMediaItem());
 
         contentHolder.ivTimelineCheckbox.setVisibility(mSelectedItemsIds.get(positionInSection) ? View.VISIBLE : View.GONE);
 
-        holder.itemView.setOnClickListener((View view) -> {
-            recycleViewClickListener.onClick(view, positionInSection);
-        });
+        holder.itemView.setOnClickListener((View view) -> recycleViewClickListener.onClick(view, positionInSection));
 
         holder.itemView.setOnLongClickListener(view -> {
             recycleViewClickListener.onLongClick(view, positionInSection);
@@ -259,16 +259,20 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
     // create to use animation
     public void removeMedia(int position) {
         int realPos = getRealPosition(position);
+        Log.v("deleted current position ", String.valueOf(position));
+        Log.v("deleted real position ", String.valueOf(realPos));
 
         mediaItems.remove(position);
         mListData.remove(realPos);
-//        notifyItemRemoved(realPos);
 
-        if((mListData.get(realPos - 1) instanceof HeaderModel) && (mListData.get(realPos) instanceof HeaderModel)) {
+        if((mListData.get(realPos - 1) instanceof HeaderModel) && ((realPos == mListData.size() || mListData.get(realPos) instanceof HeaderModel))) {
             mListData.remove(realPos - 1);
-//            notifyItemRemoved(realPos - 1);
+            notifyItemRemoved(realPos - 1);
+            Log.v("deleted notifyItemRemoved header ", String.valueOf(realPos - 1));
         }
-        notifyDataSetChanged(); // => need to call this because we need to refresh onBindViewHolder for all item => get positionInSection correctly
+        notifyItemRemoved(realPos);
+        notifyItemRangeChanged(realPos, getItemCount() - realPos);
+        Log.v("deleted notifyItemRemoved item ", String.valueOf(realPos));
     }
 
     private int getRealPosition(int position) {

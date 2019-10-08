@@ -1,6 +1,8 @@
 package com.ss.gallerypro.fragments.list.section.abstraction;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +32,7 @@ import com.jetradar.desertplaceholder.DesertPlaceholder;
 import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
+import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
@@ -42,6 +46,7 @@ import com.ss.gallerypro.fragments.viewer.DeletedItemCallback;
 import com.ss.gallerypro.utils.Convert;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -69,6 +74,8 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     protected ITimelineRepository model;
 
     protected BaseActionMode actionMode;
+
+    private ArrayList<Integer> mListDeletedPosition = new ArrayList<>();
 
     public BaseTimelineFragment() {
     }
@@ -152,6 +159,14 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     protected abstract int getColumnRecycleView();
 
+    protected abstract SortingMode getSortModeFromPref();
+
+    protected abstract SortingOrder getSortOrderFromPref();
+
+    protected abstract void setSortModeToPref(SortingMode sortingMode);
+
+    protected abstract void setSortOrderToPref(SortingOrder sortingOrder);
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -181,18 +196,19 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     protected abstract void createSwipeEvent();
 
-
     public ActionMode getActionMode() {
         return mActionMode;
     }
 
     public void setEnableSwipeRefresh(boolean isEnable) {
-        if(isEnable) {
-            mSwipeRefreshLayout.setEnabled(true);
-            mSwipeRefreshLayout.setDistanceToTriggerSync(0);
-        } else {
-            mSwipeRefreshLayout.setEnabled(false);
-            mSwipeRefreshLayout.setDistanceToTriggerSync(999999);
+        if(mSwipeRefreshLayout != null) {
+            if (isEnable) {
+                mSwipeRefreshLayout.setEnabled(true);
+                mSwipeRefreshLayout.setDistanceToTriggerSync(0);
+            } else {
+                mSwipeRefreshLayout.setEnabled(false);
+                mSwipeRefreshLayout.setDistanceToTriggerSync(999999);
+            }
         }
     }
 
@@ -255,14 +271,6 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         });
     }
 
-    protected abstract SortingMode getSortModeFromPref();
-
-    protected abstract SortingOrder getSortOrderFromPref();
-
-    protected abstract void setSortModeToPref(SortingMode sortingMode);
-
-    protected abstract void setSortOrderToPref(SortingOrder sortingOrder);
-
     public BaseTimelineAdapter getAdapter() {
         return adapter;
     }
@@ -286,12 +294,44 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         }
 
         if (mActionMode != null) {
-            mActionMode.setTitle(String.valueOf(getAdapter().getSelectedCount()) + " selected");
+            mActionMode.setTitle(getAdapter().getSelectedCount() + " selected");
         }
     }
 
     private void prepareTransitions() {
         setExitTransition(TransitionInflater.from(getContext())
                 .inflateTransition(R.transition.grid_exit_transition));
+    }
+
+    public ArrayList<Integer> getListDeletedPosition() {
+        return mListDeletedPosition;
+    }
+
+    public void setListDeletedPosition(ArrayList<Integer> mListDeletedPosition) {
+        this.mListDeletedPosition = mListDeletedPosition;
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void deleteMedias() {
+        ArrayList<MediaItem> mDeleteItems = new ArrayList<>();
+        mListDeletedPosition.clear();
+        for (int i = (getAdapter().getSelectedIds().size() - 1); i >= 0; i--) {
+            if (getAdapter().getSelectedIds().valueAt(i)) {
+                mDeleteItems.add((MediaItem) getAdapter().getMediaItems().get(getAdapter().getSelectedIds().keyAt(i)));
+                mListDeletedPosition.add(getAdapter().getSelectedIds().keyAt(i));
+                Log.d("deleted item position ", String.valueOf(getAdapter().getSelectedIds().keyAt(i)));
+            }
+        }
+        final Dialog dialog = new Dialog(Objects.requireNonNull(getContext()));
+        dialog.setContentView(R.layout.dialog_custom);
+        dialog.show();
+        Button btCancel = dialog.findViewById(R.id.btn_cancel);
+        Button btDelete = dialog.findViewById(R.id.btn_delete);
+        btCancel.setOnClickListener(view -> dialog.dismiss());
+        btDelete.setOnClickListener(view -> {
+            dialog.dismiss();
+            presenter.deleteMedias(mDeleteItems);
+            mActionMode.finish();
+        });
     }
 }

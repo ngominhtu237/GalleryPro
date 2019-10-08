@@ -142,7 +142,9 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
     @Override
     public void onDeleteTimelineSuccess() {
-
+        for(int i=0; i<getListDeletedPosition().size(); i++) {
+            getAdapter().removeMedia(getListDeletedPosition().get(i));
+        }
     }
 
     @Override
@@ -184,9 +186,11 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
     }
 
-
     @Override
     public void onDelete(ArrayList<Integer> pos, ArrayList<MediaItem> mediaItems) {
-
+        if(pos.size() > 0) {
+            setListDeletedPosition(pos);
+            presenter.deleteMedias(mediaItems);
+        }
     }
 }

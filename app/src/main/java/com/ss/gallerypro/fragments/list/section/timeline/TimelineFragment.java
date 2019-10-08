@@ -1,6 +1,8 @@
 package com.ss.gallerypro.fragments.list.section.timeline;
 
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,8 +13,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.ss.gallerypro.R;
+import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.TimelineHelper;
 import com.ss.gallerypro.data.filter.MediaFilter;
@@ -36,8 +41,6 @@ import java.util.Objects;
 public class TimelineFragment extends BaseTimelineFragment implements ITimelineView {
 
     private static final String TAG = "TimelineFragment";
-//    private ArrayList<Integer> mDeletedItemPosition = new ArrayList<>();
-    private int deletedPosition;
 
     public TimelineFragment() {
         // Required empty public constructor
@@ -197,18 +200,20 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
      * @param mediaItems
      */
     @Override
-    public void onDelete(ArrayList<Integer> pos, ArrayList<MediaItem> mediaItems) {
+        public void onDelete(ArrayList<Integer> pos, ArrayList<MediaItem> mediaItems) {
 //        mDeletedItemPosition = pos;
 //        Collections.sort(mDeletedItemPosition);
 //        Collections.reverse(mDeletedItemPosition);
-        if(pos.size() > 0) {
-            deletedPosition = pos.get(0);
-            presenter.deleteMedias(mediaItems);
-        }
+            if(pos.size() > 0) {
+                setListDeletedPosition(pos);
+                presenter.deleteMedias(mediaItems);
+            }
     }
 
     @Override
     public void onDeleteTimelineSuccess() {
-        getAdapter().removeMedia(deletedPosition);
+        for(int i=0; i<getListDeletedPosition().size(); i++) {
+            getAdapter().removeMedia(getListDeletedPosition().get(i));
+        }
     }
 }
