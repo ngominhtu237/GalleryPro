@@ -39,6 +39,7 @@ import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.fragments.ICheckedItem;
 import com.ss.gallerypro.fragments.RecycleViewClickListener;
 import com.ss.gallerypro.fragments.ViewHolderListener;
+import com.ss.gallerypro.fragments.home.HomeFragment;
 import com.ss.gallerypro.fragments.list.section.abstraction.actionmode.BaseActionMode;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepository;
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
@@ -77,6 +78,8 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     private ArrayList<Integer> mListDeletedPosition = new ArrayList<>();
 
+    private HomeFragment parentFragment;
+
     public BaseTimelineFragment() {
     }
 
@@ -87,6 +90,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         model = createModel();
         presenter = createPresenter(model);
         actionMode = createActionMode();
+        parentFragment = ((HomeFragment) this.getParentFragment());
         super.onCreate(savedInstanceState);
     }
 
@@ -213,6 +217,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     }
 
     public void setNullToActionMode() {
+        parentFragment.showAppBarLayout();
         if (mActionMode != null)
             mActionMode = null;
     }
@@ -291,10 +296,15 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
             mActionMode = ((AppCompatActivity) Objects.requireNonNull(getActivity())).startSupportActionMode(actionMode);
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
+            parentFragment.showAppBarLayout();
         }
 
         if (mActionMode != null) {
             mActionMode.setTitle(getAdapter().getSelectedCount() + " selected");
+        }
+        // hide tab bar
+        if (parentFragment != null && hasCheckedItems) {
+            parentFragment.hideAppBarLayout();
         }
     }
 

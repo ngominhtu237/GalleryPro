@@ -1,13 +1,16 @@
 package com.ss.gallerypro.fragments.home;
 
 
+import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,8 @@ import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.fragments.list.normal.albums.AlbumsFragment;
 import com.ss.gallerypro.fragments.list.section.timeline.TimelineFragment;
 import com.ss.gallerypro.fragments.list.section.video.VideoFragment;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -66,5 +71,25 @@ public class HomeFragment extends BaseFragment {
         adapter.addFragment(new AlbumsFragment(), "Albums");
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
+    }
+
+    public void hideAppBarLayout() {
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        lp.height = 0;
+        appBarLayout.setLayoutParams(lp);
+    }
+
+    public void showAppBarLayout() {
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        lp.height = getHeightActionBar();
+        appBarLayout.setLayoutParams(lp);
+    }
+
+    private int getHeightActionBar() {
+        TypedValue tv = new TypedValue();
+        if (Objects.requireNonNull(getActivity()).getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            return TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+        return 0;
     }
 }
