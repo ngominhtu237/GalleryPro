@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionInflater;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -48,6 +51,8 @@ import com.ss.gallerypro.utils.Convert;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -79,6 +84,8 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     private ArrayList<Integer> mListDeletedPosition = new ArrayList<>();
 
     private HomeFragment parentFragment;
+
+    public static int currentPosition;
 
     public BaseTimelineFragment() {
     }
@@ -113,6 +120,41 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         prepareTransitions();
         postponeEnterTransition();
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        scrollToPosition();
+    }
+
+    /**
+     * Scrolls the recycler view to show the last viewed item in the grid. This is important when
+     * navigating back from the grid.
+     */
+    private void scrollToPosition() {
+        mRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v,
+                                       int left,
+                                       int top,
+                                       int right,
+                                       int bottom,
+                                       int oldLeft,
+                                       int oldTop,
+                                       int oldRight,
+                                       int oldBottom) {
+                mRecyclerView.removeOnLayoutChangeListener(this);
+                final RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+                View viewAtPosition = layoutManager.findViewByPosition(BaseTimelineFragment.currentPosition);
+                // Scroll to position if the view for the current position is null (not currently part of
+                // layout manager children), or it's not completely visible.
+                if (viewAtPosition == null || layoutManager
+                        .isViewPartiallyVisible(viewAtPosition, false, true)) {
+                    mRecyclerView.post(() -> layoutManager.scrollToPosition(BaseTimelineFragment.currentPosition));
+                }
+            }
+        });
     }
 
     /**
@@ -170,6 +212,11 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     protected abstract void setSortModeToPref(SortingMode sortingMode);
 
     protected abstract void setSortOrderToPref(SortingOrder sortingOrder);
+
+    @Override
+    public void onClick(View view, int position) {
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -311,6 +358,24 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     private void prepareTransitions() {
         setExitTransition(TransitionInflater.from(getContext())
                 .inflateTransition(R.transition.grid_exit_transition));
+
+        // A similar mapping is set at the ImagePagerFragment with a setEnterSharedElementCallback.
+        setExitSharedElementCallback(
+                new SharedElementCallback() {
+                    @Override
+                    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                        // Locate the ViewHolder for the clicked position.
+                        RecyclerView.ViewHolder selectedViewHolder = mRecyclerView
+                                .findViewHolderForAdapterPosition(BaseTimelineFragment.currentPosition);
+                        if (selectedViewHolder == null || selectedViewHolder.itemView == null) {
+                            return;
+                        }
+
+                        // Map the first shared element name to the child ImageView.
+                        sharedElements
+                                .put(names.get(0), selectedViewHolder.itemView.findViewById(R.id.card_image));
+                    }
+                });
     }
 
     public ArrayList<Integer> getListDeletedPosition() {

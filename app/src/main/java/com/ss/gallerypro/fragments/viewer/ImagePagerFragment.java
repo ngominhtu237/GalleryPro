@@ -36,6 +36,7 @@ import com.ss.gallerypro.R;
 import com.ss.gallerypro.animation.ParallaxPageTransformer;
 import com.ss.gallerypro.customComponent.ViewPagerFixed;
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.fragments.list.section.abstraction.BaseTimelineFragment;
 import com.ss.gallerypro.utils.Convert;
 import com.ss.gallerypro.utils.ViewSizeUtils;
 
@@ -115,7 +116,11 @@ public class ImagePagerFragment extends Fragment {
         showBottomView(currentPosition);
 
         prepareSharedElementTransition();
-        postponeEnterTransition();
+
+        // Avoid a postponeEnterTransition on orientation change, and postpone only of first creation.
+        if (savedInstanceState == null) {
+            postponeEnterTransition();
+        }
 
         return rootView;
     }
@@ -128,7 +133,9 @@ public class ImagePagerFragment extends Fragment {
     }
 
     private void prepareSharedElementTransition() {
-        Transition transition = TransitionInflater.from(getContext()).inflateTransition(R.transition.image_shared_element_transition);
+        Transition transition =
+                TransitionInflater.from(getContext())
+                        .inflateTransition(R.transition.image_shared_element_transition);
         setSharedElementEnterTransition(transition);
 
         // A similar mapping is set at the GridFragment with a setExitSharedElementCallback.
@@ -136,7 +143,19 @@ public class ImagePagerFragment extends Fragment {
                 new SharedElementCallback() {
                     @Override
                     public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                        Log.v("callback", "onMapSharedElements");
+                        // Locate the image view at the primary fragment (the ImageFragment that is currently
+                        // visible). To locate the fragment, call instantiateItem with the selection position.
+                        // At this stage, the method will simply return the fragment at the position and will
+                        // not create a new one.
+                        Fragment currentFragment = (Fragment) mViewPager.getAdapter()
+                                .instantiateItem(mViewPager, BaseTimelineFragment.currentPosition);
+                        View view = currentFragment.getView();
+                        if (view == null) {
+                            return;
+                        }
+
+                        // Map the first shared element name to the child ImageView.
+                        sharedElements.put(names.get(0), view.findViewById(R.id.image));
                     }
                 });
     }

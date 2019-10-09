@@ -158,6 +158,7 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
         if (mActionMode != null) {
             onListItemSelect(position);
         } else {
+            BaseTimelineFragment.currentPosition = position;
             ((TransitionSet) getExitTransition()).excludeTarget(view, true);
 
             ImagePagerFragment.mImageList = getAdapter().getMediaItems();

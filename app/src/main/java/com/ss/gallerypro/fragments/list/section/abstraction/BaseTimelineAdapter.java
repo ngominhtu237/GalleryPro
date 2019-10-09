@@ -134,9 +134,10 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
                 .into(contentHolder.ivTimelineThumbnail);
 
         int positionInSection = getPositionInSection(holder.getAdapterPosition());
-        Log.v("onBindViewHolder positionInSection ", String.valueOf(positionInSection));
 
-        contentHolder.ivTimelineThumbnail.setTransitionName(cModel.mMediaItem.getPathMediaItem());
+        // set transition name
+        contentHolder.ivTimelineThumbnail.setTransitionName(cModel.mMediaItem.getName());
+        Log.v("transition send name ", cModel.mMediaItem.getName());
 
         contentHolder.ivTimelineCheckbox.setVisibility(mSelectedItemsIds.get(positionInSection) ? View.VISIBLE : View.GONE);
 
