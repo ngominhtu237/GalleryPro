@@ -35,7 +35,10 @@ public class PhotoComparators {
             @Override
             public int compare(MediaItem i1, MediaItem i2) {
                 // Order ascending.
-                return Long.valueOf(i1.getDateTaken()).compareTo(Long.valueOf(i2.getDateTaken()));
+                if(i1.getDateTaken() == null || i2.getDateTaken() == null) {
+                    return 0;
+                }
+                else return Long.valueOf(i1.getDateTaken()).compareTo(Long.valueOf(i2.getDateTaken()));
             }
         };
     }

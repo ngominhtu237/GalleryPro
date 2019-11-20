@@ -129,7 +129,16 @@ public class ImagePagerFragment extends Fragment {
         TextView tvName = rootView.findViewById(R.id.tvName);
         tvDate = rootView.findViewById(R.id.tvDate);
         tvName.setText(mImageList.get(currentPos).getName());
-        tvDate.setText(Convert.Epoch2DateString(Long.parseLong(mImageList.get(currentPos).getDateTaken())));
+        if(mImageList.get(currentPos).getDateTaken() != null) {
+            tvDate.setText(Convert.Epoch2DateString(Long.parseLong(mImageList.get(currentPos).getDateTaken())));
+        }
+        String dateTime;
+        if(mImageList.get(currentPos).getDateTaken() != null) {
+            dateTime = "Create: " + Convert.Epoch2DateString(Long.parseLong(mImageList.get(currentPos).getDateTaken()));
+        } else {
+            dateTime = "Modified: " + Convert.Epoch2DateString(Long.parseLong(mImageList.get(currentPos).getDateModified()) * 1000L);
+        }
+        tvDate.setText(dateTime);
     }
 
     private void prepareSharedElementTransition() {
@@ -309,6 +318,7 @@ public class ImagePagerFragment extends Fragment {
                 //then we will inflate the custom alert dialog xml that we created
                 View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_picture_details, viewGroup, false);
                 TextView tvItemDate = dialogView.findViewById(R.id.tvItemDate);
+                TextView dateTakenTitle = dialogView.findViewById(R.id.dateTakenTitle);
                 TextView tvItemSize = dialogView.findViewById(R.id.tvItemSize);
                 TextView tvItemResolution = dialogView.findViewById(R.id.tvItemResolution);
                 TextView tvItemPath = dialogView.findViewById(R.id.tvItemPath);
@@ -319,8 +329,13 @@ public class ImagePagerFragment extends Fragment {
                 String format = "MM-dd-yyyy HH:mm:ss";
                 SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.ENGLISH);
 
-                String dateTime = formatter.format(new Date(Long.parseLong(mediaItem.getDateTaken())));
-
+                String dateTime;
+                if(mediaItem.getDateTaken() != null) {
+                    dateTime = formatter.format(new Date(Long.parseLong(mediaItem.getDateTaken())));
+                } else {
+                    dateTakenTitle.setText("Date modified");
+                    dateTime = formatter.format(new Date(Long.parseLong(mediaItem.getDateModified())  * 1000L));
+                }
                 tvItemDate.setText(dateTime);
                 tvItemSize.setText(readableFileSize(Long.valueOf(mediaItem.getSize())));
                 tvItemResolution.setText(mediaItem.getWidth() + "x" + mediaItem.getHeight());

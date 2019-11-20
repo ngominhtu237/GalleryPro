@@ -19,10 +19,11 @@
         android:paddingBottom="8dp">
 
         <TextView
+            android:id="@+id/dateTakenTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="Date" />
+            android:text="Date taken" />
         <TextView
             android:id="@+id/tvItemDate"
             android:layout_width="match_parent"

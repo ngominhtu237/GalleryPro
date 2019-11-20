@@ -361,10 +361,12 @@ public class CPHelper {
     public static ArrayList<IItem> createDataSortByDateTaken(ArrayList<MediaItem> mediaItems) {
         ArrayList<IItem> list = new ArrayList<>();
         String currentDateTaken = "-1";
+        String tempDateTaken;
         for (int i = 0; i < mediaItems.size(); i++) {
-            String tempDateTaken = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken()));
-            if (!currentDateTaken.equals(tempDateTaken)) {
-                HeaderModel section = new HeaderModel(tempDateTaken);
+//            tempDateTaken = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken()));
+            if (mediaItems.get(i).getDateTaken() != null && !currentDateTaken.equals(Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken())))) {
+                tempDateTaken = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken()));
+                HeaderModel section = new HeaderModel(Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken())));
                 currentDateTaken = tempDateTaken;
                 list.add(section);
 

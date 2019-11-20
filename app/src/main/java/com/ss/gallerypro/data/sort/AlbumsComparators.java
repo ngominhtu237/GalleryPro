@@ -56,9 +56,11 @@ public class AlbumsComparators {
         return new Comparator<Bucket>() {
             @Override
             public int compare(Bucket a1, Bucket a2) {
-                return Long.compare(Long.parseLong(a1.getDateTaken()), Long.parseLong(a2.getDateTaken()));
+                if(a1.getDateTaken() == null || a2.getDateTaken() == null) {
+                    return 0;
+                }
+                else return Long.valueOf(a1.getDateTaken()).compareTo(Long.valueOf(a2.getDateTaken()));
             }
-
         };
     }
 }
