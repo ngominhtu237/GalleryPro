@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -303,5 +305,19 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         for(int i=selectedMediaDelete.size()-1; i>=0; i--) {
             removeImage(selectedMediaDelete.keyAt(i));
         }
+    }
+
+    @Override
+    public void onChange() {
+        Log.v("tunm1", "AlbumPicturesFragment split refresh data");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.remove(this);
+        fragmentTransaction.commit();
     }
 }

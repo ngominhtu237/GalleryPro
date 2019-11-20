@@ -2,6 +2,7 @@ package com.ss.gallerypro.fragments.list.normal.abstraction;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,6 +18,8 @@ import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.LayoutType;
+import com.ss.gallerypro.data.provider.ContentProviderObserver;
+import com.ss.gallerypro.data.provider.ProviderChangeListener;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
@@ -25,7 +28,7 @@ import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
 import butterknife.BindView;
 
-abstract public class BaseListFragment extends BaseFragment {
+abstract public class BaseListFragment extends BaseFragment implements ProviderChangeListener {
 
     @Nullable
     @BindView(R.id.activity_main_swipe_refresh_layout)
@@ -45,6 +48,8 @@ abstract public class BaseListFragment extends BaseFragment {
     protected ActionMode mActionMode;
     protected Activity mAttachedActivity;
 
+    private ContentProviderObserver mProviderObserver;
+
     public BaseListFragment() {
         super();
     }
@@ -53,6 +58,14 @@ abstract public class BaseListFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         mAttachedActivity = getActivity();
+
+        mProviderObserver = new ContentProviderObserver();
+        mProviderObserver.setChangeListener(this);
+        mAttachedActivity.getContentResolver().
+                registerContentObserver(
+                        MediaStore.Files.getContentUri("external"),
+                        true,
+                        mProviderObserver);
         super.onCreate(savedInstanceState);
     }
 

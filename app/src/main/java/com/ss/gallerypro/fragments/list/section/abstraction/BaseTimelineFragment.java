@@ -36,6 +36,8 @@ import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.data.provider.ContentProviderObserver;
+import com.ss.gallerypro.data.provider.ProviderChangeListener;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
@@ -58,7 +60,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem, ViewHolderListener, DeletedItemCallback {
+public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem, ViewHolderListener, DeletedItemCallback, ProviderChangeListener {
     @BindView(R.id.timelineRecycleView)
     protected RecyclerView mRecyclerView;
 
@@ -87,6 +89,8 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     public static int currentPosition;
 
+    private ContentProviderObserver mProviderObserver;
+
     public BaseTimelineFragment() {
     }
 
@@ -98,6 +102,13 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         presenter = createPresenter(model);
         actionMode = createActionMode();
         parentFragment = ((HomeFragment) this.getParentFragment());
+        mProviderObserver = new ContentProviderObserver();
+        mProviderObserver.setChangeListener(this);
+        mAttachedActivity.getContentResolver().
+                registerContentObserver(
+                        MediaStore.Files.getContentUri("external"),
+                        true,
+                        mProviderObserver);
         super.onCreate(savedInstanceState);
     }
 

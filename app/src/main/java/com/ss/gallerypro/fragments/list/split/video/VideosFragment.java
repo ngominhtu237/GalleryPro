@@ -10,6 +10,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -263,5 +264,10 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
 
     private void removeVideo(int position) {
         adapter.removeVideo(position);
+    }
+
+    @Override
+    public void onChange() {
+        Log.v("tunm1", "AlbumsFragment split refresh data");
     }
 }

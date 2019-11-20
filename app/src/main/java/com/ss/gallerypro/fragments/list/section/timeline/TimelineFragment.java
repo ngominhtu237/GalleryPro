@@ -217,4 +217,16 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
             getAdapter().removeMedia(getListDeletedPosition().get(i));
         }
     }
+
+    @Override
+    public void onChange() {
+        Log.v("tunm1", "TimelineFragment refresh data");
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.post(() -> {
+                if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
+                listener.onRefresh();
+                Log.v(TAG, "reload data.");
+            });
+        }
+    }
 }

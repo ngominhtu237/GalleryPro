@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class VideoFragment extends BaseTimelineFragment implements ITimelineView {
+    private static final String TAG = "VideoFragment";
+
     public VideoFragment() {
         // Required empty public constructor
     }
@@ -191,6 +194,18 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
         if(pos.size() > 0) {
             setListDeletedPosition(pos);
             presenter.deleteMedias(mediaItems);
+        }
+    }
+
+    @Override
+    public void onChange() {
+        Log.v("tunm1", "VideoFragment refresh data");
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.post(() -> {
+                if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
+                listener.onRefresh();
+                Log.v(TAG, "reload data.");
+            });
         }
     }
 }

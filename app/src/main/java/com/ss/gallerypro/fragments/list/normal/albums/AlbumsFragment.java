@@ -14,6 +14,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +34,8 @@ import com.ss.gallerypro.data.AlbumHelper;
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.filter.MediaFilter;
+import com.ss.gallerypro.data.provider.ContentProviderObserver;
+import com.ss.gallerypro.data.provider.ProviderChangeListener;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Bucket;
@@ -76,15 +79,17 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
         // receive from SplashScreen
         receiveBuckets = mAttachedActivity.getIntent().getParcelableArrayListExtra("album_data");
+        Log.v("AlbumsFragment", "onCreate");
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        Log.v("AlbumsFragment", "onCreateView");
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(true);
-        mSwipeRefreshLayout.setOnRefreshListener(listener);
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setOnRefreshListener(listener);
+        }
 
         if(presenter.isListAlbumEmpty(receiveBuckets)) {
             mSwipeRefreshLayout.post(() -> {
@@ -146,7 +151,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
             albumPicturesFragment.setArguments(args);
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, albumPicturesFragment, "AlbumPicturesFragment");
+        fragmentTransaction.add(R.id.fragment_container, albumPicturesFragment, "AlbumPicturesFragment");
 
         // Add fragment one in back stack. So it will not be destroyed. Press back menu can pop it up from the stack.
         fragmentTransaction.addToBackStack(null);
@@ -442,5 +447,16 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
     private void removeAlbum(int position) {
         albumsAdapter.removeAlbum(position);
+    }
+
+    @Override
+    public void onChange() {
+        Log.v("tunm1", "AlbumsFragment refresh data");
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.post(() -> {
+                if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
+                listener.onRefresh();
+            });
+        }
     }
 }
