@@ -7,11 +7,14 @@
     android:layout_marginTop="?attr/actionBarSize">
 
     <!-- TODO: Update blank fragment layout -->
-    <android.support.v7.widget.RecyclerView
+    <com.ss.gallerypro.view.AnimatedRecyclerView
         android:id="@+id/albumRecycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackground" />
+        android:background="@color/colorBackground"
+        app:animationDuration="400"
+        app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
+        app:layoutManagerReverse="false"/>
 
     <com.jetradar.desertplaceholder.DesertPlaceholder
         android:id="@+id/placeholder"

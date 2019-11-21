@@ -27,15 +27,12 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.AlbumHelper;
 import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.filter.MediaFilter;
-import com.ss.gallerypro.data.provider.ContentProviderObserver;
-import com.ss.gallerypro.data.provider.ProviderChangeListener;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Bucket;
@@ -121,7 +118,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
             mLayoutManager = new LinearLayoutManager(getContext());
         }
         recyclerView.setLayoutManager(mLayoutManager);
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_from_bottom);
         recyclerView.setLayoutAnimation(animation);
         recyclerView.setItemAnimator(new LandingAnimator());
         recyclerView.setAdapter(albumsAdapter);

@@ -24,6 +24,7 @@ import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.utils.Measure;
+import com.ss.gallerypro.view.AnimatedRecyclerView;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
 import butterknife.BindView;
@@ -38,7 +39,7 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
     protected DesertPlaceholder desertPlaceholder;
 
     @BindView(R.id.albumRecycleView)
-    protected RecyclerView recyclerView;
+    protected AnimatedRecyclerView recyclerView;
 
     protected RecyclerView.LayoutManager mLayoutManager;
     protected GridSpacingItemDecoration mGridSpacingItemDecoration;

@@ -17,9 +17,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.mikepenz.iconics.utils.Utils;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.Bucket;
@@ -145,7 +153,6 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         adapter.setItemCheckedInterface(this);
         GridlayoutManagerFixed gridlayoutManagerFixed = new GridlayoutManagerFixed(getContext(), NUM_COLUMNS);
         recyclerView.setLayoutManager(gridlayoutManagerFixed);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
     }
 
@@ -298,6 +305,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         adapter.setDataList(medias);
         adapter.changeSortingMode(getSortingMode());
         adapter.notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
     @Override

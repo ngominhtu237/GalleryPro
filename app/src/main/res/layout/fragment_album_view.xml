@@ -12,11 +12,14 @@
         tools:context=".fragments.list.normal.albums.AlbumsFragment">
 
         <!-- TODO: Update blank fragment layout -->
-        <android.support.v7.widget.RecyclerView
+        <com.ss.gallerypro.view.AnimatedRecyclerView
             android:id="@+id/albumRecycleView"
             android:background="@color/colorBackground"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:animationDuration="400"
+            app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
+            app:layoutManagerReverse="false"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <com.jetradar.desertplaceholder.DesertPlaceholder
