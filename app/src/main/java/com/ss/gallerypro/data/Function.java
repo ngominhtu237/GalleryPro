@@ -14,10 +14,11 @@ public class Function {
         Uri uriExternal = MediaStore.Files.getContentUri("external");
         String[] parseArgs = DataUtils.getStringArgs(args);
         String[] projection = { MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.MediaColumns.DATE_MODIFIED };
+        String bucket_name = album_name != null ? "= \"" + album_name + "\"" : " is null";
         Cursor cursorExternal = c.getContentResolver().query(
                 uriExternal,
                 projection,
-                selection + "bucket_display_name = \"" + album_name + "\"" + " and bucket_id = \"" + bucketId + "\"",
+                selection + "bucket_display_name " + bucket_name + " and bucket_id = \"" + bucketId + "\"",
                 parseArgs,
                 null);
 //        Cursor cursorInternal = c.getContentResolver().query(uriInternal, projection, "bucket_display_name = \""+album_name+"\"", null, null);

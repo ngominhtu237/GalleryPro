@@ -31,6 +31,7 @@ public class CPHelper {
 
     private static ArrayList<Bucket> mAlbumsList = new ArrayList<>();
     private static ArrayList<MediaItem> mAlbumImages = new ArrayList<>();
+    public static final String EXTERNAL_STORAGE_ROOT_NAME = "root";
 
     public static ArrayList<Bucket> getAlbums(Context context, ArrayList<Integer> filter) {
         String path, albumName, timestamp, dateTaken, bucketId;
@@ -93,7 +94,7 @@ public class CPHelper {
                 dateTaken = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN));
                 bucket.setBucketId(bucketId);
                 bucket.setPathPhotoCover(path);
-                bucket.setName(albumName);
+                bucket.setName(albumName != null ? albumName : EXTERNAL_STORAGE_ROOT_NAME);
                 bucket.setDateModified(timestamp);
                 bucket.setDateTaken(dateTaken);
 
@@ -133,7 +134,8 @@ public class CPHelper {
         mAlbumImages.clear();
         Uri uriExternal = MediaStore.Files.getContentUri("external");
         String arrNameFilter[] = context.getResources().getStringArray(R.array.list_filter);
-        String selection = "bucket_display_name = \"" + album_name + "\"" + " and bucket_id = \"" + bucketId + "\"";
+        String bucket_name = !album_name.equals(CPHelper.EXTERNAL_STORAGE_ROOT_NAME) ? "= \"" + album_name + "\"" : " is null";
+        String selection = "bucket_display_name " + bucket_name + " and bucket_id = \"" + bucketId + "\"";
         List<String> filter = new ArrayList<>(AlbumHelper.getFilter(arrNameFilter.length));
         if (filter.size() > 0) {
             if (filter.get(0).equals("0")) {
