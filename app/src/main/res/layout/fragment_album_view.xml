@@ -17,7 +17,7 @@
             android:background="@color/colorBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:animationDuration="400"
+            app:animationDuration="300"
             app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
             app:layoutManagerReverse="false"/>
     </android.support.v4.widget.SwipeRefreshLayout>

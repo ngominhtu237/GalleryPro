@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +26,9 @@ import com.ss.gallerypro.fragments.home.HomeFragment;
 
 import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker, CallBackToActivityListener {
 
+    private static final String TAG = "MainActivity";
     public static final int ABOUT_REQUEST_CODE = 1;
     private DrawerLayout drawer;
     private HeaderViewHolder mHeaderViewHolder;
@@ -110,7 +112,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String left = getEmojiByUnicode(0x1F603) + getEmojiByUnicode(0x1F604);
         String right = getEmojiByUnicode(0x1F60D) + getEmojiByUnicode(0x1F618);
         mHeaderViewHolder.mTitle.setText(left + " Gallery " + right);
+        getDataNavHeader();
+    }
 
+    private void getDataNavHeader() {
         StatisticModel image = CPHelper.getStatisticsImage(this, MediaFilter.IMAGE);
         mHeaderViewHolder.tvPhotoCount.setText(String.valueOf(image.getCount()));
         mHeaderViewHolder.tvPhotoSize.setText(readableFileSize(image.getSize()));
@@ -178,5 +183,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onCallBack() {
+        getDataNavHeader();
+        Log.v(TAG, "refresh data header");
     }
 }

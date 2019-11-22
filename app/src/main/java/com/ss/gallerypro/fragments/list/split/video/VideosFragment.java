@@ -268,6 +268,5 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
 
     @Override
     public void onChange() {
-        Log.v("tunm1", "AlbumsFragment split refresh data");
     }
 }

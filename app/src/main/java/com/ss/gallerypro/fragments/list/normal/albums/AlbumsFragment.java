@@ -449,7 +449,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     @Override
     public void onChange() {
         Log.v("tunm1", "AlbumsFragment refresh data");
-        if (mSwipeRefreshLayout != null) {
+        if (mSwipeRefreshLayout != null && !getUserVisibleHint()) {
             mSwipeRefreshLayout.post(() -> {
                 if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
                 listener.onRefresh();

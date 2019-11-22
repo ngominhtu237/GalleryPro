@@ -221,12 +221,13 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     @Override
     public void onChange() {
         Log.v("tunm1", "TimelineFragment refresh data");
-        if (mSwipeRefreshLayout != null) {
+        if (mSwipeRefreshLayout != null && !getUserVisibleHint()) {
             mSwipeRefreshLayout.post(() -> {
                 if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
                 listener.onRefresh();
                 Log.v(TAG, "reload data.");
             });
         }
+        callBackListener.onCallBack();
     }
 }

@@ -109,11 +109,11 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
         RequestOptions options = new RequestOptions()
                 .useAnimationPool(true)
                 .override(contentHolder.ivTimelineThumbnail.getWidth(), contentHolder.ivTimelineThumbnail.getHeight())
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
 
         Glide.with(context)
                 .load(cModel.mMediaItem.getPathMediaItem())
-                .thumbnail(0.1f)
+                .thumbnail(0.05f)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(options)
                 .listener(new RequestListener<Drawable>() {

@@ -317,7 +317,6 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
 
     @Override
     public void onChange() {
-        Log.v("tunm1", "AlbumPicturesFragment split refresh data");
     }
 
     @Override

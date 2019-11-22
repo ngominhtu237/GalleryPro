@@ -32,6 +32,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
+import com.ss.gallerypro.CallBackToActivityListener;
 import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
@@ -90,6 +91,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     public static int currentPosition;
 
     private ContentProviderObserver mProviderObserver;
+    protected CallBackToActivityListener callBackListener;
 
     public BaseTimelineFragment() {
     }
@@ -110,6 +112,13 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                         true,
                         mProviderObserver);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getActivity() instanceof CallBackToActivityListener)
+            callBackListener = (CallBackToActivityListener) getActivity();
     }
 
     protected abstract BaseActionMode createActionMode();

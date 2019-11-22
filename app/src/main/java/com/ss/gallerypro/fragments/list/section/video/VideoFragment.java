@@ -200,7 +200,7 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     @Override
     public void onChange() {
         Log.v("tunm1", "VideoFragment refresh data");
-        if (mSwipeRefreshLayout != null) {
+        if (mSwipeRefreshLayout != null && !getUserVisibleHint()) {
             mSwipeRefreshLayout.post(() -> {
                 if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
                 listener.onRefresh();
