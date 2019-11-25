@@ -209,19 +209,19 @@ public class ImagePagerFragment extends Fragment {
 
     public void blo() {
         if(!isFullScreen()) {
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            Objects.requireNonNull(getActivity()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
             slideDown(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(getActivity())) * 3 / 2, 500);
             slideDown(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(getActivity())), 500);
         } else {
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            Objects.requireNonNull(getActivity()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             slideUp(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(getActivity())) * 3 / 2, 500);
             slideUp(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(getActivity())), 500);
         }
     }
 
     public boolean isFullScreen() {
-        int flg = getActivity().getWindow().getAttributes().flags;
+        int flg = Objects.requireNonNull(getActivity()).getWindow().getAttributes().flags;
         boolean flag = false;
         if ((flg & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN) {
             flag = true;
