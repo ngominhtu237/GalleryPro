@@ -31,25 +31,28 @@ public class PhotoComparators {
     }
 
     private static Comparator<MediaItem> getDateTakenComparator() {
-        return new Comparator<MediaItem>() {
-            @Override
-            public int compare(MediaItem i1, MediaItem i2) {
-                // Order ascending.
-                if(i1.getDateTaken() == null || i2.getDateTaken() == null) {
-                    return 0;
-                }
-                else return Long.valueOf(i1.getDateTaken()).compareTo(Long.valueOf(i2.getDateTaken()));
+        return (i1, i2) -> {
+            if(i1.getDateTaken() == null && i2.getDateTaken() == null) {
+                return 0;
+            } else if(i1.getDateTaken() != null && i2.getDateTaken() == null) {
+                return 1;
+            } else if(i1.getDateTaken() == null && i2.getDateTaken() != null) {
+                return -1;
             }
+            else return Long.valueOf(i1.getDateTaken()).compareTo(Long.valueOf(i2.getDateTaken()));
         };
     }
 
     private static Comparator<MediaItem> getDateModifiedComparator() {
-        return new Comparator<MediaItem>() {
-            @Override
-            public int compare(MediaItem i1, MediaItem i2) {
-                // Order ascending.
-                return Long.valueOf(i1.getDateModified()).compareTo(Long.valueOf(i2.getDateModified()));
+        return (i1, i2) -> {
+            if(i1.getDateModified() == null && i2.getDateModified() == null) {
+                return 0;
+            } else if(i1.getDateModified() != null && i2.getDateModified() == null) {
+                return 1;
+            } else if(i1.getDateModified() == null && i2.getDateModified() != null) {
+                return -1;
             }
+            else return Long.valueOf(i1.getDateModified()).compareTo(Long.valueOf(i2.getDateModified()));
         };
     }
 
