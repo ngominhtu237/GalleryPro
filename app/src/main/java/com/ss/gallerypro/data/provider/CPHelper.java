@@ -19,6 +19,7 @@ import com.ss.gallerypro.fragments.list.section.abstraction.model.ContentModel;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.HeaderModel;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.IItem;
 import com.ss.gallerypro.utils.Convert;
+import com.ss.gallerypro.utils.DateUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -342,12 +343,19 @@ public class CPHelper {
 
     public static ArrayList<IItem> createDataSortByLastModified(ArrayList<MediaItem> mediaItems) {
         ArrayList<IItem> list = new ArrayList<>();
-        String currentLastModified = "-1";
+        String currentDate = "-1";
         for (int i = 0; i < mediaItems.size(); i++) {
-            String temp = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateModified()));
-            if (!currentLastModified.equals(temp)) {
-                HeaderModel section = new HeaderModel(temp);
-                currentLastModified = temp;
+            String temp = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateModified()) * 1000L);
+            if (!currentDate.equals(temp)) {
+                currentDate = temp;
+                HeaderModel section;
+                if(temp.equals(DateUtils.getTodayDateString())) {
+                    section = new HeaderModel("Today");
+                } else if(temp.equals(DateUtils.getYesterdayDateString())){
+                    section = new HeaderModel("Yesterday");
+                } else {
+                    section = new HeaderModel(temp);
+                }
                 list.add(section);
 
                 ContentModel content = new ContentModel(mediaItems.get(i));
@@ -362,14 +370,20 @@ public class CPHelper {
 
     public static ArrayList<IItem> createDataSortByDateTaken(ArrayList<MediaItem> mediaItems) {
         ArrayList<IItem> list = new ArrayList<>();
-        String currentDateTaken = "-1";
-        String tempDateTaken;
+        String currentDate = "-1";
+        String temp;
         for (int i = 0; i < mediaItems.size(); i++) {
-//            tempDateTaken = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken()));
-            if (mediaItems.get(i).getDateTaken() != null && !currentDateTaken.equals(Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken())))) {
-                tempDateTaken = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken()));
-                HeaderModel section = new HeaderModel(Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken())));
-                currentDateTaken = tempDateTaken;
+            if (mediaItems.get(i).getDateTaken() != null && !currentDate.equals(Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken())))) {
+                temp = Convert.Epoch2DateString(Long.parseLong(mediaItems.get(i).getDateTaken()));
+                currentDate = temp;
+                HeaderModel section;
+                if(temp.equals(DateUtils.getTodayDateString())) {
+                    section = new HeaderModel("Today");
+                } else if(temp.equals(DateUtils.getYesterdayDateString())){
+                    section = new HeaderModel("Yesterday");
+                } else {
+                    section = new HeaderModel(temp);
+                }
                 list.add(section);
 
                 ContentModel content = new ContentModel(mediaItems.get(i));
