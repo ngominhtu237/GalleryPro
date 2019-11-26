@@ -1,5 +1,6 @@
 package com.ss.gallerypro.utils.preferences;
 
+import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.LayoutType;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
@@ -19,4 +20,11 @@ public class Defaults {
 
     public static final int VIDEO_SORTING_MODE = SortingMode.DATE_TAKEN.getValue();
     public static final int VIDEO_SORTING_ORDER = SortingOrder.DESCENDING.getValue();
+
+    // Theme
+    public static final int COLOR_PRIMARY = R.color.colorPrimary;
+    public static final int COLOR_ACCENT = R.color.colorAccent;
+    public static final int COLOR_HIGHLIGHT = R.color.colorHighlight;
+    public static final int COLOR_BACKGROUND = R.color.colorBackground;
+    public static final int COLOR_PRIMARY_HIGHLIGHT = R.color.colorPrimaryHighlightColor;
 }

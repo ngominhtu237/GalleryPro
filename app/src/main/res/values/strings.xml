@@ -88,7 +88,7 @@
     <string name="camera">Camera</string>
 
     <string name="cancel">Cancel</string>
-    <string name="delete">Delete</string>
+    <string name="ten_dp">Delete</string>
     <string name="hide">Hide</string>
     <string name="unhide">Unhide</string>
     <string name="ok_action">OK</string>
@@ -490,4 +490,5 @@ and this could make the media inaccessible from other apps. Use the exclude opti
 
     <!-- Option menu PictureFragment -->
     <string name="set_picture_as">Set picture as</string>
+    <string name="delete">Delete</string>
 </resources>

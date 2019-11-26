@@ -1,5 +1,7 @@
 package com.ss.gallerypro.utils.preferences;
 
+import com.ss.gallerypro.R;
+
 public class Keys {
 
     // Prevent class instantiation
@@ -40,4 +42,12 @@ public class Keys {
 
     public static final String VIDEO_SORTING_MODE = "video_sorting_mode";
     public static final String VIDEO_SORTING_ORDER = "video_sorting_order";
+
+
+    // Theme
+    public static final String COLOR_PRIMARY = "color_primary";
+    public static final String COLOR_ACCENT = "color_accent";
+    public static final String COLOR_BACKGROUND = "color_background";
+    public static final String COLOR_HIGHLIGHT = "color_highlight";
+    public static final String COLOR_PRIMARY_HIGHLIGHT = "color_primary_highlight";
 }

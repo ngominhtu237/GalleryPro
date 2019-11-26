@@ -2,12 +2,14 @@ package com.ss.gallerypro.fragments.viewer;
 
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.utils.preferences.Prefs;
 
 import java.util.Objects;
 
@@ -56,6 +59,7 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
         SubsamplingScaleImageView scaleImageView = v.findViewById(R.id.ivSubSamplingView);
         ImageView ivPlay = v.findViewById(R.id.ivPlayIcon);
         progressBar = v.findViewById(R.id.progress);
+        progressBar.getIndeterminateDrawable().setColorFilter(Prefs.getPrimaryColor(getActivity()), PorterDuff.Mode.SRC_IN );
 
         scaleImageView.setOnImageEventListener(this);
 

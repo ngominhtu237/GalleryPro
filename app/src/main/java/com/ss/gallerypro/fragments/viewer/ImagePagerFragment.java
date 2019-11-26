@@ -39,6 +39,7 @@ import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.fragments.list.section.abstraction.BaseTimelineFragment;
 import com.ss.gallerypro.utils.Convert;
 import com.ss.gallerypro.utils.ViewSizeUtils;
+import com.ss.gallerypro.view.DeleteDialogCustom;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -290,18 +291,15 @@ public class ImagePagerFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                final Dialog dialog = new Dialog(Objects.requireNonNull(getContext()));
-                dialog.setContentView(R.layout.dialog_custom);
-                dialog.show();
-                Button btnCancel = dialog.findViewById(R.id.btn_cancel);
-                Button btnDelete = dialog.findViewById(R.id.btn_delete);
-                TextView tvTitle = dialog.findViewById(R.id.tv_title);
-                tvTitle.setText("Are you sure you want to delete this item ?");
-                btnCancel.setOnClickListener(view -> dialog.dismiss());
-                btnDelete.setOnClickListener(view -> {
-                    deleteCurrentItem();
+                DeleteDialogCustom dialog = new DeleteDialogCustom(getActivity());
+                dialog.setTitle("Delete");
+                dialog.setMessage("Are you sure you want to delete this item?");
+                dialog.setNegativeButton("Cancel", v -> dialog.dismiss());
+                dialog.setPositveButton("Delete", v -> {
                     dialog.dismiss();
+                    deleteCurrentItem();
                 });
+                dialog.show();
                 return true;
 
             case R.id.action_share:

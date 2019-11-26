@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,17 +16,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mikepenz.iconics.utils.Utils;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.Bucket;
@@ -44,6 +35,7 @@ import com.ss.gallerypro.fragments.list.split.pictures.presenter.MediaPresenterI
 import com.ss.gallerypro.fragments.list.split.pictures.view.IMediaView;
 import com.ss.gallerypro.fragments.viewer.ImagePagerFragment;
 import com.ss.gallerypro.utils.Measure;
+import com.ss.gallerypro.view.DeleteDialogCustom;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 import com.ss.gallerypro.view.SquareImageView;
 
@@ -109,20 +101,17 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
                 mDeletedMedias.add(adapter.getMediaList().get(selectedMediaDelete.keyAt(i)));
             }
         }
-        final Dialog dialog = new Dialog(Objects.requireNonNull(getContext()));
-        dialog.setContentView(R.layout.dialog_custom);
-        dialog.show();
-        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
-        Button btnDelete = dialog.findViewById(R.id.btn_delete);
-        TextView tvTitle = dialog.findViewById(R.id.tv_title);
-        String itemString = (selectedMediaDelete.size()>1) ? " items" : " item";
-        tvTitle.setText("Are you sure you want to delete " + selectedMediaDelete.size() + itemString + " ?");
-        btnCancel.setOnClickListener(view -> dialog.dismiss());
-        btnDelete.setOnClickListener(view -> {
+        DeleteDialogCustom dialog = new DeleteDialogCustom(mAttachedActivity);
+        dialog.setTitle("Delete");
+        String s = selectedMediaDelete.size() == 1 ? "item" : "items";
+        dialog.setMessage("Are you sure you want to delete " + selectedMediaDelete.size() + " " + s + "?");
+        dialog.setNegativeButton("Cancel", v -> dialog.dismiss());
+        dialog.setPositveButton("Delete", v -> {
             dialog.dismiss();
             presenter.deleteMedias(mDeletedMedias);
             mActionMode.finish();
         });
+        dialog.show();
     }
 
     protected void onListItemSelect(int position) {

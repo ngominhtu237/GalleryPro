@@ -44,6 +44,7 @@ import com.ss.gallerypro.fragments.list.normal.albums.presenter.AlbumsPresenterI
 import com.ss.gallerypro.fragments.list.normal.albums.view.IAlbumsView;
 import com.ss.gallerypro.fragments.list.split.pictures.AlbumPicturesFragment;
 import com.ss.gallerypro.utils.Measure;
+import com.ss.gallerypro.view.DeleteDialogCustom;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
 import java.util.ArrayList;
@@ -404,18 +405,17 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 mDeletedAlbums.add(albumsAdapter.getBuckets().get(selectedDeleteAlbum.keyAt(i)));
             }
         }
-        final Dialog dialog = new Dialog(Objects.requireNonNull(getContext()));
-        dialog.setContentView(R.layout.dialog_custom);
-        dialog.show();
-        Button btCancel = dialog.findViewById(R.id.btn_cancel);
-        Button btDelete = dialog.findViewById(R.id.btn_delete);
-        btCancel.setOnClickListener(view -> dialog.dismiss());
-        btDelete.setOnClickListener(view -> {
+        DeleteDialogCustom dialog = new DeleteDialogCustom(mAttachedActivity);
+        dialog.setTitle("Delete");
+        String s = mDeletedAlbums.size() == 1 ? "album" : "albums";
+        dialog.setMessage("Are you sure you want to delete " + mDeletedAlbums.size() + " " + s + "?");
+        dialog.setNegativeButton("Cancel", v -> dialog.dismiss());
+        dialog.setPositveButton("Delete", v -> {
             dialog.dismiss();
             presenter.deleteAlbums(mDeletedAlbums);
             mActionMode.finish();
         });
-
+        dialog.show();
     }
 
     private final SwipeRefreshLayout.OnRefreshListener listener = new SwipeRefreshLayout.OnRefreshListener() {

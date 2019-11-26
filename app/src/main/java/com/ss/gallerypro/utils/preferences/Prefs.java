@@ -149,4 +149,44 @@ public class Prefs {
         }
         return getPrefs().getSetString(Keys.FILTER_ITEM_CHECK, state);
     }
+
+    public static int getPrimaryColor(Context context) {
+        return getPrefs().get(Keys.COLOR_PRIMARY, context.getColor(Defaults.COLOR_PRIMARY));
+    }
+
+    public static int getAccentColor(Context context) {
+        return getPrefs().get(Keys.COLOR_ACCENT, context.getColor(Defaults.COLOR_ACCENT));
+    }
+
+    public static int getHighlightColor(Context context) {
+        return getPrefs().get(Keys.COLOR_HIGHLIGHT, context.getColor(Defaults.COLOR_HIGHLIGHT));
+    }
+
+    public static int getPrimaryHighlightColor(Context context) {
+        return getPrefs().get(Keys.COLOR_PRIMARY_HIGHLIGHT, context.getColor(Defaults.COLOR_PRIMARY_HIGHLIGHT));
+    }
+
+    public static int getBackgroundColor(Context context) {
+        return getPrefs().get(Keys.COLOR_BACKGROUND, context.getColor(Defaults.COLOR_BACKGROUND));
+    }
+
+    public static void setPrimaryColor(int value) {
+        getPrefs().put(Keys.COLOR_PRIMARY, value);
+    }
+
+    public static void setAccentColor(int value) {
+        getPrefs().put(Keys.COLOR_ACCENT, value);
+    }
+
+    public static void setHighlightColor(int value) {
+        getPrefs().put(Keys.COLOR_HIGHLIGHT, value);
+    }
+
+    public static void setPrimaryHighlightColor(int value) {
+        getPrefs().put(Keys.COLOR_PRIMARY_HIGHLIGHT, value);
+    }
+
+    public static void setBackgroundColor(int value) {
+        getPrefs().put(Keys.COLOR_BACKGROUND, value);
+    }
 }

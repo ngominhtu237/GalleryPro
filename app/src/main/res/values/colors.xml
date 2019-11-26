@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/accent_deep_purple</color>
+    <color name="colorPrimary">@color/accent_teal</color>
+    <color name="colorAccent">@color/accent_white</color>
+    <color name="colorHighlight">#DFFFF7F7</color>
+    <color name="colorPrimaryHighlightColor">@color/md_grey_900</color>
+    <color name="colorBackground">@color/accent_black</color>
+
     <color name="colorPrimaryStatusTransparent">@color/accent_deep_purple_transparent</color>
-    <color name="colorAccent">@color/md_light_statusbar</color>
     <color name="themeText">@color/accent_black</color>
-    <color name="colorBackground">@color/white</color>
 
     <color name="white">#FFFFFF</color>
     <color name="brown">#2b2b2b</color>
     <color name="green">#237639</color>
     <color name="red">#d63535</color>
-    <color name="colorHighlight">#B6B6B6</color>
     <color name="colorRipple">#A9A9F5</color>
 
     <!--Accent Color Collection-->

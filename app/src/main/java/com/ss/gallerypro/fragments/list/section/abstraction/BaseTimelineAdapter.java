@@ -31,6 +31,7 @@ import com.ss.gallerypro.fragments.ViewHolderListener;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ContentModel;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.HeaderModel;
 import com.ss.gallerypro.fragments.list.section.abstraction.model.IItem;
+import com.ss.gallerypro.theme.ColorTheme;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -52,12 +53,14 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
     private ICheckedItem checkedItemListener;
 
     private ViewHolderListener viewHolderListener;
+    private ColorTheme colorTheme;
 
     public BaseTimelineAdapter(Fragment fragment, Context context, SortingMode sortingMode, SortingOrder sortingOrder ) {
         this.mContextWeakReference = new WeakReference<>(context);
         this.mSortingMode = sortingMode;
         this.mSortingOrder = sortingOrder;
         mSelectedItemsIds = new SparseBooleanArray();
+        colorTheme = new ColorTheme(context);
     }
 
     @NonNull
@@ -100,6 +103,7 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
             headerHolder = (HEADER) holder;
             HeaderModel sModel = (HeaderModel) mListData.get(position);
             headerHolder.tvTitle.setText(sModel.title);
+            headerHolder.tvTitle.setTextColor(colorTheme.getHighLightColor());
             return;
         }
 

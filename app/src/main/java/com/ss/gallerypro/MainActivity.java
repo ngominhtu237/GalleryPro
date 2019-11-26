@@ -23,6 +23,7 @@ import com.ss.gallerypro.data.StatisticModel;
 import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.data.provider.CPHelper;
 import com.ss.gallerypro.fragments.home.HomeFragment;
+import com.ss.gallerypro.theme.ColorTheme;
 
 import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
@@ -36,14 +37,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle toggle;
 
     private static int lastClicked = -1;
+    private ColorTheme colorTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        colorTheme = new ColorTheme(this);
 
         setToolbarCustom();
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(colorTheme.getPrimaryColor());
         setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);

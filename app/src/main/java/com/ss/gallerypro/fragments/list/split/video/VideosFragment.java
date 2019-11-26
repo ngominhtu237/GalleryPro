@@ -10,7 +10,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -94,7 +93,7 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
         dialog.show();
         Button btnCancel = dialog.findViewById(R.id.btn_cancel);
         Button btnDelete = dialog.findViewById(R.id.btn_delete);
-        TextView tvTitle = dialog.findViewById(R.id.tv_title);
+        TextView tvTitle = dialog.findViewById(R.id.message_dialog_custom);
         String itemString = (selectedMediaDelete.size()>1) ? " items" : " item";
         tvTitle.setText("Are you sure you want to delete " + selectedMediaDelete.size() + itemString + " ?");
         btnCancel.setOnClickListener(view -> dialog.dismiss());

@@ -1,46 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/title_dialog_custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/md_blue_grey_900">
-
-        <ImageView
-            android:id="@+id/iconQuestion"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:layout_marginLeft="@dimen/fifteen_dp"
-            android:layout_centerVertical="true"
-            android:background="@mipmap/question"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/iconQuestion"
-            android:paddingTop="@dimen/fifteen_dp"
-            android:paddingRight="@dimen/fifteen_dp"
-            android:paddingBottom="@dimen/fifteen_dp"
-            android:layout_marginLeft="@dimen/ten_dp"
-            android:text="Confirm Delete..."
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
+        android:paddingTop="@dimen/fifteen_dp"
+        android:paddingStart="@dimen/ten_dp"
+        android:paddingEnd="@dimen/fifteen_dp"
+        android:paddingBottom="@dimen/three_dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:text="@string/delete"
+        android:textColor="@color/colorBackground"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/message_dialog_custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/ten_dp"
-        android:paddingLeft="@dimen/twenty_dp"
-        android:paddingRight="@dimen/twenty_dp"
-        android:paddingTop="@dimen/ten_dp"
+        android:paddingStart="@dimen/ten_dp"
+        android:paddingEnd="@dimen/fifteen_dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="5dp"
         android:text="Are you sure you want to delete this album?"
         android:textColor="@color/accent_black"
         android:textSize="@dimen/sixteen_sp" />
@@ -49,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
+        android:layout_marginTop="@dimen/ten_dp"
         android:orientation="horizontal">
 
         <Button
@@ -57,7 +45,8 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:text="@string/cancel"
-            android:textColor="@color/md_blue_grey_700" />
+            android:textColor="@color/md_blue_grey_700"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btn_delete"
@@ -65,7 +54,8 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:text="@string/delete"
-            android:textColor="@color/md_blue_grey_700" />
+            android:textColor="@color/md_blue_grey_700"
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 </LinearLayout>
