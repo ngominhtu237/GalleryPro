@@ -46,7 +46,8 @@ public class VideoAdapter extends BaseTimelineAdapter<HeaderViewHolder, VideoCon
         super.onBindViewHolder(holder, position);
         if(ViewType.CONTENT_VIEW_TYPE == getItemViewType(position)) {
             ContentModel cModel = (ContentModel) mListData.get(position);
-            contentHolder.tvDuration.setText(Convert.convertSecondsToHMmSs(Long.parseLong(cModel.mMediaItem.getDuration())));
+            String duration = (cModel.mMediaItem.getDuration() == null) ? "0:00" : Convert.convertSecondsToHMmSs(Long.parseLong(cModel.mMediaItem.getDuration()));
+            contentHolder.tvDuration.setText(duration);
         }
     }
 }
