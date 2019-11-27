@@ -3,14 +3,12 @@ package com.ss.gallerypro.fragments.list.section.abstraction;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
@@ -23,10 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
@@ -49,9 +43,9 @@ import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepos
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
 import com.ss.gallerypro.fragments.viewer.DeletedItemCallback;
 import com.ss.gallerypro.theme.ColorTheme;
-import com.ss.gallerypro.utils.Convert;
-import com.ss.gallerypro.view.DeleteDialogCustom;
+import com.ss.gallerypro.view.dialog.DeleteDialog;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
+import com.ss.gallerypro.view.dialog.SortDialogTimeline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,6 +187,20 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         return adapter != null ? adapter.getSortingOrder() : getSortOrderFromPref();
     }
 
+    @Override
+    public void onResume() {
+        refreshTheme();
+        super.onResume();
+    }
+
+    private void refreshTheme() {
+        if(colorTheme.isDarkTheme()) {
+            mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
+        } else {
+            mRecyclerView.setBackgroundColor(colorTheme.getBackgroundColor());
+        }
+    }
+
     private void initRecycleView() {
         mRecyclerView.setHasFixedSize(true);
         NUM_COLUMN = getColumnRecycleView();
@@ -208,7 +216,11 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         adapter.setCheckedItemListener(this);
         adapter.setViewHolderListener(this);
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setBackgroundColor(colorTheme.getBackgroundColor());
+        if(colorTheme.isDarkTheme()) {
+            mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
+        } else {
+            mRecyclerView.setBackgroundColor(colorTheme.getBackgroundColor());
+        }
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -293,64 +305,27 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     }
 
     private void showChoiceDialog(SortingMode sortingMode, SortingOrder sortingOrder) {
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(mAttachedActivity);
-        View view = getLayoutInflater().inflate(R.layout.dialog_sort, null);
-        view.setBackgroundColor(colorTheme.getPrimaryHighLightColor());
-        Button btCancel = view.findViewById(R.id.cancel);
-        Button btOk = view.findViewById(R.id.ok);
-        TextView title = view.findViewById(R.id.title_dialog_sort);
-        title.setTextColor(colorTheme.getAccentColor());
-        btCancel.setTextColor(colorTheme.getPrimaryColor());
-        btOk.setTextColor(colorTheme.getPrimaryColor());
+//        AlertDialog.Builder mBuilder = new AlertDialog.Builder(mAttachedActivity);
 
-        // create two sort radio group
-        RadioButton[] rb, rb1;
-        RadioGroup rgSortingMode = view.findViewById(R.id.rgSortingMode);
-        RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 10, 0, 10);
-        rgSortingMode.setOrientation(RadioGroup.VERTICAL);
-        rb = new RadioButton[SortingMode.getNames().length];
-        for(int i=0; i<SortingMode.getNames().length; i++){
-            rb[i] = new RadioButton(getContext());
-            rb[i].setId(i);
-            rb[i].setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT));
-            rb[i].setPadding(20, 0, 0, 0);
-            rb[i].setLayoutParams(params);
-            rb[i].setButtonTintList(ColorStateList.valueOf(colorTheme.getPrimaryColor()));
-            rb[i].setTextColor(colorTheme.getAccentColor());
-            rb[i].setText(Convert.formatEnumStringDialog(SortingMode.getNames()[i]));
-            if(sortingMode == SortingMode.fromValue(i)) rb[i].setChecked(true);
-            rgSortingMode.addView(rb[i]);
-        }
-        RadioGroup rgSortingOrder = view.findViewById(R.id.rgSortingOrder);
-        rgSortingOrder.setOrientation(RadioGroup.VERTICAL);
-        rb1 = new RadioButton[SortingOrder.getNames().length];
-        for(int i=0; i<SortingOrder.getNames().length; i++){
-            rb1[i] = new RadioButton(getContext());
-            rb1[i].setId(i);
-            rb1[i].setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT));
-            rb1[i].setPadding(20, 0, 0, 0);
-            rb1[i].setLayoutParams(params);
-            rb1[i].setButtonTintList(ColorStateList.valueOf(colorTheme.getPrimaryColor()));
-            rb1[i].setTextColor(colorTheme.getAccentColor());
-            rb1[i].setText(Convert.formatEnumStringDialog(SortingOrder.getNames()[i]));
-            if(sortingOrder == SortingOrder.fromValue(i)) rb1[i].setChecked(true);
-            rgSortingOrder.addView(rb1[i]);
-        }
-
-        mBuilder.setView(view);
-        AlertDialog dialog = mBuilder.create();
-        dialog.show();
-
-        btCancel.setOnClickListener(v -> dialog.dismiss());
-        btOk.setOnClickListener(v -> {
-            int i1 = rgSortingMode.getCheckedRadioButtonId();
-            int i2 = rgSortingOrder.getCheckedRadioButtonId();
+        SortDialogTimeline dialog = new SortDialogTimeline(mAttachedActivity);
+        dialog.setTitle("Sort");
+        dialog.setSortingMode(sortingMode);
+        dialog.setSortingOrder(sortingOrder);
+        dialog.setCancelButton("Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setSortButton("OK", v -> {
+            int i1 = dialog.getCheckedSortingMode();
+            int i2 = dialog.getCheckedSortingOrder();
             adapter.changeSorting(SortingMode.fromValue(i1), SortingOrder.fromValue(i2));
             setSortModeToPref(SortingMode.fromValue(i1));
             setSortOrderToPref(SortingOrder.fromValue(i2));
             dialog.dismiss();
         });
+        dialog.show();
     }
 
     public BaseTimelineAdapter getAdapter() {
@@ -427,44 +402,12 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                 Log.d("deleted item position ", String.valueOf(getAdapter().getSelectedIds().keyAt(i)));
             }
         }
-//        final Dialog dialog = new Dialog(Objects.requireNonNull(getContext()));
-//        LayoutInflater inflater = (LayoutInflater) mAttachedActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View v = null;
-//        if (inflater != null) {
-//            v = inflater.inflate(R.layout.dialog_custom, null, false);
-//        }
-//        TextView content = v.findViewById(R.id.message_dialog_custom);
-//        String s = mListDeletedPosition.size() == 1 ? "item" : "items";
-//        content.setText("Are you sure you want to delete " + mListDeletedPosition.size() + " " + s + "?");
-//        dialog.setContentView(v);
-//        dialog.show();
-//
-//        // background
-//        GradientDrawable gd = new GradientDrawable();
-//        gd.setColor(colorTheme.getPrimaryHighLightColor());
-//        gd.setCornerRadius(25);
-//        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(gd);
-//
-//        TextView title = dialog.findViewById(R.id.title_dialog_custom);
-//        Button btCancel = dialog.findViewById(R.id.btn_cancel);
-//        Button btDelete = dialog.findViewById(R.id.btn_delete);
-//        title.setTextColor(colorTheme.getAccentColor());
-//        content.setTextColor(colorTheme.getHighLightColor());
-//        btCancel.setTextColor(colorTheme.getPrimaryColor());
-//        btDelete.setTextColor(colorTheme.getPrimaryColor());
-//        btCancel.setOnClickListener(view -> dialog.dismiss());
-//        btDelete.setOnClickListener(view -> {
-//            dialog.dismiss();
-//            presenter.deleteMedias(mDeleteItems);
-//            mActionMode.finish();
-//        });
-
-        DeleteDialogCustom dialog = new DeleteDialogCustom(mAttachedActivity);
+        DeleteDialog dialog = new DeleteDialog(mAttachedActivity);
         dialog.setTitle("Delete");
         String s = mListDeletedPosition.size() == 1 ? "item" : "items";
         dialog.setMessage("Are you sure you want to delete " + mListDeletedPosition.size() + " " + s + "?");
         dialog.setNegativeButton("Cancel", v -> dialog.dismiss());
-        dialog.setPositveButton("Delete", v -> {
+        dialog.setPositiveButton("Delete", v -> {
             dialog.dismiss();
             presenter.deleteMedias(mDeleteItems);
             mActionMode.finish();

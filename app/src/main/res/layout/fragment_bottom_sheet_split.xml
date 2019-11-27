@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/bottom_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fifteen_dp"
+        android:paddingTop="@dimen/five_dp"
+        android:text="@string/info"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/fifteen_dp"
+        android:layout_marginRight="@dimen/fifteen_dp"
+        android:layout_marginBottom="@dimen/fifteen_dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fifteen_dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/bottom_dialog_name_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/fifteen_dp"
+                    android:padding="@dimen/three_dp"
+                    android:src="@mipmap/icon_dialog_file_white" />
+
+                <TextView
+                    android:id="@+id/bottom_dialog_name_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/bottom_dialog_name_icon"
+                    android:text="File name"
+                    android:textColor="@color/colorHighlight"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/bottom_dialog_name_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bottom_dialog_name_title"
+                    android:layout_toEndOf="@+id/bottom_dialog_name_icon"
+                    android:text="IMG_3227.jpg"
+                    android:textColor="@color/colorAccent" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fifteen_dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/bottom_dialog_path_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/fifteen_dp"
+                    android:padding="@dimen/three_dp"
+                    android:src="@mipmap/icon_dialog_path_white" />
+
+                <TextView
+                    android:id="@+id/bottom_dialog_path_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/bottom_dialog_path_icon"
+                    android:text="File path"
+                    android:textColor="@color/colorHighlight"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/bottom_dialog_path_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bottom_dialog_path_title"
+                    android:layout_toEndOf="@+id/bottom_dialog_path_icon"
+                    android:text="/storage/emulated/0/svmc/IMG_3227.jpg"
+                    android:textColor="@color/colorAccent" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fifteen_dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/bottom_dialog_size_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/fifteen_dp"
+                    android:padding="@dimen/three_dp"
+                    android:src="@mipmap/icon_dialog_memory_white" />
+
+                <TextView
+                    android:id="@+id/bottom_dialog_size_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/bottom_dialog_size_icon"
+                    android:text="Size"
+                    android:textColor="@color/colorHighlight"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/bottom_dialog_size_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bottom_dialog_size_title"
+                    android:layout_toEndOf="@+id/bottom_dialog_size_icon"
+                    android:text="4 MB"
+                    android:textColor="@color/colorAccent" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fifteen_dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/bottom_dialog_resolution_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/fifteen_dp"
+                    android:padding="@dimen/three_dp"
+                    android:src="@mipmap/icon_dialog_resolution_white" />
+
+                <TextView
+                    android:id="@+id/bottom_dialog_resolution_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/bottom_dialog_resolution_icon"
+                    android:text="Resolution"
+                    android:textColor="@color/colorHighlight"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/bottom_dialog_resolution_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bottom_dialog_resolution_title"
+                    android:layout_toEndOf="@+id/bottom_dialog_resolution_icon"
+                    android:text="2048 x 1365"
+                    android:textColor="@color/colorAccent" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fifteen_dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/bottom_dialog_date_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/fifteen_dp"
+                    android:padding="@dimen/three_dp"
+                    android:src="@mipmap/icon_dialog_date_white" />
+
+                <TextView
+                    android:id="@+id/bottom_dialog_date_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/bottom_dialog_date_icon"
+                    android:text="Date taken"
+                    android:textColor="@color/colorHighlight"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/bottom_dialog_date_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bottom_dialog_date_title"
+                    android:layout_toEndOf="@+id/bottom_dialog_date_icon"
+                    android:text="Nov 18, 2019 01:50 AM"
+                    android:textColor="@color/colorAccent" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

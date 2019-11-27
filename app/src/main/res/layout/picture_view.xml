@@ -27,6 +27,6 @@
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@mipmap/play2"
+        android:src="@mipmap/icon_play_button"
         android:visibility="gone"/>
 </RelativeLayout>

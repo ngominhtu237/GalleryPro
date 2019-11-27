@@ -1,7 +1,6 @@
 package com.ss.gallerypro.fragments.viewer;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -12,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
@@ -26,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,18 +36,14 @@ import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.fragments.list.section.abstraction.BaseTimelineFragment;
 import com.ss.gallerypro.utils.Convert;
 import com.ss.gallerypro.utils.ViewSizeUtils;
-import com.ss.gallerypro.view.DeleteDialogCustom;
+import com.ss.gallerypro.view.dialog.DeleteDialog;
+import com.ss.gallerypro.view.dialog.FragmentBottomSheetDialog;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-
-import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
 public class ImagePagerFragment extends Fragment {
 
@@ -260,11 +253,11 @@ public class ImagePagerFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
         if(isFullScreen()) {
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             slideUp(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(getActivity())) * 3 / 2, 0);
             slideUp(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(getActivity())), 0);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
         }
         if(callback != null) {
             callback.onDelete(mDeletedItemPosition, mListDeletedItem);
@@ -291,11 +284,11 @@ public class ImagePagerFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                DeleteDialogCustom dialog = new DeleteDialogCustom(getActivity());
+                DeleteDialog dialog = new DeleteDialog(getActivity());
                 dialog.setTitle("Delete");
                 dialog.setMessage("Are you sure you want to delete this item?");
                 dialog.setNegativeButton("Cancel", v -> dialog.dismiss());
-                dialog.setPositveButton("Delete", v -> {
+                dialog.setPositiveButton("Delete", v -> {
                     dialog.dismiss();
                     deleteCurrentItem();
                 });
@@ -312,39 +305,43 @@ public class ImagePagerFragment extends Fragment {
                 return true;
 
             case R.id.action_details:
-                ViewGroup viewGroup = rootView.findViewById(android.R.id.content);
-                //then we will inflate the custom alert dialog xml that we created
-                View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_picture_details, viewGroup, false);
-                TextView tvItemDate = dialogView.findViewById(R.id.tvItemDate);
-                TextView dateTakenTitle = dialogView.findViewById(R.id.dateTakenTitle);
-                TextView tvItemSize = dialogView.findViewById(R.id.tvItemSize);
-                TextView tvItemResolution = dialogView.findViewById(R.id.tvItemResolution);
-                TextView tvItemPath = dialogView.findViewById(R.id.tvItemPath);
-                TextView tvItemTitle = dialogView.findViewById(R.id.tvItemTitle);
-                Button btOK = dialogView.findViewById(R.id.buttonOk);
-                MediaItem mediaItem = mImageList.get(currentPosition);
-
-                String format = "MM-dd-yyyy HH:mm:ss";
-                SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.ENGLISH);
-
-                String dateTime;
-                if(mediaItem.getDateTaken() != null) {
-                    dateTime = formatter.format(new Date(Long.parseLong(mediaItem.getDateTaken())));
-                } else {
-                    dateTakenTitle.setText("Date modified");
-                    dateTime = formatter.format(new Date(Long.parseLong(mediaItem.getDateModified())  * 1000L));
+//                ViewGroup viewGroup = rootView.findViewById(android.R.id.content);
+//                View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_picture_details, viewGroup, false);
+//                TextView tvItemDate = dialogView.findViewById(R.id.tvItemDate);
+//                TextView dateTakenTitle = dialogView.findViewById(R.id.dateTakenTitle);
+//                TextView tvItemSize = dialogView.findViewById(R.id.tvItemSize);
+//                TextView tvItemResolution = dialogView.findViewById(R.id.tvItemResolution);
+//                TextView tvItemPath = dialogView.findViewById(R.id.tvItemPath);
+//                TextView tvItemTitle = dialogView.findViewById(R.id.tvItemTitle);
+//                Button btOK = dialogView.findViewById(R.id.buttonOk);
+//                MediaItem mediaItem = mImageList.get(currentPosition);
+//
+//                String format = "MM-dd-yyyy HH:mm:ss";
+//                SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.ENGLISH);
+//
+//                String dateTime;
+//                if(mediaItem.getDateTaken() != null) {
+//                    dateTime = formatter.format(new Date(Long.parseLong(mediaItem.getDateTaken())));
+//                } else {
+//                    dateTakenTitle.setText("Date modified");
+//                    dateTime = formatter.format(new Date(Long.parseLong(mediaItem.getDateModified())  * 1000L));
+//                }
+//                tvItemDate.setText(dateTime);
+//                tvItemSize.setText(readableFileSize(Long.valueOf(mediaItem.getSize())));
+//                tvItemResolution.setText(mediaItem.getWidth() + "x" + mediaItem.getHeight());
+//                tvItemPath.setText(new File(mediaItem.getPathMediaItem()).getParent());
+//                tvItemTitle.setText(mediaItem.getName() + mediaItem.getPathMediaItem().substring(mediaItem.getPathMediaItem().lastIndexOf(".")));
+//
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                builder.setView(dialogView);
+//                AlertDialog alertDialog = builder.create();
+//                alertDialog.show();
+//                btOK.setOnClickListener((view) -> alertDialog.dismiss());
+                FragmentBottomSheetDialog fragment = new FragmentBottomSheetDialog();
+                if (getFragmentManager() != null) {
+                    fragment.setMediaItem(mImageList.get(currentPosition));
+                    fragment.show(getFragmentManager(), fragment.getTag());
                 }
-                tvItemDate.setText(dateTime);
-                tvItemSize.setText(readableFileSize(Long.valueOf(mediaItem.getSize())));
-                tvItemResolution.setText(mediaItem.getWidth() + "x" + mediaItem.getHeight());
-                tvItemPath.setText(new File(mediaItem.getPathMediaItem()).getParent());
-                tvItemTitle.setText(mediaItem.getName() + mediaItem.getPathMediaItem().substring(mediaItem.getPathMediaItem().lastIndexOf(".")));
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setView(dialogView);
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-                btOK.setOnClickListener((view) -> alertDialog.dismiss());
                 return true;
             case R.id.action_set_picture_as:
                 Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);

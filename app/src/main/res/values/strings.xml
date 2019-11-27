@@ -491,4 +491,5 @@ and this could make the media inaccessible from other apps. Use the exclude opti
     <!-- Option menu PictureFragment -->
     <string name="set_picture_as">Set picture as</string>
     <string name="delete">Delete</string>
+    <string name="info">info</string>
 </resources>

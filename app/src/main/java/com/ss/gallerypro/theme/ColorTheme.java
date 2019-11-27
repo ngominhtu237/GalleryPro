@@ -11,6 +11,7 @@ public class ColorTheme {
     private int mBackgroundColor;
 
     private int mPrimaryHighLightColor;
+    private boolean isDarkTheme;
     private Context mContext;
 
     public ColorTheme(Context context) {
@@ -55,5 +56,13 @@ public class ColorTheme {
 
     public void setPrimaryHighLightColor(int color) {
         Prefs.setPrimaryHighlightColor(color);
+    }
+
+    public boolean isDarkTheme() {
+        return Prefs.getIsDarkTheme(mContext);
+    }
+
+    public void setDarkTheme(boolean isDarkTheme) {
+        Prefs.setIsDarkTheme(isDarkTheme);
     }
 }

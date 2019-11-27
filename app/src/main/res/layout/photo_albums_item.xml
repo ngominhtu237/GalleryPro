@@ -26,12 +26,12 @@
 
     <ImageView
         android:id="@+id/ivPlayIcon"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/five_dp"
-        android:layout_marginRight="@dimen/five_dp"
-        android:src="@mipmap/play2"
+        android:layout_marginBottom="@dimen/three_dp"
+        android:layout_marginRight="@dimen/three_dp"
+        android:src="@mipmap/icon_play_button"
         android:visibility="gone" />
 </com.ss.gallerypro.view.SquareRelativeLayout>

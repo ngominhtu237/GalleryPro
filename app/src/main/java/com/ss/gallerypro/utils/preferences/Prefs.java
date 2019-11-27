@@ -170,6 +170,10 @@ public class Prefs {
         return getPrefs().get(Keys.COLOR_BACKGROUND, context.getColor(Defaults.COLOR_BACKGROUND));
     }
 
+    public static boolean getIsDarkTheme(Context context) {
+        return getPrefs().get(Keys.IS_DARK_THEME, Defaults.IS_DARK_THEME);
+    }
+
     public static void setPrimaryColor(int value) {
         getPrefs().put(Keys.COLOR_PRIMARY, value);
     }
@@ -188,5 +192,9 @@ public class Prefs {
 
     public static void setBackgroundColor(int value) {
         getPrefs().put(Keys.COLOR_BACKGROUND, value);
+    }
+
+    public static void setIsDarkTheme(boolean isDarkTheme) {
+        getPrefs().put(Keys.IS_DARK_THEME, isDarkTheme);
     }
 }

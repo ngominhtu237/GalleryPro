@@ -50,4 +50,5 @@ public class Keys {
     public static final String COLOR_BACKGROUND = "color_background";
     public static final String COLOR_HIGHLIGHT = "color_highlight";
     public static final String COLOR_PRIMARY_HIGHLIGHT = "color_primary_highlight";
+    public static final String IS_DARK_THEME = "is_dark_theme";
 }

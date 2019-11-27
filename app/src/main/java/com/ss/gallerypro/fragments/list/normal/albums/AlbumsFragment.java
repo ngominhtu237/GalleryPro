@@ -1,7 +1,6 @@
 package com.ss.gallerypro.fragments.list.normal.albums;
 
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.ss.gallerypro.R;
@@ -44,7 +42,7 @@ import com.ss.gallerypro.fragments.list.normal.albums.presenter.AlbumsPresenterI
 import com.ss.gallerypro.fragments.list.normal.albums.view.IAlbumsView;
 import com.ss.gallerypro.fragments.list.split.pictures.AlbumPicturesFragment;
 import com.ss.gallerypro.utils.Measure;
-import com.ss.gallerypro.view.DeleteDialogCustom;
+import com.ss.gallerypro.view.dialog.DeleteDialog;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 
 import java.util.ArrayList;
@@ -101,6 +99,30 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.v("AlbumsFragment", "onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.v("AlbumsFragment", "onPause");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.v("AlbumsFragment", "onDestroy");
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+        Log.v("AlbumsFragment", "onDestroyOptionsMenu");
+    }
+
+    @Override
     protected void initRecycleView(View v) {
         super.initRecycleView(v);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -140,20 +162,21 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     }
 
     protected void openAlbum(int position) {
-        FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-        AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) fragmentManager.findFragmentByTag("AlbumPicturesFragment");
+        FragmentManager fm = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+        AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) fm.findFragmentByTag("AlbumPicturesFragment");
         if(albumPicturesFragment == null) {
             albumPicturesFragment = new AlbumPicturesFragment();
             Bundle args = new Bundle();
             args.putParcelable("album", albumsAdapter.getBuckets().get(position));
             albumPicturesFragment.setArguments(args);
         }
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, albumPicturesFragment, "AlbumPicturesFragment");
+        FragmentTransaction f = fm.beginTransaction();
+        f.add(R.id.fragment_container, albumPicturesFragment, "AlbumPicturesFragment");
+        f.hide(AlbumsFragment.this); // => remove overlap optionMenu when add fragment
 
         // Add fragment one in back stack. So it will not be destroyed. Press back menu can pop it up from the stack.
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        f.addToBackStack(AlbumsFragment.class.getName());
+        f.commit();
     }
 
     @Override
@@ -405,12 +428,12 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 mDeletedAlbums.add(albumsAdapter.getBuckets().get(selectedDeleteAlbum.keyAt(i)));
             }
         }
-        DeleteDialogCustom dialog = new DeleteDialogCustom(mAttachedActivity);
+        DeleteDialog dialog = new DeleteDialog(mAttachedActivity);
         dialog.setTitle("Delete");
         String s = mDeletedAlbums.size() == 1 ? "album" : "albums";
         dialog.setMessage("Are you sure you want to delete " + mDeletedAlbums.size() + " " + s + "?");
         dialog.setNegativeButton("Cancel", v -> dialog.dismiss());
-        dialog.setPositveButton("Delete", v -> {
+        dialog.setPositiveButton("Delete", v -> {
             dialog.dismiss();
             presenter.deleteAlbums(mDeletedAlbums);
             mActionMode.finish();

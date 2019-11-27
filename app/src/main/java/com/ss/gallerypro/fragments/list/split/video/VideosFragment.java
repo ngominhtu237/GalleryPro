@@ -207,7 +207,7 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
 //                alertDialog.show();
 //                btOK.setOnClickListener((view) -> alertDialog.dismiss());
 
-                View view = getLayoutInflater().inflate(R.layout.fragment_bottom_sheet_dialog, null);
+                View view = getLayoutInflater().inflate(R.layout.fragment_bottom_sheet_split, null);
 
                 BottomSheetDialog dialog = new BottomSheetDialog(mAttachedActivity);
                 dialog.setContentView(view);

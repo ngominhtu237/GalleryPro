@@ -1,7 +1,6 @@
 package com.ss.gallerypro.fragments.list.split.pictures;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,13 +28,14 @@ import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Photo;
 import com.ss.gallerypro.fragments.RecycleViewClickListener;
 import com.ss.gallerypro.fragments.list.normal.abstraction.BaseListFragment;
 import com.ss.gallerypro.fragments.list.normal.abstraction.BaseListViewAdapter;
+import com.ss.gallerypro.fragments.list.normal.albums.AlbumsFragment;
 import com.ss.gallerypro.fragments.list.split.pictures.model.MediaRepositoryImpl;
 import com.ss.gallerypro.fragments.list.split.pictures.presenter.IMediaPresenter;
 import com.ss.gallerypro.fragments.list.split.pictures.presenter.MediaPresenterImpl;
 import com.ss.gallerypro.fragments.list.split.pictures.view.IMediaView;
 import com.ss.gallerypro.fragments.viewer.ImagePagerFragment;
 import com.ss.gallerypro.utils.Measure;
-import com.ss.gallerypro.view.DeleteDialogCustom;
+import com.ss.gallerypro.view.dialog.DeleteDialog;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
 import com.ss.gallerypro.view.SquareImageView;
 
@@ -86,7 +86,6 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
 
         // back from another fragment not call onCreate Fragment
         presenter.getMedias(mReceiveBucket);
-
         return rootView;
     }
 
@@ -101,12 +100,12 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
                 mDeletedMedias.add(adapter.getMediaList().get(selectedMediaDelete.keyAt(i)));
             }
         }
-        DeleteDialogCustom dialog = new DeleteDialogCustom(mAttachedActivity);
+        DeleteDialog dialog = new DeleteDialog(mAttachedActivity);
         dialog.setTitle("Delete");
         String s = selectedMediaDelete.size() == 1 ? "item" : "items";
         dialog.setMessage("Are you sure you want to delete " + selectedMediaDelete.size() + " " + s + "?");
         dialog.setNegativeButton("Cancel", v -> dialog.dismiss());
-        dialog.setPositveButton("Delete", v -> {
+        dialog.setPositiveButton("Delete", v -> {
             dialog.dismiss();
             presenter.deleteMedias(mDeletedMedias);
             mActionMode.finish();
@@ -176,6 +175,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
             fragmentManager
                     .beginTransaction()
                     .add(R.id.fragment_container, pagerFragment, ImagePagerFragment.class.getSimpleName())
+                    .hide(AlbumPicturesFragment.this)
                     .addToBackStack(null)
                     .commit();
         }

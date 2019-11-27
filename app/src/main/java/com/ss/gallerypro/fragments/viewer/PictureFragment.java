@@ -1,6 +1,7 @@
 package com.ss.gallerypro.fragments.viewer;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -9,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +28,8 @@ import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.utils.preferences.Prefs;
+import com.ss.gallerypro.view.dialog.FragmentBottomSheetDialog;
+import com.ss.gallerypro.view.OnSwipeTouchListener;
 
 import java.util.Objects;
 
@@ -50,6 +52,7 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
         return fragment;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,11 +80,24 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
         scaleImageView.setOnClickListener(this);
 
         String mineType = item.getMediaType();
+        FragmentBottomSheetDialog fragment = new FragmentBottomSheetDialog();
+        MediaItem finalItem = item;
 
         if (mineType.equals("image/jpg") || mineType.equals("image/jpeg") || mineType.equals("image/png")) {
             scaleImageView.setVisibility(View.VISIBLE);
             scaleImageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_USE_EXIF);
             scaleImageView.setImage(ImageSource.uri(item.getPathMediaItem()));
+            scaleImageView.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+                public void onSwipeTop() {
+                    if (getFragmentManager() != null) {
+                        fragment.setMediaItem(finalItem);
+                        fragment.show(getFragmentManager(), fragment.getTag());
+                    }
+                }
+                public void onSwipeBottom() {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
         } else {
             photoView.setVisibility(View.VISIBLE);
 
@@ -105,6 +121,18 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
                         }
                     })
                     .into((ImageView) v.findViewById(R.id.ivPhotoView));
+            photoView.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+                public void onSwipeTop() {
+                    FragmentBottomSheetDialog fragment = new FragmentBottomSheetDialog();
+                    if (getFragmentManager() != null) {
+                        fragment.setMediaItem(finalItem);
+                        fragment.show(getFragmentManager(), fragment.getTag());
+                    }
+                }
+                public void onSwipeBottom() {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
         }
         ivPlay.setVisibility(item.getMediaType().contains("video") ? View.VISIBLE : View.GONE);
         String mediaItemPath = item.getPathMediaItem();

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <com.ss.gallerypro.theme.ui.TextViewPrimary
         android:id="@+id/title_dialog_custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,22 +14,21 @@
         android:paddingEnd="@dimen/fifteen_dp"
         android:paddingBottom="@dimen/three_dp"
         android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/accent_blue"
         android:text="@string/delete"
-        android:textColor="@color/colorBackground"
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <TextView
+    <com.ss.gallerypro.theme.ui.TextViewSecondary
         android:id="@+id/message_dialog_custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/ten_dp"
         android:paddingEnd="@dimen/fifteen_dp"
         android:layout_marginTop="3dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="8dp"
         android:text="Are you sure you want to delete this album?"
-        android:textColor="@color/accent_black"
         android:textSize="@dimen/sixteen_sp" />
 
     <LinearLayout
@@ -39,7 +38,7 @@
         android:layout_marginTop="@dimen/ten_dp"
         android:orientation="horizontal">
 
-        <Button
+        <com.ss.gallerypro.theme.ui.ButtonTheme
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,7 +47,7 @@
             android:textColor="@color/md_blue_grey_700"
             tools:ignore="ButtonStyle" />
 
-        <Button
+        <com.ss.gallerypro.theme.ui.ButtonTheme
             android:id="@+id/btn_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
