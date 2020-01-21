@@ -1,6 +1,6 @@
 package com.ss.gallerypro.data.filter;
 
-import java.util.stream.Stream;
+import java.util.LinkedList;
 
 public enum MediaFilter {
 
@@ -27,6 +27,11 @@ public enum MediaFilter {
     }
 
     public static String[] getNames() {
-        return Stream.of(MediaFilter.values()).map(MediaFilter::name).toArray(String[]::new);
+        LinkedList<String> list = new LinkedList<>();
+        for (MediaFilter s : MediaFilter.values()) {
+            list.add(s.name());
+        }
+
+        return list.toArray(new String[list.size()]);
     }
 }

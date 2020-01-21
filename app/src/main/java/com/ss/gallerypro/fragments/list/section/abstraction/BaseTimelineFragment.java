@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 import com.ss.gallerypro.CallBackToActivityListener;
+import com.ss.gallerypro.CustomModelClass;
 import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
@@ -43,8 +44,9 @@ import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepos
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
 import com.ss.gallerypro.fragments.viewer.DeletedItemCallback;
 import com.ss.gallerypro.theme.ColorTheme;
-import com.ss.gallerypro.view.dialog.DeleteDialog;
+import com.ss.gallerypro.utils.CommonStatusBarColor;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
+import com.ss.gallerypro.view.dialog.DeleteDialog;
 import com.ss.gallerypro.view.dialog.SortDialogTimeline;
 
 import java.util.ArrayList;
@@ -135,6 +137,8 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
         prepareTransitions();
         postponeEnterTransition();
+
+        CustomModelClass.getInstance().setListener(this);
         return view;
     }
 
@@ -196,8 +200,10 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     private void refreshTheme() {
         if(colorTheme.isDarkTheme()) {
             mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
+            CommonStatusBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
         } else {
             mRecyclerView.setBackgroundColor(colorTheme.getBackgroundColor());
+            CommonStatusBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
         }
     }
 
@@ -216,11 +222,6 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         adapter.setCheckedItemListener(this);
         adapter.setViewHolderListener(this);
         mRecyclerView.setAdapter(adapter);
-        if(colorTheme.isDarkTheme()) {
-            mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
-        } else {
-            mRecyclerView.setBackgroundColor(colorTheme.getBackgroundColor());
-        }
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -413,5 +414,11 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
             mActionMode.finish();
         });
         dialog.show();
+    }
+
+    @Override
+    public void requestUpdateTheme() {
+        super.requestUpdateTheme();
+        adapter.notifyDataSetChanged();
     }
 }

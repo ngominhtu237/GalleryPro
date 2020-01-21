@@ -1,6 +1,6 @@
 package com.ss.gallerypro.data.sort;
 
-import java.util.stream.Stream;
+import java.util.LinkedList;
 
 /**
  * Created by Tu on 6/24/2018.
@@ -29,7 +29,12 @@ public enum SortingMode {
     }
 
     public static String[] getNames() {
-        return Stream.of(SortingMode.values()).map(SortingMode::name).toArray(String[]::new);
+        LinkedList<String> list = new LinkedList<>();
+        for (SortingMode s : SortingMode.values()) {
+            list.add(s.name());
+        }
+
+        return list.toArray(new String[list.size()]);
     }
 }
 

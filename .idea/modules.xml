@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/ColorPicker-beta13/ColorPicker-beta13.iml" filepath="$PROJECT_DIR$/ColorPicker-beta13/ColorPicker-beta13.iml" />
       <module fileurl="file://$PROJECT_DIR$/GalleryPro.iml" filepath="$PROJECT_DIR$/GalleryPro.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/desertplaceholder/desertplaceholder.iml" filepath="$PROJECT_DIR$/desertplaceholder/desertplaceholder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photoview/photoview.iml" filepath="$PROJECT_DIR$/photoview/photoview.iml" />
       <module fileurl="file://$PROJECT_DIR$/subsampling-scale-image-view-3.10.0/subsampling-scale-image-view-3.10.0.iml" filepath="$PROJECT_DIR$/subsampling-scale-image-view-3.10.0/subsampling-scale-image-view-3.10.0.iml" />
     </modules>
   </component>

@@ -14,13 +14,12 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import uk.co.senab.photoview.PhotoView;
 
 public class ImageViewPagerAdapter extends PagerAdapter {
 

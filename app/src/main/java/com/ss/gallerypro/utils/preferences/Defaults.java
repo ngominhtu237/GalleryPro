@@ -24,8 +24,8 @@ public class Defaults {
     // Theme
     public static final int COLOR_PRIMARY = R.color.colorPrimary;
     public static final int COLOR_ACCENT = R.color.colorAccent;
-    public static final int COLOR_HIGHLIGHT = R.color.colorHighlight;
+    public static final int COLOR_BACKGROUND_HIGHLIGHT = R.color.colorBackgroundHighlight;
     public static final int COLOR_BACKGROUND = R.color.colorBackground;
-    public static final int COLOR_PRIMARY_HIGHLIGHT = R.color.colorPrimaryHighlightColor;
+    public static final int COLOR_ACCENT_HIGHLIGHT = R.color.colorAccentHighlight;
     public static final boolean IS_DARK_THEME = true;
 }

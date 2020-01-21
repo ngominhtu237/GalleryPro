@@ -33,6 +33,7 @@ import com.ss.gallerypro.R;
 import com.ss.gallerypro.animation.ParallaxPageTransformer;
 import com.ss.gallerypro.customComponent.ViewPagerFixed;
 import com.ss.gallerypro.data.MediaItem;
+import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.fragments.list.section.abstraction.BaseTimelineFragment;
 import com.ss.gallerypro.utils.Convert;
 import com.ss.gallerypro.utils.ViewSizeUtils;
@@ -45,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class ImagePagerFragment extends Fragment {
+public class ImagePagerFragment extends BaseFragment {
 
     public static ArrayList<MediaItem> mImageList;
     private ArrayList<Fragment> fragments;
@@ -79,6 +80,7 @@ public class ImagePagerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        rootView = super.onCreateView(inflater, container, savedInstanceState);
         if (getArguments() != null) {
             currentPosition = getArguments().getInt("currentPosition");
             isImage = getArguments().getBoolean("isImage");
@@ -91,7 +93,6 @@ public class ImagePagerFragment extends Fragment {
 
         setToolbar(true);
 
-        rootView = inflater.inflate(R.layout.image_pager_fragment, container, false);
         mViewPager = rootView.findViewById(R.id.viewPager);
         mViewPager.setPageTransformer(true, new ParallaxPageTransformer());
         pagerAdapter = new ImagePagerAdapter(this);
@@ -187,7 +188,11 @@ public class ImagePagerFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+        if(mColorTheme.isDarkTheme()) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getActivity().getColor(R.color.colorDarkBackgroundHighlight)));
+        } else {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(mColorTheme.getPrimaryColor()));
+        }
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setToolbar(false);
@@ -263,6 +268,11 @@ public class ImagePagerFragment extends Fragment {
             callback.onDelete(mDeletedItemPosition, mListDeletedItem);
         }
         super.onDestroyView();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.image_pager_fragment;
     }
 
     @Override

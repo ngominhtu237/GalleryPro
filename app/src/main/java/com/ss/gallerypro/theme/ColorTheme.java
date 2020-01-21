@@ -42,20 +42,20 @@ public class ColorTheme {
         Prefs.setBackgroundColor(color);
     }
 
-    public int getHighLightColor() {
-        return Prefs.getHighlightColor(mContext);
+    public int getBackgroundHighLightColor() {
+        return Prefs.getBackgroundHighlightColor(mContext);
     }
 
-    public void setHighLightColor(int color) {
-        Prefs.setHighlightColor(color);
+    public void setBackgroundHighLightColor(int color) {
+        Prefs.setBackgroundHighlightColor(color);
     }
 
-    public int getPrimaryHighLightColor() {
-        return Prefs.getPrimaryHighlightColor(mContext);
+    public int getAccentHighLightColor() {
+        return Prefs.getAccentHighlightColor(mContext);
     }
 
-    public void setPrimaryHighLightColor(int color) {
-        Prefs.setPrimaryHighlightColor(color);
+    public void setAccentHighLightColor(int color) {
+        Prefs.setAccentHighlightColor(color);
     }
 
     public boolean isDarkTheme() {

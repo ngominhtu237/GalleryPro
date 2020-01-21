@@ -10,6 +10,7 @@
     <dimen name="profile_width">75dp</dimen>
     <dimen name="profile_height">75dp</dimen>
 
+    <dimen name="eight_dp">8dp</dimen>
     <dimen name="ten_dp">10dp</dimen>
     <dimen name="twenty_dp">20dp</dimen>
     <dimen name="twenty_two_dp">22dp</dimen>

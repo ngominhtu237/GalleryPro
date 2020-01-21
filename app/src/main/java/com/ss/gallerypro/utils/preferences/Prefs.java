@@ -158,12 +158,12 @@ public class Prefs {
         return getPrefs().get(Keys.COLOR_ACCENT, context.getColor(Defaults.COLOR_ACCENT));
     }
 
-    public static int getHighlightColor(Context context) {
-        return getPrefs().get(Keys.COLOR_HIGHLIGHT, context.getColor(Defaults.COLOR_HIGHLIGHT));
+    public static int getBackgroundHighlightColor(Context context) {
+        return getPrefs().get(Keys.COLOR_BACKGROUND_HIGHLIGHT, context.getColor(Defaults.COLOR_BACKGROUND_HIGHLIGHT));
     }
 
-    public static int getPrimaryHighlightColor(Context context) {
-        return getPrefs().get(Keys.COLOR_PRIMARY_HIGHLIGHT, context.getColor(Defaults.COLOR_PRIMARY_HIGHLIGHT));
+    public static int getAccentHighlightColor(Context context) {
+        return getPrefs().get(Keys.COLOR_ACCENT_HIGHLIGHT, context.getColor(Defaults.COLOR_ACCENT_HIGHLIGHT));
     }
 
     public static int getBackgroundColor(Context context) {
@@ -182,12 +182,12 @@ public class Prefs {
         getPrefs().put(Keys.COLOR_ACCENT, value);
     }
 
-    public static void setHighlightColor(int value) {
-        getPrefs().put(Keys.COLOR_HIGHLIGHT, value);
+    public static void setBackgroundHighlightColor(int value) {
+        getPrefs().put(Keys.COLOR_BACKGROUND_HIGHLIGHT, value);
     }
 
-    public static void setPrimaryHighlightColor(int value) {
-        getPrefs().put(Keys.COLOR_PRIMARY_HIGHLIGHT, value);
+    public static void setAccentHighlightColor(int value) {
+        getPrefs().put(Keys.COLOR_ACCENT_HIGHLIGHT, value);
     }
 
     public static void setBackgroundColor(int value) {

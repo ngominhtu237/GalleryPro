@@ -9,13 +9,13 @@
             android:icon="@mipmap/nav_home"
             android:title="@string/nav_home" />
         <!--<item-->
-            <!--android:id="@+id/nav_albums"-->
-            <!--android:icon="@mipmap/baseline_photo_library_white_48"-->
-            <!--android:title="@string/nav_albums" />-->
-        <!--<item-->
             <!--android:id="@+id/nav_videos"-->
             <!--android:icon="@mipmap/nav_play"-->
             <!--android:title="@string/nav_video" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_albums"-->
+            <!--android:icon="@mipmap/baseline_photo_library_white_48"-->
+            <!--android:title="@string/nav_albums" />-->
         <!--<item-->
             <!--android:id="@+id/nav_times"-->
             <!--android:icon="@mipmap/ic_av_timer_black_24dp"-->
@@ -26,15 +26,15 @@
             <!--android:icon="@mipmap/ic_movie_black_18dp"-->
             <!--android:title="@string/nav_cates" />-->
 
-        <!--<item-->
-            <!--android:id="@+id/nav_settings"-->
-            <!--android:icon="@mipmap/nav_settings"-->
-            <!--android:title="@string/nav_settings" />-->
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@mipmap/nav_settings"
+            android:title="@string/nav_settings" />
 
-        <!--<item-->
-            <!--android:id="@+id/nav_rate"-->
-            <!--android:icon="@mipmap/nav_heart"-->
-            <!--android:title="@string/nav_rate" />-->
+        <item
+            android:id="@+id/nav_rate"
+            android:icon="@mipmap/nav_heart"
+            android:title="@string/nav_rate" />
 
         <item
             android:id="@+id/nav_about_us"

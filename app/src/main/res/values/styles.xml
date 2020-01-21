@@ -58,4 +58,8 @@
         <item name="colorControlHighlight">#E0F2F1</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
     </style>
+
+    <style name="ColorPickerDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/colorBackground</item>
+    </style>
 </resources>

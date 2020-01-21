@@ -1,12 +1,16 @@
 package com.ss.gallerypro;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HeaderViewHolder {
+
+    @BindView(R.id.nav_header_bg)
+    protected ImageView mNavHeaderBg;
 
     @BindView(R.id.nav_header_title)
     protected TextView mTitle;

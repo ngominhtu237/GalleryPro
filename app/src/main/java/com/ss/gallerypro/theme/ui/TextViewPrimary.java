@@ -3,10 +3,12 @@ package com.ss.gallerypro.theme.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import com.ss.gallerypro.CustomModelClass;
+import com.ss.gallerypro.OnChooseColorListener;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.theme.ColorTheme;
 
-public class TextViewPrimary extends android.support.v7.widget.AppCompatTextView {
+public class TextViewPrimary extends android.support.v7.widget.AppCompatTextView implements OnChooseColorListener {
     private ColorTheme colorTheme;
 
     public TextViewPrimary(Context context) {
@@ -31,7 +33,17 @@ public class TextViewPrimary extends android.support.v7.widget.AppCompatTextView
         if(colorTheme.isDarkTheme()) {
              this.setTextColor(getContext().getColor(R.color.colorDarkAccent));
         } else {
-            //
+            setTextColor(colorTheme.getAccentColor());
+        }
+        CustomModelClass.getInstance().setListener(this);
+    }
+
+    @Override
+    public void requestUpdateTheme() {
+        if(colorTheme.isDarkTheme()) {
+            this.setTextColor(getContext().getColor(R.color.colorDarkAccent));
+        } else {
+            setTextColor(colorTheme.getAccentColor());
         }
     }
 }

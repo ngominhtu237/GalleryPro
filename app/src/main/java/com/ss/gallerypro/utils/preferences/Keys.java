@@ -1,7 +1,5 @@
 package com.ss.gallerypro.utils.preferences;
 
-import com.ss.gallerypro.R;
-
 public class Keys {
 
     // Prevent class instantiation
@@ -48,7 +46,7 @@ public class Keys {
     public static final String COLOR_PRIMARY = "color_primary";
     public static final String COLOR_ACCENT = "color_accent";
     public static final String COLOR_BACKGROUND = "color_background";
-    public static final String COLOR_HIGHLIGHT = "color_highlight";
-    public static final String COLOR_PRIMARY_HIGHLIGHT = "color_primary_highlight";
+    public static final String COLOR_BACKGROUND_HIGHLIGHT = "color_background_highlight";
+    public static final String COLOR_ACCENT_HIGHLIGHT = "color_accent_highlight";
     public static final String IS_DARK_THEME = "is_dark_theme";
 }

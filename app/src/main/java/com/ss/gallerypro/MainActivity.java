@@ -3,6 +3,7 @@ package com.ss.gallerypro;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,18 +19,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ss.gallerypro.activity.AboutActivity;
+import com.ss.gallerypro.activity.SettingsActivity;
 import com.ss.gallerypro.data.StatisticModel;
 import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.data.provider.CPHelper;
 import com.ss.gallerypro.fragments.home.HomeFragment;
 import com.ss.gallerypro.theme.ColorTheme;
+import com.ss.gallerypro.utils.CommonStatusBarColor;
 
 import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker, CallBackToActivityListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker, CallBackToActivityListener , OnChooseColorListener{
 
     private static final String TAG = "MainActivity";
     public static final int ABOUT_REQUEST_CODE = 1;
+    public static final int SETTINGS_REQUEST_CODE = 2;
     private DrawerLayout drawer;
     private HeaderViewHolder mHeaderViewHolder;
     private FragmentManager mFragmentManager;
@@ -42,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         colorTheme = new ColorTheme(this);
 
         setToolbarCustom();
@@ -90,6 +92,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         lastClicked = getCheckedItem(navigationView);
+
+        CustomModelClass.getInstance().setListener(this);
+        requestUpdateTheme();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
     }
 
     private void setToolbarCustom() {
@@ -155,9 +165,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 lastClicked = currentItem;
             }
 
-            if(currentItem == R.id.nav_about_us) {
-                startActivityForResult(new Intent(this, AboutActivity.class), ABOUT_REQUEST_CODE);
-                return false;
+            if(currentItem == R.id.nav_settings) {
+                    startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS_REQUEST_CODE);
+                    return false;
+                }
+
+                if(currentItem == R.id.nav_about_us) {
+                    startActivityForResult(new Intent(this, AboutActivity.class), ABOUT_REQUEST_CODE);
+                    return false;
             }
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -193,5 +208,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onCallBack() {
         getDataNavHeader();
         Log.v(TAG, "refresh data header");
+    }
+
+    @Override
+    public void requestUpdateTheme() {
+        super.requestUpdateTheme();
+        if(mHeaderViewHolder != null){
+            mHeaderViewHolder.mNavHeaderBg.setBackgroundColor(mColorTheme.isDarkTheme() ? getColor(R.color.colorDarkBackgroundHighlight): mColorTheme.getPrimaryColor());
+        }
+        if(mColorTheme.isDarkTheme()) {
+            int colorBg = getColor(R.color.colorDarkBackgroundHighlight);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorBg));
+            CommonStatusBarColor.setStatusBarColor(this, colorBg);
+        } else {
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(mColorTheme.getPrimaryColor()));
+            CommonStatusBarColor.setStatusBarColor(this, mColorTheme.getPrimaryColor());
+        }
     }
 }

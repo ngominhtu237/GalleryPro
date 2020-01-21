@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,22 +23,22 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.github.chrisbanes.photoview.OnViewTapListener;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.utils.preferences.Prefs;
-import com.ss.gallerypro.view.dialog.FragmentBottomSheetDialog;
 import com.ss.gallerypro.view.OnSwipeTouchListener;
+import com.ss.gallerypro.view.dialog.FragmentBottomSheetDialog;
 
 import java.util.Objects;
-
-import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PictureFragment extends Fragment implements SubsamplingScaleImageView.OnImageEventListener, View.OnClickListener, PhotoViewAttacher.OnViewTapListener {
+public class PictureFragment extends Fragment implements SubsamplingScaleImageView.OnImageEventListener, View.OnClickListener {
 
     private static final String KEY_IMAGE_OBJ = "com.ss.key.imageObj";
     private ProgressBar progressBar;
@@ -73,10 +72,16 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
 
         assert item != null;
         v.findViewById(R.id.ivPhotoView).setTransitionName(item.getName());
-        Log.v("transition receive name ", item.getName());
 
         PhotoViewAttacher mAttacher = new PhotoViewAttacher(photoView);
-        mAttacher.setOnViewTapListener(this);
+        mAttacher.setOnViewTapListener(new OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                if (getParentFragment() != null) {
+                    ((ImagePagerFragment )getParentFragment()).blo();
+                }
+            }
+        });
         scaleImageView.setOnClickListener(this);
 
         String mineType = item.getMediaType();
@@ -152,6 +157,7 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
     @Override
     public void onImageLoaded() {
         progressBar.setVisibility(View.GONE);
+        Objects.requireNonNull(getParentFragment()).startPostponedEnterTransition();
     }
 
     @Override
@@ -182,13 +188,6 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
                     ((ImagePagerFragment )getParentFragment()).blo();
                 }
                 break;
-        }
-    }
-
-    @Override
-    public void onViewTap(View view, float v, float v1) {
-        if (getParentFragment() != null) {
-            ((ImagePagerFragment )getParentFragment()).blo();
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.ss.gallerypro.fragments.home;
 
 
-import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,12 +9,12 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ss.gallerypro.CustomModelClass;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.fragments.list.normal.albums.AlbumsFragment;
@@ -51,6 +50,8 @@ public class HomeFragment extends BaseFragment {
         setupTabLayout();
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+        requestUpdateTheme();
+        CustomModelClass.getInstance().setListener(this);
         return view;
     }
 
@@ -92,5 +93,17 @@ public class HomeFragment extends BaseFragment {
             return TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
         }
         return 0;
+    }
+
+    @Override
+    public void requestUpdateTheme() {
+        if(tabLayout != null) {
+            if (mColorTheme.isDarkTheme()) {
+                int colorBg = getActivity().getColor(R.color.colorDarkBackgroundHighlight);
+                tabLayout.setBackgroundColor(colorBg);
+            } else {
+                tabLayout.setBackgroundColor(mColorTheme.getPrimaryColor());
+            }
+        }
     }
 }

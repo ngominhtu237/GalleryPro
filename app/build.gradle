@@ -4,11 +4,10 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.ss.gallerypro"
-        minSdkVersion 25
+        minSdkVersion 24
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -45,9 +44,7 @@ dependencies {
     implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     // Picture View
-    implementation 'com.github.chrisbanes:PhotoView:1.2.6'
     implementation 'com.yarolegovich:lovely-dialog:1.1.0'
-    implementation 'com.github.jetradarmobile.desertplaceholder:desertplaceholder:1.2.4'
     implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation project(':subsampling-scale-image-view-3.10.0')
@@ -58,6 +55,10 @@ dependencies {
 
     // Shimmer
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+    implementation project(path: ':ColorPicker-beta13')
+
+    compile project(':desertplaceholder')
+    compile project(':photoview')
 }
 repositories {
     mavenCentral()

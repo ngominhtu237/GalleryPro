@@ -20,6 +20,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.provider.CPHelper;
 import com.ss.gallerypro.data.sort.PhotoComparators;
@@ -53,14 +54,16 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
     private ICheckedItem checkedItemListener;
 
     private ViewHolderListener viewHolderListener;
-    private ColorTheme colorTheme;
+    private ColorTheme mColorTheme;
+    private Context mContext;
 
     public BaseTimelineAdapter(Fragment fragment, Context context, SortingMode sortingMode, SortingOrder sortingOrder ) {
         this.mContextWeakReference = new WeakReference<>(context);
         this.mSortingMode = sortingMode;
         this.mSortingOrder = sortingOrder;
         mSelectedItemsIds = new SparseBooleanArray();
-        colorTheme = new ColorTheme(context);
+        mColorTheme = new ColorTheme(context);
+        mContext = context;
     }
 
     @NonNull
@@ -103,7 +106,11 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
             headerHolder = (HEADER) holder;
             HeaderModel sModel = (HeaderModel) mListData.get(position);
             headerHolder.tvTitle.setText(sModel.title);
-            headerHolder.tvTitle.setTextColor(colorTheme.getHighLightColor());
+            if(mColorTheme.isDarkTheme()) {
+                headerHolder.tvTitle.setTextColor(mContext.getColor(R.color.colorDarkAccent));
+            } else {
+                headerHolder.tvTitle.setTextColor(mColorTheme.getAccentColor());
+            }
             return;
         }
 

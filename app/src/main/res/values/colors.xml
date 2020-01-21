@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/md_grey_900</color>
-    <color name="colorAccent">@color/accent_white</color>
-    <color name="colorHighlight">#DFFFF7F7</color>
-    <color name="colorPrimaryHighlightColor">@color/md_grey_900</color>
-    <color name="colorBackground">@color/accent_black</color>
+    <color name="colorPrimary">@color/md_light_blue_800</color>
+    <color name="colorHighlight">@color/md_grey_850</color>
+
+    <color name="colorAccent">@color/accent_black</color>
+    <color name="colorAccentHighlight">@color/md_grey_600</color>
+
+    <color name="colorBackground">@color/accent_white</color>
+    <color name="colorBackgroundHighlight">@color/md_grey_300</color>
 
     <!-- Dark theme -->
     <color name="colorDarkPrimary">@color/md_grey_900</color>
-    <color name="colorDarkPrimaryHighlightColor">@color/md_grey_850</color>
+    <color name="colorDarkPrimaryHighlight">@color/md_grey_850</color>
     <color name="colorDarkAccent">@color/accent_white</color>
-    <color name="colorDarkHighlight">#DFFFF7F7</color>
+    <color name="colorDarkHighlight">#757575</color>
+
     <color name="colorDarkBackground">@color/accent_black</color>
+    <color name="colorDarkBackgroundHighlight">@color/colorDarkPrimary</color>
 
     <color name="colorPrimaryStatusTransparent">@color/accent_deep_purple_transparent</color>
     <color name="themeText">@color/accent_black</color>

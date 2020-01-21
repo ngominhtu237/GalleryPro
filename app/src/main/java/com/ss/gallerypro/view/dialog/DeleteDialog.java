@@ -71,7 +71,7 @@ public class DeleteDialog extends Dialog {
             Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
         } else {
             GradientDrawable gd = new GradientDrawable();
-            gd.setColor(colorTheme.getPrimaryHighLightColor());
+            gd.setColor(colorTheme.getAccentHighLightColor());
             gd.setCornerRadius(25);
             Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
         }

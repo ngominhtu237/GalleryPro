@@ -1,39 +1,35 @@
 package com.ss.gallerypro.fragments;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.InflateException;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.ss.gallerypro.R;
+import com.ss.gallerypro.OnChooseColorListener;
 import com.ss.gallerypro.theme.ColorTheme;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements OnChooseColorListener {
     protected Unbinder unbinder;
     //protected Activity mAttachedActivity;
-    private ColorTheme colorTheme;
+    protected ColorTheme mColorTheme;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         //mAttachedActivity = getActivity();
         super.onCreate(savedInstanceState);
-        colorTheme = new ColorTheme(getActivity());
+        mColorTheme = new ColorTheme(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -61,5 +57,10 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected abstract int getLayoutId();
+
+    @Override
+    public void requestUpdateTheme() {
+
+    }
 }
 

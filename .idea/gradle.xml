@@ -8,7 +8,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/ColorPicker-beta13" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/desertplaceholder" />
+            <option value="$PROJECT_DIR$/photoview" />
             <option value="$PROJECT_DIR$/subsampling-scale-image-view-3.10.0" />
           </set>
         </option>
