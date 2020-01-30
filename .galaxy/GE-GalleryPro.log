@@ -1,20 +1,38 @@
-[2019-10-09 10:24:19] [GalaxyEnv$1] galaxy property is null or empty 
-[2019-10-09 10:24:19] [GalaxyEnv$1] Non-GB Project : GalleryPro 
-[2019-10-09 10:24:19] [GalaxyEnv$1] allprojects : project : app 
-[2019-10-09 10:24:19] [GalaxyEnv$1] Non-GB Project : app 
-[2019-10-09 10:24:19] [GalaxyEnv$1] allprojects : project : subsampling-scale-image-view-3.10.0 
-[2019-10-09 10:24:19] [GalaxyEnv$1] Non-GB Project : subsampling-scale-image-view-3.10.0 
-[2019-10-09 10:24:19] [GalaxyEnv$2][D] gradle projects loaded 
-[2019-10-09 10:24:19] [GalaxyEnv][I] set common default repository : samsung maven 
-[2019-10-09 10:24:19] [GalaxyEnv$6][I]     Default Repo : buildscript repository : http://10.252.250.53:8081/lm/content/groups/public/ 
-[2019-10-09 10:24:19] [GalaxyEnv$7][I]     Default Repo : repository : http://10.252.250.53:8081/lm/content/groups/public/ 
-[2019-10-09 10:24:19] [GalaxyEnv][I] set common default strategy 
-[2019-10-09 10:24:19] [GalaxyEnv][I] set common default repository : samsung maven 
-[2019-10-09 10:24:19] [GalaxyEnv$6][I]     Default Repo : buildscript repository : http://10.252.250.53:8081/lm/content/groups/public/ 
-[2019-10-09 10:24:19] [GalaxyEnv$7][I]     Default Repo : repository : http://10.252.250.53:8081/lm/content/groups/public/ 
-[2019-10-09 10:24:19] [GalaxyEnv][I] set common default strategy 
-[2019-10-09 10:24:19] [GalaxyEnv][I] set common default repository : samsung maven 
-[2019-10-09 10:24:19] [GalaxyEnv$6][I]     Default Repo : buildscript repository : http://10.252.250.53:8081/lm/content/groups/public/ 
-[2019-10-09 10:24:19] [GalaxyEnv$7][I]     Default Repo : repository : http://10.252.250.53:8081/lm/content/groups/public/ 
-[2019-10-09 10:24:19] [GalaxyEnv][I] set common default strategy 
-[2019-10-09 10:24:19] [GalaxyEnv$5][D] gradle projects evaluated 
+[2020-01-30 08:57:25] [GalaxyEnv$1] galaxy property is null or empty 
+[2020-01-30 08:57:25] [GalaxyEnv$1] Non-GB Project : GalleryPro 
+[2020-01-30 08:57:25] [GalaxyEnv$1] allprojects : project : ColorPicker-beta13 
+[2020-01-30 08:57:25] [GalaxyEnv$1] Non-GB Project : ColorPicker-beta13 
+[2020-01-30 08:57:25] [GalaxyEnv$1] allprojects : project : app 
+[2020-01-30 08:57:25] [GalaxyEnv$1] Non-GB Project : app 
+[2020-01-30 08:57:25] [GalaxyEnv$1] allprojects : project : desertplaceholder 
+[2020-01-30 08:57:25] [GalaxyEnv$1] Non-GB Project : desertplaceholder 
+[2020-01-30 08:57:25] [GalaxyEnv$1] allprojects : project : photoview 
+[2020-01-30 08:57:25] [GalaxyEnv$1] Non-GB Project : photoview 
+[2020-01-30 08:57:25] [GalaxyEnv$1] allprojects : project : subsampling-scale-image-view-3.10.0 
+[2020-01-30 08:57:25] [GalaxyEnv$1] Non-GB Project : subsampling-scale-image-view-3.10.0 
+[2020-01-30 08:57:25] [GalaxyEnv$2][D] gradle projects loaded 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default repository : samsung maven 
+[2020-01-30 08:57:25] [GalaxyEnv$6][I]     Default Repo : buildscript repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv$7][I]     Default Repo : repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default strategy 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default repository : samsung maven 
+[2020-01-30 08:57:25] [GalaxyEnv$6][I]     Default Repo : buildscript repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv$7][I]     Default Repo : repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default strategy 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default repository : samsung maven 
+[2020-01-30 08:57:25] [GalaxyEnv$6][I]     Default Repo : buildscript repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv$7][I]     Default Repo : repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default strategy 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default repository : samsung maven 
+[2020-01-30 08:57:25] [GalaxyEnv$6][I]     Default Repo : buildscript repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv$7][I]     Default Repo : repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default strategy 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default repository : samsung maven 
+[2020-01-30 08:57:25] [GalaxyEnv$6][I]     Default Repo : buildscript repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv$7][I]     Default Repo : repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default strategy 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default repository : samsung maven 
+[2020-01-30 08:57:25] [GalaxyEnv$6][I]     Default Repo : buildscript repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv$7][I]     Default Repo : repository : http://10.252.250.53:8081/lm/content/groups/public/ 
+[2020-01-30 08:57:25] [GalaxyEnv][I] set common default strategy 
+[2020-01-30 08:57:31] [GalaxyEnv$5][D] gradle projects evaluated 

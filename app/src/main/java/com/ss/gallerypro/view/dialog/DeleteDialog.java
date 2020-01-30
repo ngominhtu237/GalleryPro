@@ -11,7 +11,7 @@ import android.view.View;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.theme.ColorTheme;
 import com.ss.gallerypro.theme.ui.ButtonTheme;
-import com.ss.gallerypro.theme.ui.TextViewSecondary;
+import com.ss.gallerypro.theme.ui.TextViewPrimary;
 
 import java.util.Objects;
 
@@ -23,7 +23,7 @@ public class DeleteDialog extends Dialog {
     private View.OnClickListener btCancelListener = null;
     private View.OnClickListener btDeleteListener = null;
     private ColorTheme colorTheme;
-    private TextViewSecondary tvMessage;
+    private TextViewPrimary tvMessage;
     private ButtonTheme btnCancel, btnDelete;
 
     public DeleteDialog(@NonNull Context context) {
@@ -71,7 +71,7 @@ public class DeleteDialog extends Dialog {
             Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
         } else {
             GradientDrawable gd = new GradientDrawable();
-            gd.setColor(colorTheme.getAccentHighLightColor());
+            gd.setColor(colorTheme.getBackgroundHighLightColor());
             gd.setCornerRadius(25);
             Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
         }

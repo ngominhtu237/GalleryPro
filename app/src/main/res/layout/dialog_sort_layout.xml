@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/five_dp"
     android:orientation="vertical">
 
-    <com.ss.gallerypro.theme.ui.TextViewPrimary
+    <com.ss.gallerypro.theme.ui.TitleTextView
         android:id="@+id/title_dialog_sort"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

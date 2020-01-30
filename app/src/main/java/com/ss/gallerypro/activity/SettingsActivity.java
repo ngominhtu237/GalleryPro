@@ -14,7 +14,7 @@ import com.ss.gallerypro.BaseActivity;
 import com.ss.gallerypro.CustomModelClass;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.theme.ui.TextViewPrimary;
-import com.ss.gallerypro.utils.CommonStatusBarColor;
+import com.ss.gallerypro.utils.CommonMenuBarColor;
 import com.ss.gallerypro.view.SwitchButton;
 
 import butterknife.BindView;
@@ -127,7 +127,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             cardView2.setCardBackgroundColor(colorDarkBgHighlight);
 
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorBg));
-            CommonStatusBarColor.setStatusBarColor(this, colorBg);
+            CommonMenuBarColor.setStatusBarColor(this, colorBg);
 
             themeIc.setImageResource(R.mipmap.settings_theme_white_96);
             nightModeIc.setImageResource(R.mipmap.setting_nightmode_white_96);
@@ -140,7 +140,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             cardView2.setCardBackgroundColor(colorBg);
 
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(mColorTheme.getPrimaryColor()));
-            CommonStatusBarColor.setStatusBarColor(this, mColorTheme.getPrimaryColor());
+            CommonMenuBarColor.setStatusBarColor(this, mColorTheme.getPrimaryColor());
 
             themeIc.setImageResource(R.mipmap.settings_theme_black_96);
             nightModeIc.setImageResource(R.mipmap.setting_nightmode_black_96);

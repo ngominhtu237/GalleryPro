@@ -44,7 +44,7 @@ import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepos
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
 import com.ss.gallerypro.fragments.viewer.DeletedItemCallback;
 import com.ss.gallerypro.theme.ColorTheme;
-import com.ss.gallerypro.utils.CommonStatusBarColor;
+import com.ss.gallerypro.utils.CommonMenuBarColor;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
 import com.ss.gallerypro.view.dialog.DeleteDialog;
 import com.ss.gallerypro.view.dialog.SortDialogTimeline;
@@ -200,10 +200,10 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     private void refreshTheme() {
         if(colorTheme.isDarkTheme()) {
             mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
-            CommonStatusBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
+            CommonMenuBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
         } else {
             mRecyclerView.setBackgroundColor(colorTheme.getBackgroundColor());
-            CommonStatusBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
+            CommonMenuBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
         }
     }
 

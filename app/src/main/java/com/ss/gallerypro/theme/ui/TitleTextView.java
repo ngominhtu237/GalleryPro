@@ -6,29 +6,28 @@ import android.util.AttributeSet;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.theme.ColorTheme;
 
-public class ButtonTheme extends android.support.v7.widget.AppCompatButton {
+public class TitleTextView extends android.support.v7.widget.AppCompatTextView {
     private ColorTheme colorTheme;
 
-    public ButtonTheme(Context context) {
+    public TitleTextView(Context context) {
         super(context);
         colorTheme = new ColorTheme(context);
         init();
     }
 
-    public ButtonTheme(Context context, AttributeSet attrs) {
+    public TitleTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         colorTheme = new ColorTheme(context);
         init();
     }
 
-    public ButtonTheme(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TitleTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         colorTheme = new ColorTheme(context);
         init();
     }
 
     private void init() {
-        setBackground(null);
         if(colorTheme.isDarkTheme()) {
             setTextColor(getContext().getColor(R.color.colorDarkAccent));
         } else {

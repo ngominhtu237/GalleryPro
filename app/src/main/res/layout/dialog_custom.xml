@@ -9,7 +9,7 @@
         android:id="@+id/title_dialog_custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/fifteen_dp"
+        android:paddingTop="@dimen/ten_dp"
         android:paddingStart="@dimen/ten_dp"
         android:paddingEnd="@dimen/fifteen_dp"
         android:paddingBottom="@dimen/three_dp"
@@ -17,10 +17,10 @@
         android:layout_marginStart="8dp"
         android:textColor="@color/accent_blue"
         android:text="@string/delete"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
-    <com.ss.gallerypro.theme.ui.TextViewSecondary
+    <com.ss.gallerypro.theme.ui.TextViewPrimary
         android:id="@+id/message_dialog_custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

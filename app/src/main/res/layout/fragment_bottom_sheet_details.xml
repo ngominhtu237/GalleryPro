@@ -4,12 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.ss.gallerypro.theme.ui.TextViewSecondary
+    <com.ss.gallerypro.theme.ui.TitleTextView
         android:id="@+id/bottom_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fifteen_dp"
-        android:paddingTop="@dimen/five_dp"
         android:text="@string/info"
         android:textColor="@color/colorAccent"
         android:textSize="20sp"

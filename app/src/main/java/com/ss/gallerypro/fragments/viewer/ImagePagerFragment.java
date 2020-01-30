@@ -35,6 +35,7 @@ import com.ss.gallerypro.customComponent.ViewPagerFixed;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.fragments.list.section.abstraction.BaseTimelineFragment;
+import com.ss.gallerypro.utils.CommonMenuBarColor;
 import com.ss.gallerypro.utils.Convert;
 import com.ss.gallerypro.utils.ViewSizeUtils;
 import com.ss.gallerypro.view.dialog.DeleteDialog;
@@ -189,9 +190,12 @@ public class ImagePagerFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         if(mColorTheme.isDarkTheme()) {
+            int colorBg = getActivity().getColor(R.color.colorDarkBackgroundHighlight);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getActivity().getColor(R.color.colorDarkBackgroundHighlight)));
+            CommonMenuBarColor.setStatusBarColor(getActivity(), colorBg);
         } else {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(mColorTheme.getPrimaryColor()));
+            CommonMenuBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
         }
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

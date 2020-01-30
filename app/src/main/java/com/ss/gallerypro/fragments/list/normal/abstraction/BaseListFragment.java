@@ -23,6 +23,7 @@ import com.ss.gallerypro.data.provider.ProviderChangeListener;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
+import com.ss.gallerypro.utils.CommonMenuBarColor;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.AnimatedRecyclerView;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
@@ -88,6 +89,17 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
             setUpColumns();
         }
         super.onResume();
+        refreshTheme();
+    }
+
+    private void refreshTheme() {
+        if(mColorTheme.isDarkTheme()) {
+            recyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
+            CommonMenuBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
+        } else {
+            recyclerView.setBackgroundColor(mColorTheme.getBackgroundColor());
+            CommonMenuBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
+        }
     }
 
     public void setUpColumns() {

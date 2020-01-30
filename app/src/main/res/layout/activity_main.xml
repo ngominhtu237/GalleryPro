@@ -29,9 +29,6 @@
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:itemTextColor="@color/white"
-        android:background="@color/md_dark_cards"
-        app:itemBackground="@drawable/drawer_item"
         app:itemTextAppearance="@style/TahomaFont"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/main_drawer" />

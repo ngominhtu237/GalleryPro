@@ -11,13 +11,11 @@ import android.support.design.widget.BottomSheetDialogFragment;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.theme.ColorTheme;
 import com.ss.gallerypro.theme.ui.TextViewPrimary;
-import com.ss.gallerypro.theme.ui.TextViewSecondary;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,6 +47,12 @@ public class FragmentBottomSheetDialog extends BottomSheetDialogFragment {
             dateModifiedIcon.setImageResource(R.mipmap.icon_dialog_date_white);
         } else {
             //
+            nameIcon.setImageResource(R.mipmap.icon_dialog_file_black);
+            pathIcon.setImageResource(R.mipmap.icon_dialog_path_black);
+            sizeIcon.setImageResource(R.mipmap.icon_dialog_memory_black);
+            resolutionIcon.setImageResource(R.mipmap.icon_dialog_resolution_black);
+            dateTakenIcon.setImageResource(R.mipmap.icon_dialog_date_black);
+            dateModifiedIcon.setImageResource(R.mipmap.icon_dialog_date_black);
         }
     }
 

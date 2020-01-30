@@ -14,7 +14,6 @@
     <color name="colorDarkPrimaryHighlight">@color/md_grey_850</color>
     <color name="colorDarkAccent">@color/accent_white</color>
     <color name="colorDarkHighlight">#757575</color>
-
     <color name="colorDarkBackground">@color/accent_black</color>
     <color name="colorDarkBackgroundHighlight">@color/colorDarkPrimary</color>
 
@@ -362,4 +361,5 @@
     <color name="transparent_black">#c4000000</color>
     <color name="transparent_md_amber_500">#99FFC107</color>
     <color name="semi_transparent">#66000000</color>
+    <color name="transparent">#00000000</color>
 </resources>
