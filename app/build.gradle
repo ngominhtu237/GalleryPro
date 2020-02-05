@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.ss.gallerypro"
         minSdkVersion 24
@@ -19,6 +20,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
 }
 
 dependencies {
@@ -56,9 +59,9 @@ dependencies {
     // Shimmer
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
     implementation project(path: ':ColorPicker-beta13')
+    implementation project(path: ':desertplaceholder')
+    implementation project(path: ':photoview')
 
-    compile project(':desertplaceholder')
-    compile project(':photoview')
 }
 repositories {
     mavenCentral()
