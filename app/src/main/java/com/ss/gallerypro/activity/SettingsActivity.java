@@ -65,7 +65,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 
         registerListener();
 
-        refreshTheme();
+        refreshTheme(true);
     }
 
     private void registerListener() {
@@ -82,7 +82,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     private void changeSwitch(boolean isChecked) {
         nightModeSwitch.setChecked(isChecked);
         mColorTheme.setDarkTheme(isChecked);
-        refreshTheme();
+        refreshTheme(false);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 .showColorPreview(true)
                 .setPositiveButton("set", (dialog, selectedColor, allColors) -> {
                     mColorTheme.setPrimaryColor(selectedColor);
-                    refreshTheme();
+                    refreshTheme(false);
                 })
                 .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
                 .build().show();
@@ -140,7 +140,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         Toast.makeText(this, "Update column successfully!", Toast.LENGTH_SHORT).show();
     }
 
-    private void refreshTheme() {
+    private void refreshTheme(boolean isFirstTime) {
         nightModeSwitch.setShowIndicator(false);
 
         if(mColorTheme.isDarkTheme()) {
@@ -171,7 +171,9 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             columnIc.setImageResource(R.mipmap.setting_column_black_96);
 
         }
-        CustomModelClass.getInstance().applyThemeGlobal();
+        if(!isFirstTime) {
+            CustomModelClass.getInstance().applyThemeGlobal();
+        }
     }
 
     @Override

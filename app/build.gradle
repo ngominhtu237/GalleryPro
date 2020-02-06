@@ -62,6 +62,9 @@ dependencies {
     implementation project(path: ':desertplaceholder')
     implementation project(path: ':photoview')
 
+    implementation 'com.ramotion.fluidslider:fluid-slider:0.2.0'
+    implementation project(path: ':materialiconlib')
+
 }
 repositories {
     mavenCentral()

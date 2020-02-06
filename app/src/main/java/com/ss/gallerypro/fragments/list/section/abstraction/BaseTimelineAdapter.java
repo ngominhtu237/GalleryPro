@@ -71,15 +71,15 @@ public abstract class BaseTimelineAdapter<HEADER extends BaseHeaderViewHolder, C
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = mContextWeakReference.get();
         if(viewType == ViewType.HEADER_VIEW_TYPE) {
-            return createHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(getHeaderItemLayout(), parent, false));
+            return createHeaderViewHolder(context, LayoutInflater.from(parent.getContext()).inflate(getHeaderItemLayout(), parent, false));
         } else {
-            return createContentViewHolder(LayoutInflater.from(parent.getContext()).inflate(getContentItemLayout(), parent, false));
+            return createContentViewHolder(context, LayoutInflater.from(parent.getContext()).inflate(getContentItemLayout(), parent, false));
         }
     }
 
-    protected abstract HEADER createHeaderViewHolder(View view);
+    protected abstract HEADER createHeaderViewHolder(Context context, View view);
 
-    protected abstract CONTENT createContentViewHolder(View view);
+    protected abstract CONTENT createContentViewHolder(Context context, View view);
 
     protected abstract int getHeaderItemLayout();
 

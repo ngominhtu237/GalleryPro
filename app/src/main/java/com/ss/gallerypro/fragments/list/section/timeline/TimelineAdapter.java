@@ -18,13 +18,13 @@ public class TimelineAdapter extends BaseTimelineAdapter<HeaderViewHolder, Conte
     }
 
     @Override
-    protected HeaderViewHolder createHeaderViewHolder(View view) {
-        return new HeaderViewHolder(view);
+    protected HeaderViewHolder createHeaderViewHolder(Context context, View view) {
+        return new HeaderViewHolder(context, view);
     }
 
     @Override
-    protected ContentViewHolder createContentViewHolder(View view) {
-        return new ContentViewHolder(view);
+    protected ContentViewHolder createContentViewHolder(Context context, View view) {
+        return new ContentViewHolder(context, view);
     }
 
     @Override

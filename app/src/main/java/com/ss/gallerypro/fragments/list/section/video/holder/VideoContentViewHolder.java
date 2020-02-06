@@ -1,5 +1,6 @@
 package com.ss.gallerypro.fragments.list.section.video.holder;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +19,7 @@ public class VideoContentViewHolder extends BaseContentViewHolder {
     public
     TextView tvDuration;
 
-    public VideoContentViewHolder(View view) {
-        super(view);
+    public VideoContentViewHolder(Context context, View view) {
+        super(context, view);
     }
 }

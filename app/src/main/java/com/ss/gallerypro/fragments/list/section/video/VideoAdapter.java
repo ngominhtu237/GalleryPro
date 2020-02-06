@@ -22,13 +22,13 @@ public class VideoAdapter extends BaseTimelineAdapter<HeaderViewHolder, VideoCon
     }
 
     @Override
-    protected HeaderViewHolder createHeaderViewHolder(View view) {
-        return new HeaderViewHolder(view);
+    protected HeaderViewHolder createHeaderViewHolder(Context context, View view) {
+        return new HeaderViewHolder(context, view);
     }
 
     @Override
-    protected VideoContentViewHolder createContentViewHolder(View view) {
-        return new VideoContentViewHolder(view);
+    protected VideoContentViewHolder createContentViewHolder(Context context, View view) {
+        return new VideoContentViewHolder(context, view);
     }
 
     @Override
