@@ -6,9 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -20,6 +17,7 @@ import com.ss.gallerypro.data.sort.PhotoComparators;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.list.normal.abstraction.BaseListViewAdapter;
+import com.ss.gallerypro.utils.view.IconUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,6 +55,7 @@ public class AlbumPictureViewAdapter extends BaseListViewAdapter<AlbumPicturesVi
                 .apply(options)
                 .into(holder.ivAlbumPictureThumb);
 
+        holder.ivCheckbox.setImageDrawable(IconUtils.createSelectedIcon(mContext, mContext.getColor(R.color.colorDarkAccent)));
         holder.ivCheckbox.setVisibility(mSelectedItemsIds.get(position) ? View.VISIBLE : View.GONE);
         holder.ivPlayIcon.setVisibility(mItem.getMediaType().contains("video") ? View.VISIBLE : View.GONE);
         super.onBindViewHolder(holder, position);

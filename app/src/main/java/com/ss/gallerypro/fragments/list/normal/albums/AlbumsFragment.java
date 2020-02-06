@@ -197,11 +197,15 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
             mActionMode = ((AppCompatActivity) Objects.requireNonNull(getActivity())).startSupportActionMode(toolbarActionModeBucket);
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
+            parentFragment.showAppBarLayout();
         }
 
         if (mActionMode != null) {
-            mActionMode.setTitle(String.valueOf(albumsAdapter
-                    .getSelectedCount()) + " selected");
+            mActionMode.setTitle(albumsAdapter.getSelectedCount() + " selected");
+        }
+        // hide tab bar
+        if (parentFragment != null && hasCheckedItems) {
+            parentFragment.hideAppBarLayout();
         }
     }
 
@@ -492,5 +496,12 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         }
         setupColumn();
         Log.v("update column", "AlbumsFragment");
+    }
+
+    // must override only here, not in BaseListFragment because we only need in AlbumsFragment => fix issue when back from PhotoSplitView
+    @Override
+    public void setNullToActionMode() {
+        parentFragment.showAppBarLayout();
+        super.setNullToActionMode();
     }
 }

@@ -18,6 +18,7 @@ import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.list.normal.abstraction.BaseListViewAdapter;
 import com.ss.gallerypro.utils.Convert;
+import com.ss.gallerypro.utils.view.IconUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,6 +56,7 @@ public class VideosAdapter extends BaseListViewAdapter<VideoViewHolder> {
                 .apply(options)
                 .into(holder.ivVideoThumb);
 
+        holder.ivCheckbox.setImageDrawable(IconUtils.createSelectedIcon(mContext, mContext.getColor(R.color.colorDarkAccent)));
         holder.ivCheckbox.setVisibility(mSelectedItemsIds.get(position) ? View.VISIBLE : View.GONE);
         holder.tvDuration.setText(Convert.convertSecondsToHMmSs(Long.parseLong(mItem.getDuration())));
         super.onBindViewHolder(holder, position);

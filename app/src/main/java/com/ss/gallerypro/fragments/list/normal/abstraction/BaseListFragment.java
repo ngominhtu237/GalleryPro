@@ -23,6 +23,7 @@ import com.ss.gallerypro.data.provider.ProviderChangeListener;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
+import com.ss.gallerypro.fragments.home.HomeFragment;
 import com.ss.gallerypro.utils.CommonMenuBarColor;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.AnimatedRecyclerView;
@@ -52,6 +53,8 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
 
     private ContentProviderObserver mProviderObserver;
 
+    protected HomeFragment parentFragment;
+
     public BaseListFragment() {
         super();
     }
@@ -60,6 +63,7 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         mAttachedActivity = getActivity();
+        parentFragment = ((HomeFragment) this.getParentFragment());
 
         mProviderObserver = new ContentProviderObserver();
         mProviderObserver.setChangeListener(this);
