@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ss.gallerypro.OnChooseColorListener;
+import com.ss.gallerypro.setting.callback.ThemeChangeObserver;
 import com.ss.gallerypro.theme.ColorTheme;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public abstract class BaseFragment extends Fragment implements OnChooseColorListener {
+public abstract class BaseFragment extends Fragment implements ThemeChangeObserver {
     protected Unbinder unbinder;
     //protected Activity mAttachedActivity;
     protected ColorTheme mColorTheme;

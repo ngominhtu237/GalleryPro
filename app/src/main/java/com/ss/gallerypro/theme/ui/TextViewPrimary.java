@@ -4,11 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.ss.gallerypro.CustomModelClass;
-import com.ss.gallerypro.OnChooseColorListener;
+import com.ss.gallerypro.setting.callback.ThemeChangeObserver;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.theme.ColorTheme;
 
-public class TextViewPrimary extends android.support.v7.widget.AppCompatTextView implements OnChooseColorListener {
+public class TextViewPrimary extends android.support.v7.widget.AppCompatTextView implements ThemeChangeObserver {
     private ColorTheme colorTheme;
 
     public TextViewPrimary(Context context) {
@@ -35,7 +35,7 @@ public class TextViewPrimary extends android.support.v7.widget.AppCompatTextView
         } else {
             setTextColor(colorTheme.getAccentColor());
         }
-        CustomModelClass.getInstance().setListener(this);
+        CustomModelClass.getInstance().addThemeChangeObserver(this);
     }
 
     @Override

@@ -1,8 +1,6 @@
 package com.ss.gallerypro.fragments.list.section.timeline;
 
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,11 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.data.Bucket;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.TimelineHelper;
 import com.ss.gallerypro.data.filter.MediaFilter;
@@ -81,23 +76,8 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     }
 
     @Override
-    protected int getContentColumn() {
-        return 1;
-    }
-
-    @Override
-    protected int getHeaderColumn() {
-        return 3;
-    }
-
-    @Override
     protected BaseTimelineAdapter createAdapter() {
         return new TimelineAdapter(this, mAttachedActivity, getSortingMode(), getSortingOrder());
-    }
-
-    @Override
-    protected int getColumnRecycleView() {
-        return 3;
     }
 
     @Override

@@ -1,11 +1,15 @@
 package com.ss.gallerypro;
 
+import com.ss.gallerypro.setting.callback.ColumnChangeObserver;
+import com.ss.gallerypro.setting.callback.ThemeChangeObserver;
+
 import java.util.ArrayList;
 
 // purpose: notify between two activity
 public class CustomModelClass {
     private static CustomModelClass mInstance;
-    private ArrayList<OnChooseColorListener> mListenerArr = new ArrayList<>();
+    private ArrayList<ThemeChangeObserver> themeChangeObservers = new ArrayList<>();
+    private ArrayList<ColumnChangeObserver> columnChangeObservers = new ArrayList<>();
 
     private CustomModelClass() {}
 
@@ -16,13 +20,23 @@ public class CustomModelClass {
         return mInstance;
     }
 
-    public void setListener(OnChooseColorListener listener) {
-        mListenerArr.add(listener);
+    public void addThemeChangeObserver(ThemeChangeObserver observer) {
+        themeChangeObservers.add(observer);
     }
 
-    public void changeState() {
-        for(OnChooseColorListener listener: mListenerArr) {
-            listener.requestUpdateTheme();
+    public void addColumnChangeObserver(ColumnChangeObserver observer) {
+        columnChangeObservers.add(observer);
+    }
+
+    public void applyThemeGlobal() {
+        for(ThemeChangeObserver observer: themeChangeObservers) {
+            observer.requestUpdateTheme();
+        }
+    }
+
+    public void updateColumnGlobal() {
+        for(ColumnChangeObserver observer: columnChangeObservers) {
+            observer.requestUpdateColumn();
         }
     }
 }

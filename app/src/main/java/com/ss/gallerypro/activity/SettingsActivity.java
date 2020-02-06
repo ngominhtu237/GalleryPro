@@ -15,7 +15,9 @@ import com.ss.gallerypro.CustomModelClass;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.theme.ui.TextViewPrimary;
 import com.ss.gallerypro.utils.CommonMenuBarColor;
+import com.ss.gallerypro.utils.preferences.Prefs;
 import com.ss.gallerypro.view.SwitchButton;
+import com.ss.gallerypro.view.dialog.ChooseColumnDialog;
 
 import butterknife.BindView;
 
@@ -35,7 +37,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     @BindView(R.id.settings_theme_icon) ImageView themeIc;
     @BindView(R.id.settings_night_mode_icon) ImageView nightModeIc;
     @BindView(R.id.settings_column_icon) ImageView columnIc;
-    @BindView(R.id.settings_language_icon) ImageView languageIc;
+//    @BindView(R.id.settings_language_icon) ImageView languageIc;
 
     @BindView(R.id.settings_night_mode_switch)
     SwitchButton nightModeSwitch;
@@ -43,7 +45,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     @BindView(R.id.settings_theme_container) RelativeLayout settingsThemeContainer;
     @BindView(R.id.settings_night_mode_container) RelativeLayout settingsNightModeContainer;
     @BindView(R.id.settings_column_container) RelativeLayout settingsColumnContainer;
-    @BindView(R.id.settings_language_container) RelativeLayout settingsLanguageContainer;
+//    @BindView(R.id.settings_language_container) RelativeLayout settingsLanguageContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 changeSwitch(isChecked);
             }
         });
+        settingsColumnContainer.setOnClickListener(this);
     }
 
     private void changeSwitch(boolean isChecked) {
@@ -91,7 +94,23 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 } else {
                     showColorPicker();
                 }
+                break;
+            case R.id.settings_column_container:
+                showSelectColumnDialog();
+                break;
         }
+    }
+
+    private void showSelectColumnDialog() {
+        ChooseColumnDialog dialog = new ChooseColumnDialog(this);
+        dialog.setNegativeButton("Cancel", v -> dialog.dismiss());
+        dialog.setPositiveButton("Ok", v -> {
+            dialog.dismiss();
+            Prefs.setAlbumColumnPort(dialog.getSelectedAlbumColumn());
+            Prefs.setTimelineColumnPortrait(dialog.getSelectedTimelineColumn());
+            refreshColumn();
+        });
+        dialog.show();
     }
 
     private void showColorPicker() {
@@ -114,6 +133,11 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected int getLayoutId() {
         return R.layout.activity_settings;
+    }
+
+    private void refreshColumn() {
+        CustomModelClass.getInstance().updateColumnGlobal();
+        Toast.makeText(this, "Update column successfully!", Toast.LENGTH_SHORT).show();
     }
 
     private void refreshTheme() {
@@ -147,7 +171,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             columnIc.setImageResource(R.mipmap.setting_column_black_96);
 
         }
-        CustomModelClass.getInstance().changeState();
+        CustomModelClass.getInstance().applyThemeGlobal();
     }
 
     @Override

@@ -25,6 +25,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
+import com.ss.gallerypro.CustomModelClass;
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.ss.gallerypro.data.AlbumHelper;
@@ -41,6 +42,7 @@ import com.ss.gallerypro.fragments.list.normal.albums.model.AlbumRepositoryImpl;
 import com.ss.gallerypro.fragments.list.normal.albums.presenter.AlbumsPresenterImpl;
 import com.ss.gallerypro.fragments.list.normal.albums.view.IAlbumsView;
 import com.ss.gallerypro.fragments.list.split.pictures.AlbumPicturesFragment;
+import com.ss.gallerypro.setting.callback.ColumnChangeObserver;
 import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.dialog.DeleteDialog;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
@@ -54,7 +56,7 @@ import java.util.Set;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public class AlbumsFragment extends BaseListFragment implements IAlbumsView, RecycleViewClickListener, BaseListViewAdapter.CheckedItemInterface {
+public class AlbumsFragment extends BaseListFragment implements IAlbumsView, RecycleViewClickListener, BaseListViewAdapter.CheckedItemInterface, ColumnChangeObserver {
 
     private AlbumsAdapter albumsAdapter;
     private Toolbar_ActionMode_Bucket toolbarActionModeBucket;
@@ -75,6 +77,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
         // receive from SplashScreen
         receiveBuckets = mAttachedActivity.getIntent().getParcelableArrayListExtra("album_data");
+        CustomModelClass.getInstance().addColumnChangeObserver(this);
         Log.v("AlbumsFragment", "onCreate");
     }
 
@@ -312,7 +315,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                     } else {
                         AlbumHelper.setNumbColumnLand(NUM_COLUMNS);
                     }
-                    setUpColumns();
+                    setupColumn();
                 } else {
                     Toast.makeText(getContext(), "Max column is 10", Toast.LENGTH_SHORT).show();
                 }
@@ -326,7 +329,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                     } else {
                         AlbumHelper.setNumbColumnLand(NUM_COLUMNS);
                     }
-                    setUpColumns();
+                    setupColumn();
                 } else {
                     Toast.makeText(getContext(), "Min column is 1", Toast.LENGTH_SHORT).show();
                 }
@@ -478,5 +481,16 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 listener.onRefresh();
             });
         }
+    }
+
+    @Override
+    public void requestUpdateColumn() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            NUM_COLUMNS = AlbumHelper.getNumbColumnPort(getActivity());
+        } else {
+            NUM_COLUMNS = AlbumHelper.getNumbColumnLand(getActivity());
+        }
+        setupColumn();
+        Log.v("update column", "AlbumsFragment");
     }
 }

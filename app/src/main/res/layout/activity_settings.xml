@@ -98,6 +98,21 @@
                             android:layout_height="35dp" />
 
                     </RelativeLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/five_dp"
+                card_view:cardBackgroundColor="@color/colorDarkPrimary"
+                card_view:cardCornerRadius="@dimen/twenty_dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:id="@+id/settings_column_container"
@@ -134,57 +149,42 @@
                             android:textColor="@color/colorDarkHighlight"
                             android:textSize="12sp"/>
                     </RelativeLayout>
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/five_dp"
-                card_view:cardBackgroundColor="@color/colorDarkPrimary"
-                card_view:cardCornerRadius="@dimen/twenty_dp">
+                    <!--<RelativeLayout-->
+                    <!--android:id="@+id/settings_language_container"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:padding="@dimen/fifteen_dp">-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    <!--<ImageView-->
+                    <!--android:id="@+id/settings_language_icon"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginEnd="@dimen/twenty_dp"-->
+                    <!--android:padding="@dimen/three_dp"-->
+                    <!--android:src="@mipmap/icon_dialog_file_white" />-->
 
-                    <RelativeLayout
-                        android:id="@+id/settings_language_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/fifteen_dp">
+                    <!--<com.ss.gallerypro.theme.ui.TextViewPrimary-->
+                    <!--android:id="@+id/settings_language_title"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_toEndOf="@+id/settings_language_icon"-->
+                    <!--android:layout_marginBottom="@dimen/five_dp"-->
+                    <!--android:text="Language"-->
+                    <!--android:textColor="@color/colorDarkAccent" />-->
 
-                        <ImageView
-                            android:id="@+id/settings_language_icon"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/twenty_dp"
-                            android:padding="@dimen/three_dp"
-                            android:src="@mipmap/icon_dialog_file_white" />
-
-                        <com.ss.gallerypro.theme.ui.TextViewPrimary
-                            android:id="@+id/settings_language_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_toEndOf="@+id/settings_language_icon"
-                            android:layout_marginBottom="@dimen/five_dp"
-                            android:text="Language"
-                            android:textColor="@color/colorDarkAccent" />
-
-                        <com.ss.gallerypro.theme.ui.TextViewSecondary
-                            android:id="@+id/language_content"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/settings_language_title"
-                            android:layout_toEndOf="@+id/settings_language_icon"
-                            android:text="Change app display language"
-                            android:textColor="@color/colorDarkHighlight"
-                            android:textSize="12sp"/>
-                    </RelativeLayout>
+                    <!--<com.ss.gallerypro.theme.ui.TextViewSecondary-->
+                    <!--android:id="@+id/language_content"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@id/settings_language_title"-->
+                    <!--android:layout_toEndOf="@+id/settings_language_icon"-->
+                    <!--android:text="Change app display language"-->
+                    <!--android:textColor="@color/colorDarkHighlight"-->
+                    <!--android:textSize="12sp"/>-->
+                    <!--</RelativeLayout>-->
                 </LinearLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>

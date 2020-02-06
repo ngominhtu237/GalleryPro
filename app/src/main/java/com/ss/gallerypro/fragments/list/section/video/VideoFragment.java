@@ -71,23 +71,8 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     }
 
     @Override
-    protected int getContentColumn() {
-        return 1;
-    }
-
-    @Override
-    protected int getHeaderColumn() {
-        return 3;
-    }
-
-    @Override
     protected BaseTimelineAdapter createAdapter() {
         return new VideoAdapter(this, mAttachedActivity, getSortingMode(), getSortingOrder());
-    }
-
-    @Override
-    protected int getColumnRecycleView() {
-        return 3;
     }
 
     @Override

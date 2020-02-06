@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.ss.gallerypro.theme.ui.TextViewPrimary
+            android:id="@+id/media_column_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:paddingStart="@dimen/ten_dp"
+            android:paddingTop="@dimen/ten_dp"
+            android:paddingEnd="@dimen/fifteen_dp"
+            android:paddingBottom="@dimen/three_dp"
+            android:text="@string/media_column"
+            android:textColor="@color/accent_blue"
+            android:textSize="15sp"/>
+
+        <com.ramotion.fluidslider.FluidSlider
+            android:id="@+id/mediaSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:elevation="2dp"
+            app:duration="@android:integer/config_mediumAnimTime"
+            app:size="small" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.ss.gallerypro.theme.ui.TextViewPrimary
+            android:id="@+id/album_column_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:paddingStart="@dimen/ten_dp"
+            android:paddingTop="@dimen/ten_dp"
+            android:paddingEnd="@dimen/fifteen_dp"
+            android:paddingBottom="@dimen/three_dp"
+            android:text="@string/album_column"
+            android:textColor="@color/accent_blue"
+            android:textSize="15sp"/>
+
+        <com.ramotion.fluidslider.FluidSlider
+            android:id="@+id/albumSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:elevation="2dp"
+            app:duration="@android:integer/config_mediumAnimTime"
+            app:size="small" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <com.ss.gallerypro.theme.ui.ButtonTheme
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@string/cancel"
+            android:textColor="@color/md_blue_grey_700"
+            tools:ignore="ButtonStyle" />
+
+        <com.ss.gallerypro.theme.ui.ButtonTheme
+            android:id="@+id/btn_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@string/ok_action"
+            android:textColor="@color/md_blue_grey_700"
+            tools:ignore="ButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

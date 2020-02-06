@@ -86,7 +86,7 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
     @Override
     public void onResume() {
         if(mLayoutType == LayoutType.GRID) {
-            setUpColumns();
+            setupColumn();
         }
         super.onResume();
         refreshTheme();
@@ -102,7 +102,7 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
         }
     }
 
-    public void setUpColumns() {
+    public void setupColumn() {
         if (NUM_COLUMNS != ((GridLayoutManager) mLayoutManager).getSpanCount()) {
             recyclerView.removeItemDecoration(mGridSpacingItemDecoration);
             mGridSpacingItemDecoration = new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, getContext()), true);

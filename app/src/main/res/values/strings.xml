@@ -492,4 +492,8 @@ and this could make the media inaccessible from other apps. Use the exclude opti
     <string name="set_picture_as">Set picture as</string>
     <string name="delete">Delete</string>
     <string name="info">info</string>
+
+    <!-- Settings -->
+    <string name="media_column">Media Grid Columns</string>
+    <string name="album_column">Album Grid Columns</string>
 </resources>

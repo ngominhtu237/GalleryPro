@@ -3,6 +3,7 @@ package com.ss.gallerypro.fragments.list.section.abstraction;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -21,14 +22,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Toast;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 import com.ss.gallerypro.CallBackToActivityListener;
 import com.ss.gallerypro.CustomModelClass;
 import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
+import com.ss.gallerypro.activity.AboutActivity;
+import com.ss.gallerypro.activity.SettingsActivity;
 import com.ss.gallerypro.customComponent.GridlayoutManagerFixed;
+import com.ss.gallerypro.data.MediaHelper;
 import com.ss.gallerypro.data.MediaItem;
 import com.ss.gallerypro.data.provider.ContentProviderObserver;
 import com.ss.gallerypro.data.provider.ProviderChangeListener;
@@ -43,6 +46,7 @@ import com.ss.gallerypro.fragments.list.section.abstraction.actionmode.BaseActio
 import com.ss.gallerypro.fragments.list.section.abstraction.model.ITimelineRepository;
 import com.ss.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
 import com.ss.gallerypro.fragments.viewer.DeletedItemCallback;
+import com.ss.gallerypro.setting.callback.ColumnChangeObserver;
 import com.ss.gallerypro.theme.ColorTheme;
 import com.ss.gallerypro.utils.CommonMenuBarColor;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
@@ -57,7 +61,8 @@ import java.util.Objects;
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem, ViewHolderListener, DeletedItemCallback, ProviderChangeListener {
+public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem,
+        ViewHolderListener, DeletedItemCallback, ProviderChangeListener, ColumnChangeObserver {
     @BindView(R.id.timelineRecycleView)
     protected RecyclerView mRecyclerView;
 
@@ -109,6 +114,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                         true,
                         mProviderObserver);
         colorTheme = new ColorTheme(mAttachedActivity);
+        CustomModelClass.getInstance().addColumnChangeObserver(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -138,7 +144,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         prepareTransitions();
         postponeEnterTransition();
 
-        CustomModelClass.getInstance().setListener(this);
+        CustomModelClass.getInstance().addThemeChangeObserver(this);
         return view;
     }
 
@@ -209,9 +215,13 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     private void initRecycleView() {
         mRecyclerView.setHasFixedSize(true);
-        NUM_COLUMN = getColumnRecycleView();
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(mAttachedActivity, R.dimen.timeline_item_spacing);
-        mRecyclerView.addItemDecoration(itemDecoration);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            NUM_COLUMN = MediaHelper.getTimelineColumnPortrait(mAttachedActivity);
+        } else {
+            NUM_COLUMN = MediaHelper.getTimelineColumnLandscape(mAttachedActivity);
+        }
+        ItemOffsetDecoration itemOffsetDecoration = new ItemOffsetDecoration(mAttachedActivity, R.dimen.timeline_item_spacing);
+        mRecyclerView.addItemDecoration(itemOffsetDecoration);
         mLayoutManager = new GridlayoutManagerFixed(getContext(), NUM_COLUMN);
         mRecyclerView.setLayoutManager(mLayoutManager);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
@@ -222,6 +232,10 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         adapter.setCheckedItemListener(this);
         adapter.setViewHolderListener(this);
         mRecyclerView.setAdapter(adapter);
+        setSpanSize();
+    }
+
+    private void setSpanSize() {
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -233,13 +247,15 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         });
     }
 
-    protected abstract int getContentColumn();
+    private int getContentColumn() {
+        return 1;
+    }
 
-    protected abstract int getHeaderColumn();
+    private int getHeaderColumn() {
+        return NUM_COLUMN;
+    }
 
     protected abstract BaseTimelineAdapter createAdapter();
-
-    protected abstract int getColumnRecycleView();
 
     protected abstract SortingMode getSortModeFromPref();
 
@@ -266,11 +282,11 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                 return true;
 
             case R.id.action_timeline_about:
-                Toast.makeText(mAttachedActivity, "Open About Activity", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(mAttachedActivity, AboutActivity.class));
                 return true;
 
             case R.id.action_timeline_setting:
-                Toast.makeText(mAttachedActivity, "Open Setting Activity", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(mAttachedActivity, SettingsActivity.class));
                 return true;
 
             case R.id.action_timeline_delete:
@@ -420,5 +436,25 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     public void requestUpdateTheme() {
         super.requestUpdateTheme();
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void requestUpdateColumn() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            NUM_COLUMN = MediaHelper.getTimelineColumnPortrait(mAttachedActivity);
+        } else {
+            NUM_COLUMN = MediaHelper.getTimelineColumnLandscape(mAttachedActivity);
+        }
+        setupColumn();
+        Log.v("update column", "BaseTimelineFragment");
+    }
+
+    public void setupColumn() {
+        if (NUM_COLUMN != mLayoutManager.getSpanCount()) {
+            mLayoutManager = new GridlayoutManagerFixed(getContext(), NUM_COLUMN);
+            mLayoutManager.setSpanCount(NUM_COLUMN);
+            setSpanSize();
+            mRecyclerView.setLayoutManager(mLayoutManager);
+        }
     }
 }

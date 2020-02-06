@@ -51,7 +51,7 @@ public class HomeFragment extends BaseFragment {
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         requestUpdateTheme();
-        CustomModelClass.getInstance().setListener(this);
+        CustomModelClass.getInstance().addThemeChangeObserver(this);
         return view;
     }
 

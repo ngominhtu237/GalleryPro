@@ -25,12 +25,13 @@ import com.ss.gallerypro.data.StatisticModel;
 import com.ss.gallerypro.data.filter.MediaFilter;
 import com.ss.gallerypro.data.provider.CPHelper;
 import com.ss.gallerypro.fragments.home.HomeFragment;
+import com.ss.gallerypro.setting.callback.ThemeChangeObserver;
 import com.ss.gallerypro.theme.ColorTheme;
 import com.ss.gallerypro.utils.CommonMenuBarColor;
 
 import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker, CallBackToActivityListener , OnChooseColorListener{
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker, CallBackToActivityListener , ThemeChangeObserver {
 
     private static final String TAG = "MainActivity";
     public static final int ABOUT_REQUEST_CODE = 1;
@@ -97,7 +98,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         lastClicked = getCheckedItem(navigationView);
 
-        CustomModelClass.getInstance().setListener(this);
+        CustomModelClass.getInstance().addThemeChangeObserver(this);
         requestUpdateTheme();
     }
 
