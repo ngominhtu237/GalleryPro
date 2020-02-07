@@ -20,6 +20,7 @@ import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.fragments.list.normal.albums.AlbumsFragment;
 import com.ss.gallerypro.fragments.list.section.timeline.TimelineFragment;
 import com.ss.gallerypro.fragments.list.section.video.VideoFragment;
+import com.ss.gallerypro.view.LockableViewPager;
 
 import java.util.Objects;
 
@@ -37,7 +38,7 @@ public class HomeFragment extends BaseFragment {
     TabLayout tabLayout;
 
     @BindView(R.id.homeViewPager)
-    ViewPager viewPager;
+    LockableViewPager viewPager;
 
     public HomeFragment() {
         // Required empty public constructor

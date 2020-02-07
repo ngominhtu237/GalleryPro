@@ -44,8 +44,9 @@ import com.ss.gallerypro.fragments.list.normal.albums.view.IAlbumsView;
 import com.ss.gallerypro.fragments.list.split.pictures.AlbumPicturesFragment;
 import com.ss.gallerypro.setting.callback.ColumnChangeObserver;
 import com.ss.gallerypro.utils.Measure;
-import com.ss.gallerypro.view.dialog.DeleteDialog;
 import com.ss.gallerypro.view.GridSpacingItemDecoration;
+import com.ss.gallerypro.view.LockableViewPager;
+import com.ss.gallerypro.view.dialog.DeleteDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +65,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     private SparseBooleanArray selectedDeleteAlbum;
 
     private AlbumsPresenterImpl presenter;
+    private LockableViewPager parentViewPager;
 
     public AlbumsFragment() {
         super();
@@ -98,6 +100,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         } else {
             albumsAdapter.setDataList(receiveBuckets);
         }
+        parentViewPager = (LockableViewPager) container;
         return view;
     }
 
@@ -198,6 +201,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
             parentFragment.showAppBarLayout();
+            parentViewPager.setSwipeLocked(false);
         }
 
         if (mActionMode != null) {
@@ -206,6 +210,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         // hide tab bar
         if (parentFragment != null && hasCheckedItems) {
             parentFragment.hideAppBarLayout();
+            parentViewPager.setSwipeLocked(true);
         }
     }
 
@@ -502,6 +507,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     @Override
     public void setNullToActionMode() {
         parentFragment.showAppBarLayout();
+        parentViewPager.setSwipeLocked(false);
         super.setNullToActionMode();
     }
 }

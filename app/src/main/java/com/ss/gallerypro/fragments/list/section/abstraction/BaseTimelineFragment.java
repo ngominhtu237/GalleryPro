@@ -50,6 +50,7 @@ import com.ss.gallerypro.setting.callback.ColumnChangeObserver;
 import com.ss.gallerypro.theme.ColorTheme;
 import com.ss.gallerypro.utils.CommonMenuBarColor;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
+import com.ss.gallerypro.view.LockableViewPager;
 import com.ss.gallerypro.view.dialog.DeleteDialog;
 import com.ss.gallerypro.view.dialog.SortDialogTimeline;
 
@@ -94,6 +95,8 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     private ContentProviderObserver mProviderObserver;
     protected CallBackToActivityListener callBackListener;
     private ColorTheme colorTheme;
+
+    private LockableViewPager parentViewPager;
 
     public BaseTimelineFragment() {
     }
@@ -145,6 +148,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         postponeEnterTransition();
 
         CustomModelClass.getInstance().addThemeChangeObserver(this);
+        parentViewPager = (LockableViewPager) container;
         return view;
     }
 
@@ -317,6 +321,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     public void setNullToActionMode() {
         parentFragment.showAppBarLayout();
+        parentViewPager.setSwipeLocked(false);
         if (mActionMode != null)
             mActionMode = null;
     }
@@ -366,6 +371,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
             parentFragment.showAppBarLayout();
+            parentViewPager.setSwipeLocked(false);
         }
 
         if (mActionMode != null) {
@@ -374,6 +380,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         // hide tab bar
         if (parentFragment != null && hasCheckedItems) {
             parentFragment.hideAppBarLayout();
+            parentViewPager.setSwipeLocked(true);
         }
     }
 
