@@ -25,9 +25,8 @@ import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.fragments.home.HomeFragment;
 import com.ss.gallerypro.utils.CommonMenuBarColor;
-import com.ss.gallerypro.utils.Measure;
 import com.ss.gallerypro.view.AnimatedRecyclerView;
-import com.ss.gallerypro.view.GridSpacingItemDecoration;
+import com.ss.gallerypro.view.ItemOffsetDecoration;
 
 import butterknife.BindView;
 
@@ -41,13 +40,13 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
     protected DesertPlaceholder desertPlaceholder;
 
     @BindView(R.id.albumRecycleView)
-    protected AnimatedRecyclerView recyclerView;
+    protected AnimatedRecyclerView mRecyclerView;
 
     protected RecyclerView.LayoutManager mLayoutManager;
-    protected GridSpacingItemDecoration mGridSpacingItemDecoration;
+    protected ItemOffsetDecoration itemOffsetDecoration;
 
     protected LayoutType mLayoutType;
-    protected int NUM_COLUMNS;
+    protected int columnNumber;
     protected ActionMode mActionMode;
     protected Activity mAttachedActivity;
 
@@ -98,21 +97,18 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
 
     private void refreshTheme() {
         if(mColorTheme.isDarkTheme()) {
-            recyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
+            mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
             CommonMenuBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
         } else {
-            recyclerView.setBackgroundColor(mColorTheme.getBackgroundColor());
+            mRecyclerView.setBackgroundColor(mColorTheme.getBackgroundColor());
             CommonMenuBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
         }
     }
 
     public void setupColumn() {
-        if (NUM_COLUMNS != ((GridLayoutManager) mLayoutManager).getSpanCount()) {
-            recyclerView.removeItemDecoration(mGridSpacingItemDecoration);
-            mGridSpacingItemDecoration = new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, getContext()), true);
-            recyclerView.addItemDecoration(mGridSpacingItemDecoration);
-            recyclerView.setLayoutManager(new GridlayoutManagerFixed(getContext(), NUM_COLUMNS));
-            ((GridlayoutManagerFixed) mLayoutManager).setSpanCount(NUM_COLUMNS);
+        if (columnNumber != ((GridLayoutManager) mLayoutManager).getSpanCount()) {
+            mRecyclerView.setLayoutManager(new GridlayoutManagerFixed(getContext(), columnNumber));
+            ((GridlayoutManagerFixed) mLayoutManager).setSpanCount(columnNumber);
         }
     }
 
@@ -122,7 +118,9 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
 
     protected void initRecycleView(View v) {
         mLayoutType = getLayoutType();
-        recyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(true);
+        itemOffsetDecoration = new ItemOffsetDecoration(mAttachedActivity, R.dimen.timeline_item_spacing);
+        mRecyclerView.addItemDecoration(itemOffsetDecoration);
     }
 
     //Set enable SwipeRefreshLayout

@@ -20,10 +20,10 @@ import kotlin.Unit;
 
 public class ChooseColumnDialog extends Dialog {
 
-    private static final int MIN_COLUMN_MEDIA = 2;
-    private static final int MAX_COLUMN_MEDIA = 6;
-    private static final int MIN_COLUMN_ALBUM = 2;
-    private static final int MAX_COLUMN_ALBUM = 4;
+    public static final int MIN_COLUMN_MEDIA = 2;
+    public static final int MAX_COLUMN_MEDIA = 6;
+    public static final int MIN_COLUMN_ALBUM = 2;
+    public static final int MAX_COLUMN_ALBUM = 4;
 
     private View.OnClickListener btCancelListener = null;
     private View.OnClickListener btOKListener = null;

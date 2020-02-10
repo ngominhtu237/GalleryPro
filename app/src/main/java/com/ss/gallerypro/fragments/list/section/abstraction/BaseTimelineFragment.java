@@ -18,10 +18,16 @@ import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 import com.ss.gallerypro.CallBackToActivityListener;
@@ -51,6 +57,7 @@ import com.ss.gallerypro.theme.ColorTheme;
 import com.ss.gallerypro.utils.CommonMenuBarColor;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
 import com.ss.gallerypro.view.LockableViewPager;
+import com.ss.gallerypro.view.dialog.ChooseColumnDialog;
 import com.ss.gallerypro.view.dialog.DeleteDialog;
 import com.ss.gallerypro.view.dialog.SortDialogTimeline;
 
@@ -76,9 +83,9 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     protected Activity mAttachedActivity;
 
-    protected GridLayoutManager mLayoutManager;
+    protected GridlayoutManagerFixed mLayoutManager;
     protected ActionMode mActionMode;
-    protected int NUM_COLUMN;
+    protected int columnNumber;
 
     private BaseTimelineAdapter adapter;
     protected ITimelinePresenter presenter;
@@ -97,6 +104,8 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     private ColorTheme colorTheme;
 
     private LockableViewPager parentViewPager;
+
+    private boolean isZoomIn, isScroll;
 
     public BaseTimelineFragment() {
     }
@@ -217,16 +226,17 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initRecycleView() {
         mRecyclerView.setHasFixedSize(true);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            NUM_COLUMN = MediaHelper.getTimelineColumnPortrait(mAttachedActivity);
+            columnNumber = MediaHelper.getTimelineColumnPortrait(mAttachedActivity);
         } else {
-            NUM_COLUMN = MediaHelper.getTimelineColumnLandscape(mAttachedActivity);
+            columnNumber = MediaHelper.getTimelineColumnLandscape(mAttachedActivity);
         }
         ItemOffsetDecoration itemOffsetDecoration = new ItemOffsetDecoration(mAttachedActivity, R.dimen.timeline_item_spacing);
         mRecyclerView.addItemDecoration(itemOffsetDecoration);
-        mLayoutManager = new GridlayoutManagerFixed(getContext(), NUM_COLUMN);
+        mLayoutManager = new GridlayoutManagerFixed(getContext(), columnNumber);
         mRecyclerView.setLayoutManager(mLayoutManager);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
         mRecyclerView.setLayoutAnimation(animation);
@@ -237,6 +247,111 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         adapter.setViewHolderListener(this);
         mRecyclerView.setAdapter(adapter);
         setSpanSize();
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        mLayoutManager.setScrollEnabled(true);
+                        isScroll = false;
+                        break;
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        break;
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+        ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(mAttachedActivity, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            @Override
+            public boolean onScale(ScaleGestureDetector detector) {
+                if(!isScroll) {
+                    float scaleFactor = detector.getScaleFactor();
+                    isZoomIn = scaleFactor > 1;
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetector detector) {
+                setEnableSwipeRefresh(false);
+                mLayoutManager.setScrollEnabled(false);
+                parentViewPager.setSwipeLocked(true);
+                return super.onScaleBegin(detector);
+            }
+
+            @Override
+            public void onScaleEnd(ScaleGestureDetector detector) {
+                if(isZoomIn) {
+                    if(columnNumber > ChooseColumnDialog.MIN_COLUMN_MEDIA) {
+                        columnNumber--;
+                        MediaHelper.setTimelineColumnPortrait(columnNumber);
+                        animateRecyclerLayoutChange();
+                    } else {
+                        Toast.makeText(mAttachedActivity, "min column is: " + ChooseColumnDialog.MIN_COLUMN_MEDIA, Toast.LENGTH_SHORT).show();
+                        setEnableSwipeRefresh(true);
+                        mLayoutManager.setScrollEnabled(true);
+                        parentViewPager.setSwipeLocked(false);
+                    }
+                }
+                else {
+                    if(columnNumber < ChooseColumnDialog.MAX_COLUMN_MEDIA) {
+                        columnNumber++;
+                        MediaHelper.setTimelineColumnPortrait(columnNumber);
+                        animateRecyclerLayoutChange();
+                    } else {
+                        Toast.makeText(mAttachedActivity, "max column is: " + ChooseColumnDialog.MAX_COLUMN_MEDIA, Toast.LENGTH_SHORT).show();
+                        setEnableSwipeRefresh(true);
+                        mLayoutManager.setScrollEnabled(true);
+                        parentViewPager.setSwipeLocked(false);
+                    }
+                }
+                super.onScaleEnd(detector);
+            }
+        });
+        mRecyclerView.setOnTouchListener((v, event) -> {
+            scaleGestureDetector.onTouchEvent(event);
+            return false;
+        });
+    }
+
+    protected void animateRecyclerLayoutChange() {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator());
+        fadeOut.setDuration(400);
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mLayoutManager.setSpanCount(columnNumber);
+                setSpanSize();
+                mLayoutManager.requestLayout();
+                adapter.notifyDataSetChanged();
+
+                Animation fadeIn = new AlphaAnimation(0, 1);
+                fadeIn.setInterpolator(new AccelerateInterpolator());
+                fadeIn.setDuration(400);
+                mRecyclerView.startAnimation(fadeIn);
+                setEnableSwipeRefresh(true);
+                mLayoutManager.setScrollEnabled(true);
+                parentViewPager.setSwipeLocked(false);
+            }
+        });
+        mRecyclerView.clearAnimation();
+        mRecyclerView.startAnimation(fadeOut);
     }
 
     private void setSpanSize() {
@@ -256,7 +371,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     }
 
     private int getHeaderColumn() {
-        return NUM_COLUMN;
+        return columnNumber;
     }
 
     protected abstract BaseTimelineAdapter createAdapter();
@@ -448,18 +563,18 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     @Override
     public void requestUpdateColumn() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            NUM_COLUMN = MediaHelper.getTimelineColumnPortrait(mAttachedActivity);
+            columnNumber = MediaHelper.getTimelineColumnPortrait(mAttachedActivity);
         } else {
-            NUM_COLUMN = MediaHelper.getTimelineColumnLandscape(mAttachedActivity);
+            columnNumber = MediaHelper.getTimelineColumnLandscape(mAttachedActivity);
         }
         setupColumn();
         Log.v("update column", "BaseTimelineFragment");
     }
 
     public void setupColumn() {
-        if (NUM_COLUMN != mLayoutManager.getSpanCount()) {
-            mLayoutManager = new GridlayoutManagerFixed(getContext(), NUM_COLUMN);
-            mLayoutManager.setSpanCount(NUM_COLUMN);
+        if (columnNumber != mLayoutManager.getSpanCount()) {
+            mLayoutManager = new GridlayoutManagerFixed(getContext(), columnNumber);
+            mLayoutManager.setSpanCount(columnNumber);
             setSpanSize();
             mRecyclerView.setLayoutManager(mLayoutManager);
         }

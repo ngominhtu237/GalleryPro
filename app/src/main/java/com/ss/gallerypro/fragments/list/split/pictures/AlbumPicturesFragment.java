@@ -28,16 +28,13 @@ import com.ss.gallerypro.event.amodebar.Toolbar_ActionMode_Photo;
 import com.ss.gallerypro.fragments.RecycleViewClickListener;
 import com.ss.gallerypro.fragments.list.normal.abstraction.BaseListFragment;
 import com.ss.gallerypro.fragments.list.normal.abstraction.BaseListViewAdapter;
-import com.ss.gallerypro.fragments.list.normal.albums.AlbumsFragment;
 import com.ss.gallerypro.fragments.list.split.pictures.model.MediaRepositoryImpl;
 import com.ss.gallerypro.fragments.list.split.pictures.presenter.IMediaPresenter;
 import com.ss.gallerypro.fragments.list.split.pictures.presenter.MediaPresenterImpl;
 import com.ss.gallerypro.fragments.list.split.pictures.view.IMediaView;
 import com.ss.gallerypro.fragments.viewer.ImagePagerFragment;
-import com.ss.gallerypro.utils.Measure;
-import com.ss.gallerypro.view.dialog.DeleteDialog;
-import com.ss.gallerypro.view.GridSpacingItemDecoration;
 import com.ss.gallerypro.view.SquareImageView;
+import com.ss.gallerypro.view.dialog.DeleteDialog;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -134,14 +131,13 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
     @Override
     protected void initRecycleView(View v) {
         super.initRecycleView(v);
-        recyclerView.setItemAnimator(new LandingAnimator());
+        mRecyclerView.setItemAnimator(new LandingAnimator());
         int NUM_COLUMNS = 4;
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, Objects.requireNonNull(getContext())), true));
         adapter = new AlbumPictureViewAdapter(getContext(), getSortingMode(), getSortingOrder());
         adapter.setItemCheckedInterface(this);
         GridlayoutManagerFixed gridlayoutManagerFixed = new GridlayoutManagerFixed(getContext(), NUM_COLUMNS);
-        recyclerView.setLayoutManager(gridlayoutManagerFixed);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(gridlayoutManagerFixed);
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -294,7 +290,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         adapter.setDataList(medias);
         adapter.changeSortingMode(getSortingMode());
         adapter.notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
+        mRecyclerView.scheduleLayoutAnimation();
     }
 
     @Override

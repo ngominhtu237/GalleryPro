@@ -31,7 +31,12 @@ public class LockableViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        return !swipeLocked && super.onInterceptTouchEvent(event);
+        try {
+            return !swipeLocked && super.onInterceptTouchEvent(event);
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 
     @Override

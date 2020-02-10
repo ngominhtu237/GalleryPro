@@ -1,6 +1,7 @@
 package com.ss.gallerypro.fragments.list.normal.albums;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,15 +14,21 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
@@ -43,9 +50,9 @@ import com.ss.gallerypro.fragments.list.normal.albums.presenter.AlbumsPresenterI
 import com.ss.gallerypro.fragments.list.normal.albums.view.IAlbumsView;
 import com.ss.gallerypro.fragments.list.split.pictures.AlbumPicturesFragment;
 import com.ss.gallerypro.setting.callback.ColumnChangeObserver;
-import com.ss.gallerypro.utils.Measure;
-import com.ss.gallerypro.view.GridSpacingItemDecoration;
+import com.ss.gallerypro.view.ItemOffsetDecoration;
 import com.ss.gallerypro.view.LockableViewPager;
+import com.ss.gallerypro.view.dialog.ChooseColumnDialog;
 import com.ss.gallerypro.view.dialog.DeleteDialog;
 
 import java.util.ArrayList;
@@ -66,6 +73,8 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
     private AlbumsPresenterImpl presenter;
     private LockableViewPager parentViewPager;
+
+    private boolean isZoomIn, isScroll;
 
     public AlbumsFragment() {
         super();
@@ -104,53 +113,136 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.v("AlbumsFragment", "onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.v("AlbumsFragment", "onPause");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.v("AlbumsFragment", "onDestroy");
-    }
-
-    @Override
-    public void onDestroyOptionsMenu() {
-        super.onDestroyOptionsMenu();
-        Log.v("AlbumsFragment", "onDestroyOptionsMenu");
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initRecycleView(View v) {
         super.initRecycleView(v);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            NUM_COLUMNS = AlbumHelper.getNumbColumnPort(getActivity());
+            columnNumber = AlbumHelper.getNumbColumnPort(getActivity());
         } else {
-            NUM_COLUMNS = AlbumHelper.getNumbColumnLand(getActivity());
+            columnNumber = AlbumHelper.getNumbColumnLand(getActivity());
         }
-        mGridSpacingItemDecoration = new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, mAttachedActivity), true);
+        itemOffsetDecoration = new ItemOffsetDecoration(mAttachedActivity, R.dimen.timeline_item_spacing);
         albumsAdapter = new AlbumsAdapter(getActivity(), getSortingMode(), getSortingOrder(), mLayoutType);
         albumsAdapter.setItemCheckedInterface(this);
         if(mLayoutType == LayoutType.GRID) {
-            recyclerView.addItemDecoration(mGridSpacingItemDecoration);
-            mLayoutManager = new GridlayoutManagerFixed(getContext(), NUM_COLUMNS);
+            mLayoutManager = new GridlayoutManagerFixed(getContext(), columnNumber);
         } else {
-            recyclerView.removeItemDecoration(mGridSpacingItemDecoration);
             mLayoutManager = new LinearLayoutManager(getContext());
         }
-        recyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_from_bottom);
-        recyclerView.setLayoutAnimation(animation);
-        recyclerView.setItemAnimator(new LandingAnimator());
-        recyclerView.setAdapter(albumsAdapter);
+        mRecyclerView.setLayoutAnimation(animation);
+        mRecyclerView.setItemAnimator(new LandingAnimator());
+        mRecyclerView.setAdapter(albumsAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        ((GridlayoutManagerFixed)mLayoutManager).setScrollEnabled(true);
+                        isScroll = false;
+                        break;
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        break;
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+        ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(mAttachedActivity, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            @Override
+            public boolean onScale(ScaleGestureDetector detector) {
+                if(!isScroll && mLayoutType == LayoutType.GRID) {
+                    float scaleFactor = detector.getScaleFactor();
+                    isZoomIn = scaleFactor > 1;
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetector detector) {
+                if(mLayoutType == LayoutType.GRID) {
+                    setEnableSwipeRefresh(false);
+                    ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(false);
+                    parentViewPager.setSwipeLocked(true);
+                }
+                return super.onScaleBegin(detector);
+            }
+
+            @Override
+            public void onScaleEnd(ScaleGestureDetector detector) {
+                if(mLayoutType == LayoutType.GRID) {
+                    if (isZoomIn) {
+                        if (columnNumber > ChooseColumnDialog.MIN_COLUMN_ALBUM) {
+                            columnNumber--;
+                            AlbumHelper.setNumbColumnPort(columnNumber);
+                            animateRecyclerLayoutChange();
+                        } else {
+                            Toast.makeText(mAttachedActivity, "min column is: " + ChooseColumnDialog.MIN_COLUMN_ALBUM, Toast.LENGTH_SHORT).show();
+                            setEnableSwipeRefresh(true);
+                            ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(true);
+                            parentViewPager.setSwipeLocked(false);
+                        }
+                    } else {
+                        if (columnNumber < ChooseColumnDialog.MAX_COLUMN_ALBUM) {
+                            columnNumber++;
+                            AlbumHelper.setNumbColumnPort(columnNumber);
+                            animateRecyclerLayoutChange();
+                        } else {
+                            Toast.makeText(mAttachedActivity, "max column is: " + ChooseColumnDialog.MAX_COLUMN_ALBUM, Toast.LENGTH_SHORT).show();
+                            setEnableSwipeRefresh(true);
+                            ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(false);
+                            parentViewPager.setSwipeLocked(false);
+                        }
+                    }
+                }
+                super.onScaleEnd(detector);
+            }
+        });
+        mRecyclerView.setOnTouchListener((view, event) -> {
+            scaleGestureDetector.onTouchEvent(event);
+            return false;
+        });
+    }
+
+    protected void animateRecyclerLayoutChange() {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator());
+        fadeOut.setDuration(400);
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                ((GridlayoutManagerFixed)mLayoutManager).setSpanCount(columnNumber);
+                mLayoutManager.requestLayout();
+                albumsAdapter.notifyDataSetChanged();
+
+                Animation fadeIn = new AlphaAnimation(0, 1);
+                fadeIn.setInterpolator(new AccelerateInterpolator());
+                fadeIn.setDuration(400);
+                mRecyclerView.startAnimation(fadeIn);
+                setEnableSwipeRefresh(true);
+                ((GridlayoutManagerFixed)mLayoutManager).setScrollEnabled(true);
+                parentViewPager.setSwipeLocked(false);
+            }
+        });
+        mRecyclerView.clearAnimation();
+        mRecyclerView.startAnimation(fadeOut);
     }
 
     @Override
@@ -317,30 +409,30 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 return true;
 
             case R.id.increase_column_count:
-                if(NUM_COLUMNS+1 <= 6) {
-                    NUM_COLUMNS++;
+                if(columnNumber +1 <= ChooseColumnDialog.MAX_COLUMN_ALBUM) {
+                    columnNumber++;
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        AlbumHelper.setNumbColumnPort(NUM_COLUMNS);
+                        AlbumHelper.setNumbColumnPort(columnNumber);
                     } else {
-                        AlbumHelper.setNumbColumnLand(NUM_COLUMNS);
+                        AlbumHelper.setNumbColumnLand(columnNumber);
                     }
                     setupColumn();
                 } else {
-                    Toast.makeText(getContext(), "Max column is 10", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Max column is " + ChooseColumnDialog.MAX_COLUMN_ALBUM, Toast.LENGTH_SHORT).show();
                 }
                 return true;
 
             case R.id.reduce_column_count:
-                if(NUM_COLUMNS-1 >= 1) {
-                    NUM_COLUMNS--;
+                if(columnNumber -1 >= ChooseColumnDialog.MIN_COLUMN_ALBUM) {
+                    columnNumber--;
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        AlbumHelper.setNumbColumnPort(NUM_COLUMNS);
+                        AlbumHelper.setNumbColumnPort(columnNumber);
                     } else {
-                        AlbumHelper.setNumbColumnLand(NUM_COLUMNS);
+                        AlbumHelper.setNumbColumnLand(columnNumber);
                     }
                     setupColumn();
                 } else {
-                    Toast.makeText(getContext(), "Min column is 1", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Min column is " + ChooseColumnDialog.MIN_COLUMN_ALBUM, Toast.LENGTH_SHORT).show();
                 }
                 return true;
 
@@ -351,18 +443,16 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
             case R.id.mode_grid:
                 albumsAdapter.changeLayoutType(LayoutType.GRID);
                 AlbumHelper.setLayoutType(LayoutType.GRID);
-                recyclerView.removeItemDecoration(mGridSpacingItemDecoration);
+                mRecyclerView.removeItemDecoration(itemOffsetDecoration);
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    NUM_COLUMNS = AlbumHelper.getNumbColumnPort(getActivity());
+                    columnNumber = AlbumHelper.getNumbColumnPort(getActivity());
                 } else {
-                    NUM_COLUMNS = AlbumHelper.getNumbColumnLand(getActivity());
+                    columnNumber = AlbumHelper.getNumbColumnLand(getActivity());
                 }
-                mLayoutManager = new GridlayoutManagerFixed(getContext(), NUM_COLUMNS);
-                mGridSpacingItemDecoration = new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, getContext()), true);
-                recyclerView.addItemDecoration(mGridSpacingItemDecoration);
-                recyclerView.setLayoutManager(new GridlayoutManagerFixed(getContext(), NUM_COLUMNS));
-                ((GridlayoutManagerFixed) mLayoutManager).setSpanCount(NUM_COLUMNS);
-                recyclerView.setAdapter(albumsAdapter);
+                mLayoutManager = new GridlayoutManagerFixed(getContext(), columnNumber);
+                mRecyclerView.setLayoutManager(new GridlayoutManagerFixed(getContext(), columnNumber));
+                ((GridlayoutManagerFixed) mLayoutManager).setSpanCount(columnNumber);
+                mRecyclerView.setAdapter(albumsAdapter);
                 mLayoutType = getLayoutType();
                 item.setChecked(true);
                 return true;
@@ -370,8 +460,8 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
             case R.id.mode_list:
                 albumsAdapter.changeLayoutType(LayoutType.LIST);
                 AlbumHelper.setLayoutType(LayoutType.LIST);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setAdapter(albumsAdapter);
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                mRecyclerView.setAdapter(albumsAdapter);
                 mLayoutType = getLayoutType();
                 item.setChecked(true);
                 return true;
@@ -403,14 +493,14 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 }
                 AlbumHelper.setFilter(newFilter);
                 if(newFilter.size() != 0) {
-                    recyclerView.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
                     desertPlaceholder.setVisibility(View.GONE);
                     mSwipeRefreshLayout.post(() -> {
                         mSwipeRefreshLayout.setRefreshing(true);
                         listener.onRefresh();
                     });
                 } else {
-                    recyclerView.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.GONE);
                     desertPlaceholder.setVisibility(View.VISIBLE);
                 }
             } else {
@@ -495,9 +585,9 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     @Override
     public void requestUpdateColumn() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            NUM_COLUMNS = AlbumHelper.getNumbColumnPort(getActivity());
+            columnNumber = AlbumHelper.getNumbColumnPort(getActivity());
         } else {
-            NUM_COLUMNS = AlbumHelper.getNumbColumnLand(getActivity());
+            columnNumber = AlbumHelper.getNumbColumnLand(getActivity());
         }
         setupColumn();
         Log.v("update column", "AlbumsFragment");

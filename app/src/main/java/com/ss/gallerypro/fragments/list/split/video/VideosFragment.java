@@ -125,15 +125,15 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
     @Override
     protected void initRecycleView(View v) {
         super.initRecycleView(v);
-        recyclerView.setItemAnimator(new LandingAnimator());
+        mRecyclerView.setItemAnimator(new LandingAnimator());
         int NUM_COLUMNS = 3;
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, Objects.requireNonNull(getContext())), true));
+        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, Measure.pxToDp(2, Objects.requireNonNull(getContext())), true));
         adapter = new VideosAdapter(getContext(), getSortingMode(), getSortingOrder());
         adapter.setItemCheckedInterface(this);
         GridlayoutManagerFixed gridlayoutManagerFixed = new GridlayoutManagerFixed(getContext(), NUM_COLUMNS);
-        recyclerView.setLayoutManager(gridlayoutManagerFixed);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(gridlayoutManagerFixed);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override
