@@ -24,7 +24,7 @@ import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
 import com.ss.gallerypro.fragments.BaseFragment;
 import com.ss.gallerypro.fragments.home.HomeFragment;
-import com.ss.gallerypro.utils.CommonMenuBarColor;
+import com.ss.gallerypro.utils.CommonBarColor;
 import com.ss.gallerypro.view.AnimatedRecyclerView;
 import com.ss.gallerypro.view.ItemOffsetDecoration;
 
@@ -98,10 +98,10 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
     private void refreshTheme() {
         if(mColorTheme.isDarkTheme()) {
             mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
-            CommonMenuBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
+            CommonBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
         } else {
             mRecyclerView.setBackgroundColor(mColorTheme.getBackgroundColor());
-            CommonMenuBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
+            CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
         }
     }
 

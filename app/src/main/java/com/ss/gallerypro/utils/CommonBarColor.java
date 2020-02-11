@@ -14,7 +14,7 @@ import android.view.WindowManager;
 
 import java.lang.reflect.Field;
 
-public class CommonMenuBarColor {
+public class CommonBarColor {
     @SuppressLint("ObsoleteSdkInt")
     public static void setStatusBarTransparent(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -35,12 +35,18 @@ public class CommonMenuBarColor {
         }
     }
 
+    public static void setNavigationBarColor(Activity activity, int color) {
+        Window window = activity.getWindow();
+        window.setNavigationBarColor(color);
+    }
+
     public static void setActionModeColor(Context context, int color) {
         try {
             int amId = context.getResources().getIdentifier("action_context_bar", "id", "android");
             View view = ((Activity) context).findViewById(amId);
             view.setBackgroundColor(color);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     public static void setActionModeBackgroundColor(ActionMode actionMode, int color) {

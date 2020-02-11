@@ -27,7 +27,7 @@ import com.ss.gallerypro.data.provider.CPHelper;
 import com.ss.gallerypro.fragments.home.HomeFragment;
 import com.ss.gallerypro.setting.callback.ThemeChangeObserver;
 import com.ss.gallerypro.theme.ColorTheme;
-import com.ss.gallerypro.utils.CommonMenuBarColor;
+import com.ss.gallerypro.utils.CommonBarColor;
 
 import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
@@ -224,7 +224,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if(mColorTheme.isDarkTheme()) {
             int colorBg = getColor(R.color.colorDarkBackgroundHighlight);
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorBg));
-            CommonMenuBarColor.setStatusBarColor(this, colorBg);
+            CommonBarColor.setStatusBarColor(this, colorBg);
             navigationView.setBackground(new ColorDrawable(getColor(R.color.md_dark_cards)));
             navigationView.setItemTextColor(ColorStateList.valueOf(getColor(R.color.colorDarkAccent)));
             navigationView.setItemBackground(getDrawable(R.drawable.drawer_item_dark));
@@ -234,7 +234,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             menu.findItem(R.id.nav_about_us).setIcon(R.mipmap.nav_about_dark);
         } else {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(mColorTheme.getPrimaryColor()));
-            CommonMenuBarColor.setStatusBarColor(this, mColorTheme.getPrimaryColor());
+            CommonBarColor.setStatusBarColor(this, mColorTheme.getPrimaryColor());
             navigationView.setBackground(new ColorDrawable(getColor(R.color.colorBackground)));
             navigationView.setItemTextColor(ColorStateList.valueOf(getColor(R.color.colorAccent)));
             navigationView.setItemBackground(getDrawable(R.drawable.drawer_item_light));

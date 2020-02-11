@@ -1,0 +1,19 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+    }
+    buildTypes {
+        release {
+        }
+    }
+}
+
+dependencies {
+implementation 'com.android.support:support-vector-drawable:27.1.1'
+    implementation 'com.android.support:support-compat:27.1.1'
+}

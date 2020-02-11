@@ -103,4 +103,7 @@
     <!-- Dialog detail -->
     <dimen name="dialog_detail_header">15sp</dimen>
 
+    <!-- About Us -->
+    <dimen name="about_separator_height">0.5dp</dimen>
+
 </resources>
