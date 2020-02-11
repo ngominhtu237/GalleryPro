@@ -324,7 +324,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     protected void animateRecyclerLayoutChange() {
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new DecelerateInterpolator());
-        fadeOut.setDuration(400);
+        fadeOut.setDuration(300);
         fadeOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -343,7 +343,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
                 Animation fadeIn = new AlphaAnimation(0, 1);
                 fadeIn.setInterpolator(new AccelerateInterpolator());
-                fadeIn.setDuration(400);
+                fadeIn.setDuration(300);
                 mRecyclerView.startAnimation(fadeIn);
                 setEnableSwipeRefresh(true);
                 mLayoutManager.setScrollEnabled(true);
