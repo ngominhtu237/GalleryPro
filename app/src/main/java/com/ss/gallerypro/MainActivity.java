@@ -197,6 +197,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void setDrawerEnabled(boolean enabled) {
         if(toggle != null) toggle.setDrawerIndicatorEnabled(enabled);
+        drawer.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     @Override

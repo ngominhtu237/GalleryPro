@@ -62,7 +62,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
             googlePlayIcon.setColor(lightColor);
             instagramIcon.setColor(lightColor);
         } else {
-            CommonBarColor.setStatusBarColor(this, lightColor);
+            CommonBarColor.setStatusBarColor(this, mColorTheme.getPrimaryColor());
             rootView.setBackgroundColor(lightColor);
             emailIcon.setColor(darkColor);
             googlePlayIcon.setColor(darkColor);
