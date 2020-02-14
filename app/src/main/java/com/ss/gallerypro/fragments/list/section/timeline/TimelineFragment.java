@@ -64,25 +64,18 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  super.onCreateView(inflater, container, savedInstanceState);
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.post(() -> {
-                if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
-                listener.onRefresh();
-                Log.v(TAG, "load data.");
-            });
-        }
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    protected void loadData() {
+        Log.v("loadData", TAG);
+        presenter.getMedias(MediaFilter.IMAGE);
     }
 
     @Override
     protected BaseTimelineAdapter createAdapter() {
         return new TimelineAdapter(this, mAttachedActivity, getSortingMode(), getSortingOrder());
-    }
-
-    @Override
-    protected void createSwipeEvent() {
-        presenter.getMedias(MediaFilter.IMAGE);
     }
 
     @Override
@@ -128,9 +121,8 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     public void onGetTimelineSuccess(ArrayList<MediaItem> mediaItems) {
         getAdapter().setMediaItems(mediaItems);
         getAdapter().changeSorting(getSortingMode(), getSortingOrder());
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
+        loadingLayout.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -165,7 +157,6 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
 
     @Override
     public void onLongClick(View view, int position) {
-        setEnableSwipeRefresh(false);
         onListItemSelect(position);
     }
 
@@ -199,15 +190,9 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     }
 
     @Override
-    public void onChange() {
-        Log.v("tunm1", "TimelineFragment refresh data");
-        if (mSwipeRefreshLayout != null && !getUserVisibleHint()) {
-            mSwipeRefreshLayout.post(() -> {
-                if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
-                listener.onRefresh();
-                Log.v(TAG, "reload data.");
-            });
-        }
+    public void  onChange() {
+        Log.v("loadData", "update " + TAG);
+        presenter.getMedias(MediaFilter.IMAGE);
         callBackListener.onCallBack();
     }
 }

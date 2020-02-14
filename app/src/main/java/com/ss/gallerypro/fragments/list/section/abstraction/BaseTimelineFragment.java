@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.SharedElementCallback;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
@@ -74,12 +74,11 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     @BindView(R.id.timelineRecycleView)
     protected RecyclerView mRecyclerView;
 
-    @Nullable
-    @BindView(R.id.activity_main_swipe_refresh_layout)
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
-
     @BindView(R.id.placeholder)
     protected DesertPlaceholder desertPlaceholder;
+
+    @BindView(R.id.loading_layout)
+    protected RelativeLayout loadingLayout;
 
     protected Activity mAttachedActivity;
 
@@ -106,6 +105,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     private LockableViewPager parentViewPager;
 
     private boolean isZoomIn, isScroll;
+    private View rootView;
 
     public BaseTimelineFragment() {
     }
@@ -146,11 +146,10 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        rootView = super.onCreateView(inflater, container, savedInstanceState);
         ((DrawerLocker) mAttachedActivity).setDrawerEnabled(true);
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setOnRefreshListener(listener);
-        }
+
+        loadData();
         initRecycleView();
 
         prepareTransitions();
@@ -158,8 +157,10 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
         CustomModelClass.getInstance().addThemeChangeObserver(this);
         parentViewPager = (LockableViewPager) container;
-        return view;
+        return rootView;
     }
+
+    protected abstract void loadData();
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -220,9 +221,11 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         if(colorTheme.isDarkTheme()) {
             mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
             CommonBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
+            loadingLayout.setBackgroundColor(getResources().getColor(R.color.colorDarkBackground));
         } else {
             mRecyclerView.setBackgroundColor(colorTheme.getBackgroundColor());
             CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
+            loadingLayout.setBackgroundColor(getResources().getColor(R.color.colorBackground));
         }
     }
 
@@ -280,7 +283,6 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
             @Override
             public boolean onScaleBegin(ScaleGestureDetector detector) {
-                setEnableSwipeRefresh(false);
                 mLayoutManager.setScrollEnabled(false);
                 parentViewPager.setSwipeLocked(true);
                 return super.onScaleBegin(detector);
@@ -295,7 +297,6 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                         animateRecyclerLayoutChange();
                     } else {
                         Toast.makeText(mAttachedActivity, "min column is: " + ChooseColumnDialog.MIN_COLUMN_MEDIA, Toast.LENGTH_SHORT).show();
-                        setEnableSwipeRefresh(true);
                         mLayoutManager.setScrollEnabled(true);
                         parentViewPager.setSwipeLocked(false);
                     }
@@ -307,7 +308,6 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                         animateRecyclerLayoutChange();
                     } else {
                         Toast.makeText(mAttachedActivity, "max column is: " + ChooseColumnDialog.MAX_COLUMN_MEDIA, Toast.LENGTH_SHORT).show();
-                        setEnableSwipeRefresh(true);
                         mLayoutManager.setScrollEnabled(true);
                         parentViewPager.setSwipeLocked(false);
                     }
@@ -345,7 +345,6 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                 fadeIn.setInterpolator(new AccelerateInterpolator());
                 fadeIn.setDuration(300);
                 mRecyclerView.startAnimation(fadeIn);
-                setEnableSwipeRefresh(true);
                 mLayoutManager.setScrollEnabled(true);
                 parentViewPager.setSwipeLocked(false);
             }
@@ -414,25 +413,21 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         return super.onOptionsItemSelected(item);
     }
 
-    protected final SwipeRefreshLayout.OnRefreshListener listener = this::createSwipeEvent;
-
-    protected abstract void createSwipeEvent();
-
     public ActionMode getActionMode() {
         return mActionMode;
     }
 
-    public void setEnableSwipeRefresh(boolean isEnable) {
-        if(mSwipeRefreshLayout != null) {
-            if (isEnable) {
-                mSwipeRefreshLayout.setEnabled(true);
-                mSwipeRefreshLayout.setDistanceToTriggerSync(0);
-            } else {
-                mSwipeRefreshLayout.setEnabled(false);
-                mSwipeRefreshLayout.setDistanceToTriggerSync(999999);
-            }
-        }
-    }
+//    public void setEnableSwipeRefresh(boolean isEnable) {
+//        if(mSwipeRefreshLayout != null) {
+//            if (isEnable) {
+//                mSwipeRefreshLayout.setEnabled(true);
+//                mSwipeRefreshLayout.setDistanceToTriggerSync(0);
+//            } else {
+//                mSwipeRefreshLayout.setEnabled(false);
+//                mSwipeRefreshLayout.setDistanceToTriggerSync(999999);
+//            }
+//        }
+//    }
 
     public void setNullToActionMode() {
         parentFragment.showAppBarLayout();

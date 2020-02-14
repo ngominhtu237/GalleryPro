@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +29,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.ss.gallerypro.CustomModelClass;
@@ -62,9 +62,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
 public class AlbumsFragment extends BaseListFragment implements IAlbumsView, RecycleViewClickListener, BaseListViewAdapter.CheckedItemInterface, ColumnChangeObserver {
+
+    private static final String TAG = "AlbumsFragment";
 
     private AlbumsAdapter albumsAdapter;
     private Toolbar_ActionMode_Bucket toolbarActionModeBucket;
@@ -75,6 +78,9 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     private LockableViewPager parentViewPager;
 
     private boolean isZoomIn, isScroll;
+
+    @BindView(R.id.loading_layout)
+    public RelativeLayout loadingLayout;
 
     public AlbumsFragment() {
         super();
@@ -97,15 +103,8 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                              Bundle savedInstanceState) {
         Log.v("AlbumsFragment", "onCreateView");
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setOnRefreshListener(listener);
-        }
-
-        if(presenter.isListAlbumEmpty(receiveBuckets)) {
-            mSwipeRefreshLayout.post(() -> {
-                mSwipeRefreshLayout.setRefreshing(true);
-                listener.onRefresh();
-            });
+        if (presenter.isListAlbumEmpty(receiveBuckets)) {
+            loadData();
         } else {
             albumsAdapter.setDataList(receiveBuckets);
         }
@@ -125,7 +124,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         itemOffsetDecoration = new ItemOffsetDecoration(mAttachedActivity, R.dimen.timeline_item_spacing);
         albumsAdapter = new AlbumsAdapter(getActivity(), getSortingMode(), getSortingOrder(), mLayoutType);
         albumsAdapter.setItemCheckedInterface(this);
-        if(mLayoutType == LayoutType.GRID) {
+        if (mLayoutType == LayoutType.GRID) {
             mLayoutManager = new GridlayoutManagerFixed(getContext(), columnNumber);
         } else {
             mLayoutManager = new LinearLayoutManager(getContext());
@@ -141,7 +140,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
-                        ((GridlayoutManagerFixed)mLayoutManager).setScrollEnabled(true);
+                        ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(true);
                         isScroll = false;
                         break;
                     case RecyclerView.SCROLL_STATE_DRAGGING:
@@ -160,7 +159,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(mAttachedActivity, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
-                if(!isScroll && mLayoutType == LayoutType.GRID) {
+                if (!isScroll && mLayoutType == LayoutType.GRID) {
                     float scaleFactor = detector.getScaleFactor();
                     isZoomIn = scaleFactor > 1;
                 }
@@ -169,8 +168,8 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
             @Override
             public boolean onScaleBegin(ScaleGestureDetector detector) {
-                if(mLayoutType == LayoutType.GRID) {
-                    setEnableSwipeRefresh(false);
+                if (mLayoutType == LayoutType.GRID) {
+//                    setEnableSwipeRefresh(false);
                     ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(false);
                     parentViewPager.setSwipeLocked(true);
                 }
@@ -179,7 +178,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
             @Override
             public void onScaleEnd(ScaleGestureDetector detector) {
-                if(mLayoutType == LayoutType.GRID) {
+                if (mLayoutType == LayoutType.GRID) {
                     if (isZoomIn) {
                         if (columnNumber > ChooseColumnDialog.MIN_COLUMN_ALBUM) {
                             columnNumber--;
@@ -187,7 +186,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                             animateRecyclerLayoutChange();
                         } else {
                             Toast.makeText(mAttachedActivity, "min column is: " + ChooseColumnDialog.MIN_COLUMN_ALBUM, Toast.LENGTH_SHORT).show();
-                            setEnableSwipeRefresh(true);
+//                            setEnableSwipeRefresh(true);
                             ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(true);
                             parentViewPager.setSwipeLocked(false);
                         }
@@ -198,7 +197,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                             animateRecyclerLayoutChange();
                         } else {
                             Toast.makeText(mAttachedActivity, "max column is: " + ChooseColumnDialog.MAX_COLUMN_ALBUM, Toast.LENGTH_SHORT).show();
-                            setEnableSwipeRefresh(true);
+//                            setEnableSwipeRefresh(true);
                             ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(false);
                             parentViewPager.setSwipeLocked(false);
                         }
@@ -228,7 +227,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ((GridlayoutManagerFixed)mLayoutManager).setSpanCount(columnNumber);
+                ((GridlayoutManagerFixed) mLayoutManager).setSpanCount(columnNumber);
                 mLayoutManager.requestLayout();
                 albumsAdapter.notifyDataSetChanged();
 
@@ -236,8 +235,8 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 fadeIn.setInterpolator(new AccelerateInterpolator());
                 fadeIn.setDuration(400);
                 mRecyclerView.startAnimation(fadeIn);
-                setEnableSwipeRefresh(true);
-                ((GridlayoutManagerFixed)mLayoutManager).setScrollEnabled(true);
+//                setEnableSwipeRefresh(true);
+                ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(true);
                 parentViewPager.setSwipeLocked(false);
             }
         });
@@ -262,7 +261,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     protected void openAlbum(int position) {
         FragmentManager fm = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         AlbumPicturesFragment albumPicturesFragment = (AlbumPicturesFragment) fm.findFragmentByTag("AlbumPicturesFragment");
-        if(albumPicturesFragment == null) {
+        if (albumPicturesFragment == null) {
             albumPicturesFragment = new AlbumPicturesFragment();
             Bundle args = new Bundle();
             args.putParcelable("album", albumsAdapter.getBuckets().get(position));
@@ -279,7 +278,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
     @Override
     public void onLongClick(View view, int position) {
-        setEnableSwipeRefresh(false);
+//        setEnableSwipeRefresh(false);
         onListItemSelect(position);
     }
 
@@ -337,7 +336,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     public void onPrepareOptionsMenu(Menu menu) {
         boolean editMode = false, oneSelected = false;
         int mItemSelected = albumsAdapter.getSelectedCount();
-        if(mItemSelected == 0) {
+        if (mItemSelected == 0) {
             editMode = false;
         } else if (mItemSelected == 1) {
             oneSelected = true;
@@ -355,7 +354,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
         } else {
             menu.findItem(R.id.ascending_sort_order).setChecked(getSortingOrder() == SortingOrder.ASCENDING);
-            if(mLayoutType == LayoutType.GRID) {
+            if (mLayoutType == LayoutType.GRID) {
                 menu.findItem(R.id.mode_grid).setChecked(true);
             } else {
                 menu.findItem(R.id.mode_list).setChecked(true);
@@ -409,7 +408,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 return true;
 
             case R.id.increase_column_count:
-                if(columnNumber +1 <= ChooseColumnDialog.MAX_COLUMN_ALBUM) {
+                if (columnNumber + 1 <= ChooseColumnDialog.MAX_COLUMN_ALBUM) {
                     columnNumber++;
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                         AlbumHelper.setNumbColumnPort(columnNumber);
@@ -423,7 +422,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 return true;
 
             case R.id.reduce_column_count:
-                if(columnNumber -1 >= ChooseColumnDialog.MIN_COLUMN_ALBUM) {
+                if (columnNumber - 1 >= ChooseColumnDialog.MIN_COLUMN_ALBUM) {
                     columnNumber--;
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                         AlbumHelper.setNumbColumnPort(columnNumber);
@@ -478,7 +477,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
         // get from pref => save to checkedItem (set("0", "1") -> index(0, 1) -> boolean in 'index' position)
         List<String> filter = new ArrayList<>(AlbumHelper.getFilter(n));
-        for(int i=0; i<filter.size(); i++){
+        for (int i = 0; i < filter.size(); i++) {
             checkedItem[Integer.parseInt(filter.get(i))] = true;
         }
         boolean[] newCheckedItem = Arrays.copyOf(checkedItem, n);
@@ -486,19 +485,16 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         mBuilder.setMultiChoiceItems(MediaFilter.getNames(), newCheckedItem, (dialogInterface, position, checked) -> {
             newCheckedItem[position] = checked;
         }).setPositiveButton(R.string.ok_action, (dialogInterface, position) -> {
-            if(!Arrays.equals(checkedItem, newCheckedItem)) {
+            if (!Arrays.equals(checkedItem, newCheckedItem)) {
                 Set<String> newFilter = new HashSet<>();
                 for (int i = 0; i < n; i++) {
                     if (newCheckedItem[i]) newFilter.add(String.valueOf(i));
                 }
                 AlbumHelper.setFilter(newFilter);
-                if(newFilter.size() != 0) {
+                if (newFilter.size() != 0) {
                     mRecyclerView.setVisibility(View.VISIBLE);
                     desertPlaceholder.setVisibility(View.GONE);
-                    mSwipeRefreshLayout.post(() -> {
-                        mSwipeRefreshLayout.setRefreshing(true);
-                        listener.onRefresh();
-                    });
+                    loadData();
                 } else {
                     mRecyclerView.setVisibility(View.GONE);
                     desertPlaceholder.setVisibility(View.VISIBLE);
@@ -516,13 +512,13 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
     @Override
     public void change(int numbItemCheck) {
-        if(toolbarActionModeBucket != null) {
+        if (toolbarActionModeBucket != null) {
             toolbarActionModeBucket.changeMenu(numbItemCheck);
         }
     }
 
     @SuppressWarnings("unchecked")
-    public void deleteAlbums(){
+    public void deleteAlbums() {
         selectedDeleteAlbum = albumsAdapter.getSelectedIds(); // get all selected
         ArrayList<Bucket> mDeletedAlbums = new ArrayList<>();
         for (int i = (selectedDeleteAlbum.size() - 1); i >= 0; i--) {
@@ -543,26 +539,22 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         dialog.show();
     }
 
-    private final SwipeRefreshLayout.OnRefreshListener listener = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            presenter.getAlbums();
-            albumsAdapter.notifyDataSetChanged();
-        }
-    };
+    public void loadData() {
+        presenter.getAlbums();
+        albumsAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onGetAlbumSuccess(ArrayList<Bucket> buckets) {
         albumsAdapter.setDataList(buckets);
         albumsAdapter.changeSortingMode(getSortingMode());
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
+        loadingLayout.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onDeleteAlbumSuccess() {
-        for(int i=selectedDeleteAlbum.size()-1; i>=0; i--) {
+        for (int i = selectedDeleteAlbum.size() - 1; i >= 0; i--) {
             removeAlbum(selectedDeleteAlbum.keyAt(i));
         }
     }
@@ -573,12 +565,9 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
     @Override
     public void onChange() {
-        Log.v("tunm1", "AlbumsFragment refresh data");
-        if (mSwipeRefreshLayout != null && !getUserVisibleHint()) {
-            mSwipeRefreshLayout.post(() -> {
-                if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
-                listener.onRefresh();
-            });
+        Log.v("loadData", "update " + TAG);
+        if (!getUserVisibleHint()) {
+            loadData();
         }
     }
 
@@ -599,5 +588,11 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         parentFragment.showAppBarLayout();
         parentViewPager.setSwipeLocked(false);
         super.setNullToActionMode();
+    }
+
+    @Override
+    protected void refreshTheme() {
+        super.refreshTheme();
+        loadingLayout.setBackgroundColor(getResources().getColor(mColorTheme.isDarkTheme() ? R.color.colorDarkBackground : R.color.colorBackground));
     }
 }

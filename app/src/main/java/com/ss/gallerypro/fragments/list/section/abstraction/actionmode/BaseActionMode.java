@@ -38,7 +38,6 @@ public abstract class BaseActionMode implements ActionMode.Callback {
         BaseTimelineFragment fragment = (BaseTimelineFragment) mFragment;
         fragment.getAdapter().removeSelection();
         fragment.setNullToActionMode();
-        fragment.setEnableSwipeRefresh(true);
     }
 
     public void changeMenu(int numberItem){

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,10 +30,6 @@ import com.ss.gallerypro.view.ItemOffsetDecoration;
 import butterknife.BindView;
 
 abstract public class BaseListFragment extends BaseFragment implements ProviderChangeListener {
-
-    @Nullable
-    @BindView(R.id.activity_main_swipe_refresh_layout)
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
 
     @BindView(R.id.placeholder)
     protected DesertPlaceholder desertPlaceholder;
@@ -95,7 +90,7 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
         refreshTheme();
     }
 
-    private void refreshTheme() {
+    protected void refreshTheme() {
         if(mColorTheme.isDarkTheme()) {
             mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
             CommonBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
@@ -124,15 +119,15 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
     }
 
     //Set enable SwipeRefreshLayout
-    public void setEnableSwipeRefresh(boolean isEnable) {
-        if(isEnable) {
-            mSwipeRefreshLayout.setEnabled(true);
-            mSwipeRefreshLayout.setDistanceToTriggerSync(0);
-        } else {
-            mSwipeRefreshLayout.setEnabled(false);
-            mSwipeRefreshLayout.setDistanceToTriggerSync(999999);
-        }
-    }
+//    public void setEnableSwipeRefresh(boolean isEnable) {
+//        if(isEnable) {
+//            mSwipeRefreshLayout.setEnabled(true);
+//            mSwipeRefreshLayout.setDistanceToTriggerSync(0);
+//        } else {
+//            mSwipeRefreshLayout.setEnabled(false);
+//            mSwipeRefreshLayout.setDistanceToTriggerSync(999999);
+//        }
+//    }
 
     //Set action mode null after use
     public void setNullToActionMode() {

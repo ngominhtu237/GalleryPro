@@ -5,28 +5,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/activity_main_swipe_refresh_layout"
+    <RelativeLayout
+        android:id="@+id/loading_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".fragments.list.normal.albums.AlbumsFragment">
+        android:layout_height="match_parent"
+        android:gravity="center">
 
-        <!-- TODO: Update blank fragment layout -->
-        <com.ss.gallerypro.view.AnimatedRecyclerView
-            android:id="@+id/albumRecycleView"
-            android:background="@color/colorBackground"
+        <com.ss.gallerypro.theme.ui.ProgressBarTheme
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true" />
+
+        <com.ss.gallerypro.theme.ui.TextViewSecondary
+            android:id="@+id/loadingTV"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:animationDuration="300"
-            app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
-            app:layoutManagerReverse="false"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progressBar"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:gravity="center"
+            android:text="Loading..."
+            tools:ignore="HardcodedText" />
+    </RelativeLayout>
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.ss.gallerypro.view.AnimatedRecyclerView
+        android:id="@+id/albumRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground"
+        app:animationDuration="300"
+        android:visibility="gone"
+        app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
+        app:layoutManagerReverse="false" />
 
     <com.jetradar.desertplaceholder.DesertPlaceholder
         android:id="@+id/placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        app:dp_message="There's nothing to show"/>
+        app:dp_message="There's nothing to show" />
 
 </FrameLayout>

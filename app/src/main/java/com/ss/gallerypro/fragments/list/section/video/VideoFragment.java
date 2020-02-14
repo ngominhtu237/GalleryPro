@@ -60,14 +60,7 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  super.onCreateView(inflater, container, savedInstanceState);
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.post(() -> {
-                mSwipeRefreshLayout.setRefreshing(true);
-                listener.onRefresh();
-            });
-        }
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -76,7 +69,8 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     }
 
     @Override
-    protected void createSwipeEvent() {
+    protected void loadData() {
+        Log.v("loadData", TAG);
         presenter.getMedias(MediaFilter.VIDEO);
     }
 
@@ -123,9 +117,8 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     public void onGetTimelineSuccess(ArrayList<MediaItem> mediaItems) {
         getAdapter().setMediaItems(mediaItems);
         getAdapter().changeSorting(getSortingMode(), getSortingOrder());
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
+        loadingLayout.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -165,7 +158,6 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
     @Override
     public void onLongClick(View view, int position) {
-        setEnableSwipeRefresh(false);
         onListItemSelect(position);
     }
 
@@ -184,13 +176,7 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
     @Override
     public void onChange() {
-        Log.v("tunm1", "VideoFragment refresh data");
-        if (mSwipeRefreshLayout != null && !getUserVisibleHint()) {
-            mSwipeRefreshLayout.post(() -> {
-                if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
-                listener.onRefresh();
-                Log.v(TAG, "reload data.");
-            });
-        }
+        Log.v("loadData", "update " + TAG);
+        presenter.getMedias(MediaFilter.VIDEO);
     }
 }

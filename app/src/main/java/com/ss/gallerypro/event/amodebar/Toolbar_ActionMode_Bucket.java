@@ -69,7 +69,6 @@ public class Toolbar_ActionMode_Bucket implements ActionMode.Callback {
         AlbumsFragment albumsFragment = (AlbumsFragment) mFragment;
 
         albumsFragment.setNullToActionMode();
-        albumsFragment.setEnableSwipeRefresh(true);
     }
 
     public void changeMenu(int numbItemCheck){
