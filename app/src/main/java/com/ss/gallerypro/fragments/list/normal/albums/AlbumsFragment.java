@@ -346,9 +346,6 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         menu.setGroupVisible(R.id.view_mode, !editMode);
         menu.setGroupVisible(R.id.edit_mode_items, editMode);
         menu.setGroupVisible(R.id.one_selected_items, oneSelected);
-        // not visible increase & reduce column when in list mode
-        MenuItem item = menu.findItem(R.id.change_column);
-        item.setVisible(mLayoutType == LayoutType.GRID);
 
         if (editMode) {
 
@@ -405,34 +402,6 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
             case R.id.action_camera:
                 startActivity(new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA));
-                return true;
-
-            case R.id.increase_column_count:
-                if (columnNumber + 1 <= ChooseColumnDialog.MAX_COLUMN_ALBUM) {
-                    columnNumber++;
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        AlbumHelper.setNumbColumnPort(columnNumber);
-                    } else {
-                        AlbumHelper.setNumbColumnLand(columnNumber);
-                    }
-                    setupColumn();
-                } else {
-                    Toast.makeText(getContext(), "Max column is " + ChooseColumnDialog.MAX_COLUMN_ALBUM, Toast.LENGTH_SHORT).show();
-                }
-                return true;
-
-            case R.id.reduce_column_count:
-                if (columnNumber - 1 >= ChooseColumnDialog.MIN_COLUMN_ALBUM) {
-                    columnNumber--;
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        AlbumHelper.setNumbColumnPort(columnNumber);
-                    } else {
-                        AlbumHelper.setNumbColumnLand(columnNumber);
-                    }
-                    setupColumn();
-                } else {
-                    Toast.makeText(getContext(), "Min column is " + ChooseColumnDialog.MIN_COLUMN_ALBUM, Toast.LENGTH_SHORT).show();
-                }
                 return true;
 
             case R.id.filter_data:

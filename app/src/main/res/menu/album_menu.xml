@@ -67,23 +67,6 @@
             </menu>
         </item>
 
-        <item
-            android:id="@+id/change_column"
-            android:title="@string/change_column"
-            app:showAsAction="never">
-
-            <menu>
-                <item
-                    android:id="@+id/increase_column_count"
-                    android:title="@string/increase_column_count"
-                    app:showAsAction="never" />
-                <item
-                    android:id="@+id/reduce_column_count"
-                    android:title="@string/reduce_column_count"
-                    app:showAsAction="never" />
-            </menu>
-        </item>
-
         <!--<item-->
             <!--android:id="@+id/setting"-->
             <!--android:title="@string/settings"-->
