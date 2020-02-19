@@ -2,8 +2,10 @@ package com.ss.gallerypro.fragments.list.normal.albums;
 
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,6 +16,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -29,6 +34,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -278,7 +284,6 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
     @Override
     public void onLongClick(View view, int position) {
-//        setEnableSwipeRefresh(false);
         onListItemSelect(position);
     }
 
@@ -438,47 +443,6 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         return super.onOptionsItemSelected(item);
     }
 
-    private void showMultiChoiceDialog() {
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
-        mBuilder.setTitle(R.string.title_dialog_album_filter);
-        int n = MediaFilter.values().length;
-        boolean[] checkedItem = new boolean[n];
-
-        // get from pref => save to checkedItem (set("0", "1") -> index(0, 1) -> boolean in 'index' position)
-        List<String> filter = new ArrayList<>(AlbumHelper.getFilter(n));
-        for (int i = 0; i < filter.size(); i++) {
-            checkedItem[Integer.parseInt(filter.get(i))] = true;
-        }
-        boolean[] newCheckedItem = Arrays.copyOf(checkedItem, n);
-
-        mBuilder.setMultiChoiceItems(MediaFilter.getNames(), newCheckedItem, (dialogInterface, position, checked) -> {
-            newCheckedItem[position] = checked;
-        }).setPositiveButton(R.string.ok_action, (dialogInterface, position) -> {
-            if (!Arrays.equals(checkedItem, newCheckedItem)) {
-                Set<String> newFilter = new HashSet<>();
-                for (int i = 0; i < n; i++) {
-                    if (newCheckedItem[i]) newFilter.add(String.valueOf(i));
-                }
-                AlbumHelper.setFilter(newFilter);
-                if (newFilter.size() != 0) {
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    desertPlaceholder.setVisibility(View.GONE);
-                    loadData();
-                } else {
-                    mRecyclerView.setVisibility(View.GONE);
-                    desertPlaceholder.setVisibility(View.VISIBLE);
-                }
-            } else {
-                Toast.makeText(getContext(), R.string.nothing_changed, Toast.LENGTH_SHORT).show();
-            }
-
-        }).setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-        });
-        AlertDialog mDialog = mBuilder.create();
-        mDialog.show();
-    }
-
     @Override
     public void change(int numbItemCheck) {
         if (toolbarActionModeBucket != null) {
@@ -563,5 +527,72 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     protected void refreshTheme() {
         super.refreshTheme();
         loadingLayout.setBackgroundColor(getResources().getColor(mColorTheme.isDarkTheme() ? R.color.colorDarkBackground : R.color.colorBackground));
+    }
+
+    private void showMultiChoiceDialog() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext(),
+                mColorTheme.isDarkTheme() ? R.style.AlbumsFilterDialogDark : R.style.AlbumsFilterDialogLight);
+        String titleText = "Filter";
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mColorTheme.isDarkTheme() ? getContext().getColor(R.color.colorDarkAccent) : mColorTheme.getPrimaryColor());
+        SpannableStringBuilder ssBuilder = new SpannableStringBuilder(titleText);
+        // Apply the text color span
+        ssBuilder.setSpan(
+                foregroundColorSpan,
+                0,
+                titleText.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        mBuilder.setTitle(ssBuilder);
+        int n = MediaFilter.values().length;
+        boolean[] checkedItem = new boolean[n];
+
+        // get from pref => save to checkedItem (set("0", "1") -> index(0, 1) -> boolean in 'index' position)
+        List<String> filter = new ArrayList<>(AlbumHelper.getFilter(n));
+        for (int i = 0; i < filter.size(); i++) {
+            checkedItem[Integer.parseInt(filter.get(i))] = true;
+        }
+        boolean[] newCheckedItem = Arrays.copyOf(checkedItem, n);
+
+        mBuilder.setMultiChoiceItems(MediaFilter.getNames(), newCheckedItem,
+                (dialogInterface, position, checked) -> newCheckedItem[position] = checked).setPositiveButton(R.string.ok_action,
+                (dialogInterface, position) -> {
+                    if (!Arrays.equals(checkedItem, newCheckedItem)) {
+                        Set<String> newFilter = new HashSet<>();
+                        for (int i = 0; i < n; i++) {
+                            if (newCheckedItem[i]) newFilter.add(String.valueOf(i));
+                        }
+                        AlbumHelper.setFilter(newFilter);
+                        if (newFilter.size() != 0) {
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                            desertPlaceholder.setVisibility(View.GONE);
+                            loadData();
+                        } else {
+                            mRecyclerView.setVisibility(View.GONE);
+                            desertPlaceholder.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        Toast.makeText(getContext(), R.string.nothing_changed, Toast.LENGTH_SHORT).show();
+                    }
+
+                }).setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss());
+        AlertDialog mDialog = mBuilder.create();
+        mDialog.show();
+        addStyleFilterDialog(mDialog);
+    }
+
+    private void addStyleFilterDialog(AlertDialog dialog) {
+        int w = (int) (getResources().getDisplayMetrics().widthPixels * 0.9);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(w, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(mColorTheme.isDarkTheme() ? getContext().getColor(R.color.colorDarkPrimary) : mColorTheme.getBackgroundColor());
+        gd.setCornerRadius(25);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(gd);
+
+        int colorAccent = mColorTheme.isDarkTheme() ? getContext().getColor(R.color.colorDarkAccent) : mColorTheme.getPrimaryColor();
+        Button btNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        btNegative.setTextColor(colorAccent);
+        Button btPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        btPositive.setTextColor(colorAccent);
     }
 }

@@ -1,28 +1,21 @@
 package com.ss.gallerypro.view.dialog;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.ss.gallerypro.R;
 import com.ss.gallerypro.data.sort.SortingMode;
 import com.ss.gallerypro.data.sort.SortingOrder;
-import com.ss.gallerypro.theme.ColorTheme;
+import com.ss.gallerypro.theme.ui.BaseDialogTheme;
 import com.ss.gallerypro.theme.ui.ButtonTheme;
 import com.ss.gallerypro.theme.ui.RadioButtonTheme;
 import com.ss.gallerypro.utils.Convert;
 
-import java.util.Objects;
-
-public class SortDialogTimeline extends AlertDialog {
+public class SortDialogTimeline extends BaseDialogTheme {
 
     private String btCancelText;
     private String btSortText;
@@ -30,21 +23,17 @@ public class SortDialogTimeline extends AlertDialog {
     private View.OnClickListener btSortListener = null;
     private SortingMode sortingMode;
     private SortingOrder sortingOrder;
-    private ColorTheme colorTheme;
     private ButtonTheme btnCancel, btnSort;
     RadioButtonTheme[] rb, rb1;
     RadioGroup rgSortingMode, rgSortingOrder;
 
     public SortDialogTimeline(@NonNull Context context) {
         super(context);
-        colorTheme = new ColorTheme(context);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_sort_layout);
         btnCancel = findViewById(R.id.cancel);
         btnSort = findViewById(R.id.sort);
         btnCancel.setText(btCancelText);
@@ -89,12 +78,9 @@ public class SortDialogTimeline extends AlertDialog {
         refreshTheme();
     }
 
-    private void refreshTheme() {
-        if(colorTheme.isDarkTheme()) {
-            Objects.requireNonNull(getWindow()).setBackgroundDrawableResource(R.color.colorDarkPrimary);
-        } else {
-            //
-        }
+    @Override
+    protected int getLayoutId() {
+        return R.layout.dialog_sort_layout;
     }
 
     public void setSortingMode(SortingMode sortingMode) {
@@ -121,5 +107,10 @@ public class SortDialogTimeline extends AlertDialog {
     public void setSortButton(String delete, View.OnClickListener onClickListener) {
         this.btSortText = delete;
         this.btSortListener = onClickListener;
+    }
+
+    @Override
+    protected float getWidth() {
+        return 0.9f;
     }
 }

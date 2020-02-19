@@ -1,8 +1,7 @@
 package com.ss.gallerypro.view.dialog;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.graphics.drawable.GradientDrawable;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -10,15 +9,13 @@ import android.view.View;
 
 import com.ramotion.fluidslider.FluidSlider;
 import com.ss.gallerypro.R;
-import com.ss.gallerypro.theme.ColorTheme;
+import com.ss.gallerypro.theme.ui.BaseDialogTheme;
 import com.ss.gallerypro.theme.ui.ButtonTheme;
 import com.ss.gallerypro.utils.preferences.Prefs;
 
-import java.util.Objects;
-
 import kotlin.Unit;
 
-public class ChooseColumnDialog extends Dialog {
+public class ChooseColumnDialog extends BaseDialogTheme {
 
     public static final int MIN_COLUMN_MEDIA = 2;
     public static final int MAX_COLUMN_MEDIA = 6;
@@ -28,20 +25,15 @@ public class ChooseColumnDialog extends Dialog {
     private View.OnClickListener btCancelListener = null;
     private View.OnClickListener btOKListener = null;
     private FluidSlider mediaSlider, albumSlider;
-    private ColorTheme colorTheme;
-    private Activity mActivity;
     private int selectedTimelineColumn, selectedAlbumColumn;
 
-    public ChooseColumnDialog(@NonNull Activity activity) {
-        super(activity);
-        mActivity = activity;
-        colorTheme = new ColorTheme(activity);
+    public ChooseColumnDialog(@NonNull Context context) {
+        super(context);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_choose_column);
         ButtonTheme btnCancel = findViewById(R.id.btn_cancel);
         ButtonTheme btnOk = findViewById(R.id.btn_ok);
 
@@ -50,19 +42,19 @@ public class ChooseColumnDialog extends Dialog {
 
         mediaSlider = findViewById(R.id.mediaSlider);
         albumSlider = findViewById(R.id.albumSlider);
-        selectedTimelineColumn = Prefs.getTimelineColumnPortrait(mActivity);
-        selectedAlbumColumn = Prefs.getAlbumColumnPort(mActivity);
-        initializeSlider(mediaSlider, MIN_COLUMN_MEDIA, MAX_COLUMN_MEDIA, Prefs.getTimelineColumnPortrait(mActivity));
-        initializeSlider(albumSlider, MIN_COLUMN_ALBUM, MAX_COLUMN_ALBUM, Prefs.getAlbumColumnPort(mActivity));
+        selectedTimelineColumn = Prefs.getTimelineColumnPortrait((Activity) mContext);
+        selectedAlbumColumn = Prefs.getAlbumColumnPort((Activity) mContext);
+        initializeSlider(mediaSlider, MIN_COLUMN_MEDIA, MAX_COLUMN_MEDIA, Prefs.getTimelineColumnPortrait((Activity) mContext));
+        initializeSlider(albumSlider, MIN_COLUMN_ALBUM, MAX_COLUMN_ALBUM, Prefs.getAlbumColumnPort((Activity) mContext));
 
         mediaSlider.setPositionListener(pos -> {
-            selectedTimelineColumn = (int)(MIN_COLUMN_MEDIA + ((MAX_COLUMN_MEDIA - MIN_COLUMN_MEDIA)  * pos));
+            selectedTimelineColumn = (int) (MIN_COLUMN_MEDIA + ((MAX_COLUMN_MEDIA - MIN_COLUMN_MEDIA) * pos));
             mediaSlider.setBubbleText(String.valueOf(selectedTimelineColumn));
             return Unit.INSTANCE;
         });
 
         albumSlider.setPositionListener(pos -> {
-            selectedAlbumColumn = (int)(MIN_COLUMN_ALBUM + ((MAX_COLUMN_ALBUM - MIN_COLUMN_ALBUM)  * pos));
+            selectedAlbumColumn = (int) (MIN_COLUMN_ALBUM + ((MAX_COLUMN_ALBUM - MIN_COLUMN_ALBUM) * pos));
             albumSlider.setBubbleText(String.valueOf(selectedAlbumColumn));
             return Unit.INSTANCE;
         });
@@ -107,25 +99,27 @@ public class ChooseColumnDialog extends Dialog {
         this.btOKListener = onClickListener;
     }
 
-    private void refreshTheme() {
-        if(colorTheme.isDarkTheme()) {
-            GradientDrawable gd = new GradientDrawable();
-            gd.setColor(getContext().getColor(R.color.colorDarkPrimary));
-            gd.setCornerRadius(25);
-            Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
-        } else {
-            GradientDrawable gd = new GradientDrawable();
-            gd.setColor(colorTheme.getBackgroundColor());
-            gd.setCornerRadius(25);
-            Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
-            mediaSlider.setColorBar(colorTheme.getPrimaryColor());
-            mediaSlider.setColorBubble(colorTheme.getBackgroundColor());
-            mediaSlider.setColorBubbleText(colorTheme.getAccentColor());
-            mediaSlider.setColorBarText(colorTheme.getBackgroundColor());
-            albumSlider.setColorBar(colorTheme.getPrimaryColor());
-            albumSlider.setColorBubble(colorTheme.getBackgroundColor());
-            albumSlider.setColorBubbleText(colorTheme.getAccentColor());
-            albumSlider.setColorBarText(colorTheme.getBackgroundColor());
+    public void refreshTheme() {
+        super.refreshTheme();
+        if (!mColorTheme.isDarkTheme()) {
+            mediaSlider.setColorBar(mColorTheme.getPrimaryColor());
+            mediaSlider.setColorBubble(mColorTheme.getBackgroundColor());
+            mediaSlider.setColorBubbleText(mColorTheme.getAccentColor());
+            mediaSlider.setColorBarText(mColorTheme.getBackgroundColor());
+            albumSlider.setColorBar(mColorTheme.getPrimaryColor());
+            albumSlider.setColorBubble(mColorTheme.getBackgroundColor());
+            albumSlider.setColorBubbleText(mColorTheme.getAccentColor());
+            albumSlider.setColorBarText(mColorTheme.getBackgroundColor());
         }
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.dialog_choose_column;
+    }
+
+    @Override
+    protected float getWidth() {
+        return 0.85f;
     }
 }

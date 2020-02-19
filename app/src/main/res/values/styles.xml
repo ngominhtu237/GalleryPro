@@ -57,4 +57,14 @@
     <style name="ColorPickerDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:background">@color/colorBackground</item>
     </style>
+
+    <style name="AlbumsFilterDialogLight" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/accent_black</item>
+        <item name="android:textColorSecondary">@color/accent_black</item>
+    </style>
+
+    <style name="AlbumsFilterDialogDark" parent="Theme.AppCompat">
+        <item name="colorAccent">@color/accent_white</item>
+        <item name="android:textColorSecondary">@color/accent_white</item>
+    </style>
 </resources>

@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -15,8 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.ss.gallerypro.DrawerLocker;
 import com.ss.gallerypro.R;
@@ -35,15 +32,13 @@ import com.ss.gallerypro.fragments.list.split.pictures.presenter.MediaPresenterI
 import com.ss.gallerypro.fragments.list.split.pictures.view.IMediaView;
 import com.ss.gallerypro.fragments.viewer.ImagePagerFragment;
 import com.ss.gallerypro.view.SquareImageView;
+import com.ss.gallerypro.view.dialog.AlbumPictureDetailsDialog;
 import com.ss.gallerypro.view.dialog.DeleteDialog;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
-
-import static com.ss.gallerypro.data.AlbumHelper.getSizeAlbum;
-import static com.ss.gallerypro.data.utils.DataUtils.readableFileSize;
 
 public class AlbumPicturesFragment extends BaseListFragment implements IMediaView, RecycleViewClickListener, BaseListViewAdapter.CheckedItemInterface {
 
@@ -242,30 +237,10 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
                 return true;
 
             case R.id.album_details:
-                ViewGroup viewGroup = rootView.findViewById(android.R.id.content);
-                //then we will inflate the custom alert dialog xml that we created
-                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_album_details, viewGroup, false);
-                TextView tvAlbumName = dialogView.findViewById(R.id.tvAlbumName);
-                TextView tvAlbumPath = dialogView.findViewById(R.id.tvAlbumPath);
-                TextView tvAlbumSize = dialogView.findViewById(R.id.tvAlbumSize);
-                TextView tvAlbumCount = dialogView.findViewById(R.id.tvCountAlbum);
-                Button btOK = dialogView.findViewById(R.id.buttonOk);
-                tvAlbumName.setText(mReceiveBucket.getName());
-                tvAlbumPath.setText(mReceiveBucket.getPathToAlbum());
-                tvAlbumSize.setText(readableFileSize(getSizeAlbum(adapter.getMediaList())));
-                tvAlbumCount.setText(String.valueOf(adapter.getMediaList().size()));
-
-                //Now we need an AlertDialog.Builder object
-                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-
-                //setting the view of the builder to our custom view that we already inflated
-                builder.setView(dialogView);
-
-                //finally creating the alert dialog and displaying it
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-                btOK.setOnClickListener((view) -> alertDialog.dismiss());
-
+                AlbumPictureDetailsDialog dialog = new AlbumPictureDetailsDialog(mAttachedActivity);
+                dialog.setCurrentAlbum(mReceiveBucket);
+                dialog.setMediaList(adapter.getMediaList());
+                dialog.show();
         }
         return super.onOptionsItemSelected(item);
     }

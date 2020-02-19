@@ -500,4 +500,7 @@ and this could make the media inaccessible from other apps. Use the exclude opti
     <!-- About Us -->
     <string name="app_version" translatable="false">Version 1.0</string>
     <string name="copy_right" translatable="false">Copyrights © %1$d</string>
+
+    <!-- Album Picture -->
+    <string name="album_picture_dialog_title" translatable="false">Details</string>
 </resources>

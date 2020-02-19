@@ -2,77 +2,91 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="@dimen/fifteen_dp"
+    android:paddingLeft="@dimen/fifteen_dp"
+    android:paddingRight="@dimen/fifteen_dp"
+    android:paddingBottom="@dimen/five_dp"
     android:orientation="vertical">
+
+    <com.ss.gallerypro.theme.ui.TitleTextView
+        android:id="@+id/textView_album_picture_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/five_dp"
+        android:layout_marginStart="@dimen/seven_dp"
+        android:layout_marginBottom="@dimen/ten_dp"
+        android:textColor="@color/accent_black"
+        android:textSize="@dimen/twenty_sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/album_picture_dialog_title"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingTop="@dimen/twenty_dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="8dp">
+        android:layout_marginStart="@dimen/seven_dp"
+        android:orientation="vertical">
 
-        <TextView
+        <com.ss.gallerypro.theme.ui.TextViewSecondary
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:textStyle="italic"
             android:textSize="@dimen/dialog_detail_header"
             android:text="Name" />
-        <TextView
-            android:id="@+id/tvAlbumName"
+        <com.ss.gallerypro.theme.ui.TextViewPrimary
+            android:id="@+id/textView_album_picture_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Camera"
             android:layout_marginBottom="10dp"/>
 
-        <TextView
+        <com.ss.gallerypro.theme.ui.TextViewSecondary
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:textStyle="italic"
             android:textSize="@dimen/dialog_detail_header"
             android:text="Path" />
-        <TextView
-            android:id="@+id/tvAlbumPath"
+        <com.ss.gallerypro.theme.ui.TextViewPrimary
+            android:id="@+id/textView_album_picture_path"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="/storage/emulated/0/DCIM"
             android:layout_marginBottom="10dp"/>
 
-        <TextView
+        <com.ss.gallerypro.theme.ui.TextViewSecondary
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:textStyle="italic"
             android:textSize="@dimen/dialog_detail_header"
             android:text="Size" />
-        <TextView
-            android:id="@+id/tvAlbumSize"
+        <com.ss.gallerypro.theme.ui.TextViewPrimary
+            android:id="@+id/textView_album_picture_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="5.2 GB"
             android:layout_marginBottom="10dp"/>
 
-        <TextView
+        <com.ss.gallerypro.theme.ui.TextViewSecondary
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:textStyle="italic"
             android:textSize="@dimen/dialog_detail_header"
             android:text="Total files count" />
-        <TextView
-            android:id="@+id/tvCountAlbum"
+        <com.ss.gallerypro.theme.ui.TextViewPrimary
+            android:id="@+id/textView_album_picture_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="110"
             android:layout_marginBottom="10dp"/>
 
-        <Button
-            android:id="@+id/buttonOk"
-            android:layout_width="100dp"
+        <com.ss.gallerypro.theme.ui.ButtonTheme
+            android:id="@+id/button_album_picture_ok"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:layout_gravity="center"
             android:text="Ok"
-            android:textColor="@color/colorPrimary" />
-
+            android:textColor="@color/md_blue_grey_700" />
     </LinearLayout>
 
 </LinearLayout>
