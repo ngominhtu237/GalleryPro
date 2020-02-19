@@ -473,6 +473,8 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     }
 
     public void loadData() {
+        loadingLayout.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
         presenter.getAlbums();
         albumsAdapter.notifyDataSetChanged();
     }
