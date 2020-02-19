@@ -481,10 +481,15 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
     @Override
     public void onGetAlbumSuccess(ArrayList<Bucket> buckets) {
-        albumsAdapter.setDataList(buckets);
-        albumsAdapter.changeSortingMode(getSortingMode());
-        loadingLayout.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+        if(buckets.size() > 0) {
+            albumsAdapter.setDataList(buckets);
+            albumsAdapter.changeSortingMode(getSortingMode());
+            loadingLayout.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            desertPlaceholder.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     @Override

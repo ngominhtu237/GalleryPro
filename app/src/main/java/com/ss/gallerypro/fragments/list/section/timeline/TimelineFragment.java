@@ -119,10 +119,15 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
 
     @Override
     public void onGetTimelineSuccess(ArrayList<MediaItem> mediaItems) {
-        getAdapter().setMediaItems(mediaItems);
-        getAdapter().changeSorting(getSortingMode(), getSortingOrder());
-        loadingLayout.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+        if(mediaItems.size() > 0) {
+            getAdapter().setMediaItems(mediaItems);
+            getAdapter().changeSorting(getSortingMode(), getSortingOrder());
+            loadingLayout.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            desertPlaceholder.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     @Override
