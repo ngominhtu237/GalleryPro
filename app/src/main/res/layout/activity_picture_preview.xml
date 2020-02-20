@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/slideshowFrag"
-        android:name="com.ss.gallerypro.fragments.viewer.SlideShowFragment"
+        android:name="com.tubeeapp.gallerypro.fragments.viewer.SlideShowFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>

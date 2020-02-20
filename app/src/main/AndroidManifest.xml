@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.ss.gallerypro">
+    package="com.tubeeapp.gallerypro">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
     <application
-        android:name=".MyApp"
+        android:name="com.tubeeapp.gallerypro.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/cornieicons"
         android:label="@string/app_name"
@@ -17,9 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".activity.SettingsActivity"></activity>
+        <activity android:name="com.tubeeapp.gallerypro.activity.SettingsActivity"></activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.tubeeapp.gallerypro.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
 
@@ -29,11 +29,11 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".activity.PicturePreview"
+            android:name="com.tubeeapp.gallerypro.activity.PicturePreview"
             android:screenOrientation="portrait"
             android:theme="@style/PictureView" />
         <activity
-            android:name=".SplashScreen"
+            android:name="com.tubeeapp.gallerypro.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.AboutActivity"
+            android:name="com.tubeeapp.gallerypro.activity.AboutActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

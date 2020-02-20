@@ -6,7 +6,7 @@
     android:background="@color/md_dark_cards"
     tools:context=".activity.PicturePreview">
 
-    <com.ss.gallerypro.customComponent.ViewPagerFixed
+    <com.tubeeapp.gallerypro.customComponent.ViewPagerFixed
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

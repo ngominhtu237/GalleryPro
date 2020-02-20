@@ -7,7 +7,7 @@
     tools:context=".fragments.viewer.ImagePagerFragment">
 
 
-    <com.ss.gallerypro.customComponent.ViewPagerFixed
+    <com.tubeeapp.gallerypro.customComponent.ViewPagerFixed
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

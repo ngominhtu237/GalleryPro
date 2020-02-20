@@ -31,7 +31,7 @@
                 android:src="@mipmap/cornieicons"
                 tools:ignore="ContentDescription" />
 
-            <com.ss.gallerypro.theme.ui.TextViewPrimary
+            <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                 android:textSize="25sp" />
         </LinearLayout>
 
-        <com.ss.gallerypro.theme.ui.SeparatorTheme
+        <com.tubeeapp.gallerypro.theme.ui.SeparatorTheme
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="0dp"
@@ -59,14 +59,14 @@
             android:orientation="vertical"
             android:padding="0dp">
 
-            <com.ss.gallerypro.theme.ui.TextViewPrimary
+            <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="14dp"
                 android:text="@string/app_version"
                 android:textSize="16sp"
                 android:textColor="@color/colorDarkAccent" />
-            <com.ss.gallerypro.theme.ui.SeparatorTheme
+            <com.tubeeapp.gallerypro.theme.ui.SeparatorTheme
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginTop="0dp"
@@ -83,7 +83,7 @@
             android:orientation="vertical"
             android:padding="0dp">
 
-            <com.ss.gallerypro.theme.ui.TextViewSecondary
+            <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="12dp"
@@ -106,7 +106,7 @@
                     app:materialIcon="email"
                     app:materialIconColor="#fff"
                     app:materialIconSize="24dp" />
-                <com.ss.gallerypro.theme.ui.TextViewPrimary
+                <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/accent_white"
@@ -115,7 +115,7 @@
                     android:text="Contact us"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
-            <com.ss.gallerypro.theme.ui.SeparatorTheme
+            <com.tubeeapp.gallerypro.theme.ui.SeparatorTheme
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/about_separator_height"
                 android:layout_marginTop="0dp"
@@ -138,7 +138,7 @@
                     app:materialIcon="google_play"
                     app:materialIconColor="#fff"
                     app:materialIconSize="24dp" />
-                <com.ss.gallerypro.theme.ui.TextViewPrimary
+                <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/accent_white"
@@ -147,7 +147,7 @@
                     android:text="Rate us on the Play Store"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
-            <com.ss.gallerypro.theme.ui.SeparatorTheme
+            <com.tubeeapp.gallerypro.theme.ui.SeparatorTheme
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/about_separator_height"
                 android:layout_marginTop="0dp"
@@ -170,7 +170,7 @@
                     app:materialIcon="instagram"
                     app:materialIconColor="#fff"
                     app:materialIconSize="24dp" />
-                <com.ss.gallerypro.theme.ui.TextViewPrimary
+                <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/accent_white"
@@ -179,7 +179,7 @@
                     android:text="Follow is on Instagram"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
-            <com.ss.gallerypro.theme.ui.SeparatorTheme
+            <com.tubeeapp.gallerypro.theme.ui.SeparatorTheme
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/about_separator_height"
                 android:layout_marginTop="0dp"

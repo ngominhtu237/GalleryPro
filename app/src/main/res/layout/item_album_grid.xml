@@ -11,12 +11,12 @@
     app:cardElevation="@dimen/cardview_default_elevation"
     android:focusable="true">
 
-    <com.ss.gallerypro.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.tubeeapp.gallerypro.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/md_dark_cards">
 
-        <com.ss.gallerypro.view.SquareImageView
+        <com.tubeeapp.gallerypro.view.SquareImageView
             android:id="@+id/ivThumbnail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,5 +57,5 @@
                 android:textColor="@color/md_light_green_A700" />
         </RelativeLayout>
 
-    </com.ss.gallerypro.view.SquareRelativeLayout>
+    </com.tubeeapp.gallerypro.view.SquareRelativeLayout>
 </RelativeLayout>

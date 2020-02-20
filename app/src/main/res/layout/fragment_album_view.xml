@@ -11,14 +11,14 @@
         android:layout_height="match_parent"
         android:gravity="center">
 
-        <com.ss.gallerypro.theme.ui.ProgressBarTheme
+        <com.tubeeapp.gallerypro.theme.ui.ProgressBarTheme
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:indeterminate="true" />
 
-        <com.ss.gallerypro.theme.ui.TextViewSecondary
+        <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
             android:id="@+id/loadingTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
     </RelativeLayout>
 
     <!-- TODO: Update blank fragment layout -->
-    <com.ss.gallerypro.view.AnimatedRecyclerView
+    <com.tubeeapp.gallerypro.view.AnimatedRecyclerView
         android:id="@+id/albumRecycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

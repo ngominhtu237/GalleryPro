@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/five_dp"
     android:orientation="vertical">
 
-    <com.ss.gallerypro.theme.ui.TitleTextView
+    <com.tubeeapp.gallerypro.theme.ui.TitleTextView
         android:id="@+id/textView_album_picture_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,59 +27,59 @@
         android:layout_marginStart="@dimen/seven_dp"
         android:orientation="vertical">
 
-        <com.ss.gallerypro.theme.ui.TextViewSecondary
+        <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:textSize="@dimen/dialog_detail_header"
             android:text="Name" />
-        <com.ss.gallerypro.theme.ui.TextViewPrimary
+        <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
             android:id="@+id/textView_album_picture_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Camera"
             android:layout_marginBottom="10dp"/>
 
-        <com.ss.gallerypro.theme.ui.TextViewSecondary
+        <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:textSize="@dimen/dialog_detail_header"
             android:text="Path" />
-        <com.ss.gallerypro.theme.ui.TextViewPrimary
+        <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
             android:id="@+id/textView_album_picture_path"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="/storage/emulated/0/DCIM"
             android:layout_marginBottom="10dp"/>
 
-        <com.ss.gallerypro.theme.ui.TextViewSecondary
+        <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:textSize="@dimen/dialog_detail_header"
             android:text="Size" />
-        <com.ss.gallerypro.theme.ui.TextViewPrimary
+        <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
             android:id="@+id/textView_album_picture_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="5.2 GB"
             android:layout_marginBottom="10dp"/>
 
-        <com.ss.gallerypro.theme.ui.TextViewSecondary
+        <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:textSize="@dimen/dialog_detail_header"
             android:text="Total files count" />
-        <com.ss.gallerypro.theme.ui.TextViewPrimary
+        <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
             android:id="@+id/textView_album_picture_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="110"
             android:layout_marginBottom="10dp"/>
 
-        <com.ss.gallerypro.theme.ui.ButtonTheme
+        <com.tubeeapp.gallerypro.theme.ui.ButtonTheme
             android:id="@+id/button_album_picture_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

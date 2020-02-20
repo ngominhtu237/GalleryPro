@@ -7,7 +7,7 @@
     android:layout_marginTop="?attr/actionBarSize">
 
     <!-- TODO: Update blank fragment layout -->
-    <com.ss.gallerypro.view.AnimatedRecyclerView
+    <com.tubeeapp.gallerypro.view.AnimatedRecyclerView
         android:id="@+id/albumRecycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
