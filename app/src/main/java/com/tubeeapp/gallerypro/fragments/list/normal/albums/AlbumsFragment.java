@@ -146,8 +146,10 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
-                        ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(true);
-                        isScroll = false;
+                        if (mLayoutType == LayoutType.GRID) {
+                            ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(true);
+                            isScroll = false;
+                        }
                         break;
                     case RecyclerView.SCROLL_STATE_DRAGGING:
                         break;

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.tubeeapp.gallerypro.R;
 import com.tubeeapp.gallerypro.data.Bucket;
@@ -44,11 +45,12 @@ public class AlbumsAdapter extends BaseListViewAdapter<AlbumViewHolder> {
         RequestOptions options = new RequestOptions()
                 .useAnimationPool(true)
                 .override(holder.ivThumbnail.getWidth(), holder.ivThumbnail.getHeight())
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
 
         Glide.with(mContext)
                 .load(mBuckets.get(position).getPathPhotoCover())
-                .thumbnail(0.1f)
+                .thumbnail(0.05f)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(options)
                 .into(holder.ivThumbnail);
 
@@ -67,7 +69,7 @@ public class AlbumsAdapter extends BaseListViewAdapter<AlbumViewHolder> {
         holder.ivCheckbox.setImageDrawable(IconUtils.createSelectedIcon(mContext, mContext.getColor(R.color.colorDarkAccent)));
         holder.ivCheckbox.setVisibility(mSelectedItemsIds.get(position) ? View.VISIBLE : View.GONE);
         if(mLayoutType == LayoutType.LIST) {
-            holder.tvAlbumPath.setVisibility((mLayoutType == LayoutType.LIST) ? View.VISIBLE : View.GONE);
+            holder.tvAlbumPath.setVisibility(View.VISIBLE);
             holder.tvAlbumPath.setText(mBuckets.get(position).getPathToAlbum());
         }
         super.onBindViewHolder(holder, position);
