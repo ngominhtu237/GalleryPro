@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/md_light_blue_800</color>
+    <color name="colorPrimary">#F45E2C</color>
     <color name="colorHighlight">@color/md_grey_850</color>
 
     <color name="colorAccent">@color/accent_black</color>
@@ -9,7 +9,7 @@
     <color name="colorBackground">@color/accent_white</color>
     <color name="colorBackgroundHighlight">@color/md_grey_300</color>
 
-    <!-- Dark theme -->
+    <!-- Dark theme -->s
     <color name="colorDarkPrimary">@color/md_grey_900</color>
     <color name="colorDarkPrimaryHighlight">@color/md_grey_850</color>
     <color name="colorDarkAccent">@color/accent_white</color>

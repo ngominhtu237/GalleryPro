@@ -6,7 +6,7 @@
     android:clickable="true"
     android:background="@color/md_white_26_transparent">
 
-    <com.tubeeapp.gallerypro.view.SquareImageView
+    <com.tunm.gallerypro.view.SquareImageView
         android:id="@+id/ivThumbnail"
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -31,7 +31,7 @@
         android:layout_marginLeft="8dp"
         android:layout_centerVertical="true">
 
-        <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
+        <com.tunm.gallerypro.theme.ui.TextViewPrimary
             android:id="@+id/tvAlbumName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             android:textStyle="italic"
             android:text="72" />
 
-        <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
+        <com.tunm.gallerypro.theme.ui.TextViewSecondary
             android:id="@+id/tvDirectory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

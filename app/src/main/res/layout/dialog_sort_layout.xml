@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/five_dp"
     android:orientation="vertical">
 
-    <com.tubeeapp.gallerypro.theme.ui.TitleTextView
+    <com.tunm.gallerypro.theme.ui.TitleTextView
         android:id="@+id/title_dialog_sort"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,14 +50,14 @@
         android:layout_gravity="end"
         android:orientation="horizontal">
 
-        <com.tubeeapp.gallerypro.theme.ui.ButtonTheme
+        <com.tunm.gallerypro.theme.ui.ButtonTheme
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
             android:text="@string/cancel"/>
 
-        <com.tubeeapp.gallerypro.theme.ui.ButtonTheme
+        <com.tunm.gallerypro.theme.ui.ButtonTheme
             android:id="@+id/sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

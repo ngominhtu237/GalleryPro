@@ -106,4 +106,6 @@
     <!-- About Us -->
     <dimen name="about_separator_height">0.5dp</dimen>
 
+    <dimen name="statusbar_view_height">0dp</dimen>
+
 </resources>

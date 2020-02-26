@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
+        <com.tunm.gallerypro.theme.ui.TextViewPrimary
             android:id="@+id/media_column_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
+        <com.tunm.gallerypro.theme.ui.TextViewPrimary
             android:id="@+id/album_column_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
         android:gravity="end"
         android:orientation="horizontal">
 
-        <com.tubeeapp.gallerypro.theme.ui.ButtonTheme
+        <com.tunm.gallerypro.theme.ui.ButtonTheme
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
             android:textColor="@color/md_blue_grey_700"
             tools:ignore="ButtonStyle" />
 
-        <com.tubeeapp.gallerypro.theme.ui.ButtonTheme
+        <com.tunm.gallerypro.theme.ui.ButtonTheme
             android:id="@+id/btn_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

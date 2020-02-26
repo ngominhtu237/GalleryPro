@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.tubeeapp.gallerypro.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.tunm.gallerypro.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="100dp"
@@ -48,4 +48,4 @@
             android:layout_height="20dp"
             android:src="@mipmap/icon_play_button" />
     </LinearLayout>
-</com.tubeeapp.gallerypro.view.SquareRelativeLayout>
+</com.tunm.gallerypro.view.SquareRelativeLayout>

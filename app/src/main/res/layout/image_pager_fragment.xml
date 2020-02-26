@@ -6,8 +6,7 @@
     android:fitsSystemWindows="true"
     tools:context=".fragments.viewer.ImagePagerFragment">
 
-
-    <com.tubeeapp.gallerypro.customComponent.ViewPagerFixed
+    <com.tunm.gallerypro.customComponent.ViewPagerFixed
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="@dimen/twenty_dp"
+        android:visibility="gone"
         android:orientation="vertical">
         <TextView
             android:id="@+id/tvName"

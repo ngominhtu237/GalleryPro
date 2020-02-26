@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.tubeeapp.gallerypro"
+        applicationId "com.tunm.gallerypro"
         minSdkVersion 24
         targetSdkVersion 27
         versionCode 1
@@ -64,6 +64,7 @@ dependencies {
     implementation 'com.ramotion.fluidslider:fluid-slider:0.2.0'
     implementation project(path: ':materialiconlib')
 
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 }
 repositories {
     mavenCentral()

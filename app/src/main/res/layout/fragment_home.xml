@@ -19,7 +19,7 @@
             app:tabGravity="fill"/>
     </android.support.design.widget.AppBarLayout>
 
-    <com.tubeeapp.gallerypro.view.LockableViewPager
+    <com.tunm.gallerypro.view.LockableViewPager
         android:id="@+id/homeViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,0 +1,305 @@
+Index: app/src/main/java/com/ss/gallerypro/view/dialog/DeleteDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/ss/gallerypro/view/dialog/DeleteDialog.java	(date 1581924324000)
++++ app/src/main/java/com/ss/gallerypro/view/dialog/DeleteDialog.java	(date 1581926124059)
+@@ -1,41 +1,34 @@
+ package com.ss.gallerypro.view.dialog;
+ 
+ import android.annotation.SuppressLint;
+-import android.app.Dialog;
+ import android.content.Context;
+-import android.graphics.drawable.GradientDrawable;
+ import android.os.Bundle;
+ import android.support.annotation.NonNull;
+ import android.view.View;
+ 
+ import com.ss.gallerypro.R;
+-import com.ss.gallerypro.theme.ColorTheme;
++import com.ss.gallerypro.theme.ui.BaseDialogTheme;
+ import com.ss.gallerypro.theme.ui.ButtonTheme;
+ import com.ss.gallerypro.theme.ui.TextViewPrimary;
+ 
+-import java.util.Objects;
+-
+-public class DeleteDialog extends Dialog {
++public class DeleteDialog extends BaseDialogTheme {
+ 
+     private String message;
+     private String btCancelText;
+     private String btDeleteText;
+     private View.OnClickListener btCancelListener = null;
+     private View.OnClickListener btDeleteListener = null;
+-    private ColorTheme colorTheme;
+     private TextViewPrimary tvMessage;
+     private ButtonTheme btnCancel, btnDelete;
+ 
+     public DeleteDialog(@NonNull Context context) {
+         super(context);
+-        colorTheme = new ColorTheme(context);
+     }
+ 
+     @SuppressLint("SetTextI18n")
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+-        setContentView(R.layout.dialog_custom);
+         tvMessage = findViewById(R.id.message_dialog_custom);
+         tvMessage.setText(message);
+         btnCancel = findViewById(R.id.btn_cancel);
+@@ -45,8 +38,6 @@
+ 
+         btnCancel.setOnClickListener(btCancelListener);
+         btnDelete.setOnClickListener(btDeleteListener);
+-
+-        refreshTheme();
+     }
+ 
+     public void setMessage(String message) {
+@@ -63,17 +54,8 @@
+         this.btDeleteListener = onClickListener;
+     }
+ 
+-    private void refreshTheme() {
+-        if(colorTheme.isDarkTheme()) {
+-            GradientDrawable gd = new GradientDrawable();
+-            gd.setColor(getContext().getColor(R.color.colorDarkPrimary));
+-            gd.setCornerRadius(25);
+-            Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
+-        } else {
+-            GradientDrawable gd = new GradientDrawable();
+-            gd.setColor(colorTheme.getBackgroundColor());
+-            gd.setCornerRadius(25);
+-            Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
+-        }
++    @Override
++    protected int getLayoutId() {
++        return R.layout.dialog_custom;
+     }
+ }
+Index: app/src/main/java/com/ss/gallerypro/view/dialog/ChooseColumnDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/ss/gallerypro/view/dialog/ChooseColumnDialog.java	(date 1581924324000)
++++ app/src/main/java/com/ss/gallerypro/view/dialog/ChooseColumnDialog.java	(date 1581925928228)
+@@ -1,8 +1,6 @@
+ package com.ss.gallerypro.view.dialog;
+ 
+ import android.app.Activity;
+-import android.app.Dialog;
+-import android.graphics.drawable.GradientDrawable;
+ import android.os.Bundle;
+ import android.support.annotation.NonNull;
+ import android.util.Log;
+@@ -10,15 +8,13 @@
+ 
+ import com.ramotion.fluidslider.FluidSlider;
+ import com.ss.gallerypro.R;
+-import com.ss.gallerypro.theme.ColorTheme;
++import com.ss.gallerypro.theme.ui.BaseDialogTheme;
+ import com.ss.gallerypro.theme.ui.ButtonTheme;
+ import com.ss.gallerypro.utils.preferences.Prefs;
+ 
+-import java.util.Objects;
+-
+ import kotlin.Unit;
+ 
+-public class ChooseColumnDialog extends Dialog {
++public class ChooseColumnDialog extends BaseDialogTheme {
+ 
+     public static final int MIN_COLUMN_MEDIA = 2;
+     public static final int MAX_COLUMN_MEDIA = 6;
+@@ -28,20 +24,17 @@
+     private View.OnClickListener btCancelListener = null;
+     private View.OnClickListener btOKListener = null;
+     private FluidSlider mediaSlider, albumSlider;
+-    private ColorTheme colorTheme;
+     private Activity mActivity;
+     private int selectedTimelineColumn, selectedAlbumColumn;
+ 
+     public ChooseColumnDialog(@NonNull Activity activity) {
+         super(activity);
+         mActivity = activity;
+-        colorTheme = new ColorTheme(activity);
+     }
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+-        setContentView(R.layout.dialog_choose_column);
+         ButtonTheme btnCancel = findViewById(R.id.btn_cancel);
+         ButtonTheme btnOk = findViewById(R.id.btn_ok);
+ 
+@@ -56,13 +49,13 @@
+         initializeSlider(albumSlider, MIN_COLUMN_ALBUM, MAX_COLUMN_ALBUM, Prefs.getAlbumColumnPort(mActivity));
+ 
+         mediaSlider.setPositionListener(pos -> {
+-            selectedTimelineColumn = (int)(MIN_COLUMN_MEDIA + ((MAX_COLUMN_MEDIA - MIN_COLUMN_MEDIA)  * pos));
++            selectedTimelineColumn = (int) (MIN_COLUMN_MEDIA + ((MAX_COLUMN_MEDIA - MIN_COLUMN_MEDIA) * pos));
+             mediaSlider.setBubbleText(String.valueOf(selectedTimelineColumn));
+             return Unit.INSTANCE;
+         });
+ 
+         albumSlider.setPositionListener(pos -> {
+-            selectedAlbumColumn = (int)(MIN_COLUMN_ALBUM + ((MAX_COLUMN_ALBUM - MIN_COLUMN_ALBUM)  * pos));
++            selectedAlbumColumn = (int) (MIN_COLUMN_ALBUM + ((MAX_COLUMN_ALBUM - MIN_COLUMN_ALBUM) * pos));
+             albumSlider.setBubbleText(String.valueOf(selectedAlbumColumn));
+             return Unit.INSTANCE;
+         });
+@@ -107,25 +100,22 @@
+         this.btOKListener = onClickListener;
+     }
+ 
+-    private void refreshTheme() {
+-        if(colorTheme.isDarkTheme()) {
+-            GradientDrawable gd = new GradientDrawable();
+-            gd.setColor(getContext().getColor(R.color.colorDarkPrimary));
+-            gd.setCornerRadius(25);
+-            Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
+-        } else {
+-            GradientDrawable gd = new GradientDrawable();
+-            gd.setColor(colorTheme.getBackgroundColor());
+-            gd.setCornerRadius(25);
+-            Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
+-            mediaSlider.setColorBar(colorTheme.getPrimaryColor());
+-            mediaSlider.setColorBubble(colorTheme.getBackgroundColor());
+-            mediaSlider.setColorBubbleText(colorTheme.getAccentColor());
+-            mediaSlider.setColorBarText(colorTheme.getBackgroundColor());
+-            albumSlider.setColorBar(colorTheme.getPrimaryColor());
+-            albumSlider.setColorBubble(colorTheme.getBackgroundColor());
+-            albumSlider.setColorBubbleText(colorTheme.getAccentColor());
+-            albumSlider.setColorBarText(colorTheme.getBackgroundColor());
++    public void refreshTheme() {
++        super.refreshTheme();
++        if (!mColorTheme.isDarkTheme()) {
++            mediaSlider.setColorBar(mColorTheme.getPrimaryColor());
++            mediaSlider.setColorBubble(mColorTheme.getBackgroundColor());
++            mediaSlider.setColorBubbleText(mColorTheme.getAccentColor());
++            mediaSlider.setColorBarText(mColorTheme.getBackgroundColor());
++            albumSlider.setColorBar(mColorTheme.getPrimaryColor());
++            albumSlider.setColorBubble(mColorTheme.getBackgroundColor());
++            albumSlider.setColorBubbleText(mColorTheme.getAccentColor());
++            albumSlider.setColorBarText(mColorTheme.getBackgroundColor());
+         }
+     }
++
++    @Override
++    protected int getLayoutId() {
++        return R.layout.dialog_choose_column;
++    }
+ }
+Index: app/src/main/java/com/ss/gallerypro/view/dialog/SortDialogTimeline.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/ss/gallerypro/view/dialog/SortDialogTimeline.java	(date 1581924324000)
++++ app/src/main/java/com/ss/gallerypro/view/dialog/SortDialogTimeline.java	(date 1581925014198)
+@@ -1,16 +1,12 @@
+ package com.ss.gallerypro.view.dialog;
+ 
++import android.app.Dialog;
+ import android.content.Context;
+-import android.content.res.ColorStateList;
+ import android.os.Bundle;
+ import android.support.annotation.NonNull;
+-import android.support.v7.app.AlertDialog;
+ import android.view.View;
+ import android.view.ViewGroup;
+-import android.widget.Button;
+-import android.widget.RadioButton;
+ import android.widget.RadioGroup;
+-import android.widget.TextView;
+ 
+ import com.ss.gallerypro.R;
+ import com.ss.gallerypro.data.sort.SortingMode;
+@@ -22,7 +18,7 @@
+ 
+ import java.util.Objects;
+ 
+-public class SortDialogTimeline extends AlertDialog {
++public class SortDialogTimeline extends Dialog {
+ 
+     private String btCancelText;
+     private String btSortText;
+Index: app/src/main/java/com/ss/gallerypro/fragments/list/normal/albums/AlbumsFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/ss/gallerypro/fragments/list/normal/albums/AlbumsFragment.java	(date 1581924324000)
++++ app/src/main/java/com/ss/gallerypro/fragments/list/normal/albums/AlbumsFragment.java	(date 1581925014223)
+@@ -451,9 +451,9 @@
+         }
+         boolean[] newCheckedItem = Arrays.copyOf(checkedItem, n);
+ 
+-        mBuilder.setMultiChoiceItems(MediaFilter.getNames(), newCheckedItem, (dialogInterface, position, checked) -> {
+-            newCheckedItem[position] = checked;
+-        }).setPositiveButton(R.string.ok_action, (dialogInterface, position) -> {
++        mBuilder.setMultiChoiceItems(MediaFilter.getNames(), newCheckedItem,
++                (dialogInterface, position, checked) -> newCheckedItem[position] = checked).setPositiveButton(R.string.ok_action,
++                (dialogInterface, position) -> {
+             if (!Arrays.equals(checkedItem, newCheckedItem)) {
+                 Set<String> newFilter = new HashSet<>();
+                 for (int i = 0; i < n; i++) {
+@@ -472,9 +472,7 @@
+                 Toast.makeText(getContext(), R.string.nothing_changed, Toast.LENGTH_SHORT).show();
+             }
+ 
+-        }).setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
+-            dialogInterface.dismiss();
+-        });
++        }).setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss());
+         AlertDialog mDialog = mBuilder.create();
+         mDialog.show();
+     }
+Index: app/src/main/java/com/ss/gallerypro/theme/ui/BaseDialogTheme.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/ss/gallerypro/theme/ui/BaseDialogTheme.java	(date 1581926016100)
++++ app/src/main/java/com/ss/gallerypro/theme/ui/BaseDialogTheme.java	(date 1581926016100)
+@@ -0,0 +1,38 @@
++package com.ss.gallerypro.theme.ui;
++
++import android.app.Dialog;
++import android.content.Context;
++import android.graphics.drawable.GradientDrawable;
++import android.os.Bundle;
++import android.support.annotation.NonNull;
++
++import com.ss.gallerypro.R;
++import com.ss.gallerypro.theme.ColorTheme;
++
++import java.util.Objects;
++
++public abstract class BaseDialogTheme extends Dialog {
++    protected ColorTheme mColorTheme;
++    public BaseDialogTheme(@NonNull Context context) {
++        super(context);
++        mColorTheme = new ColorTheme(context);
++    }
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(getLayoutId());
++
++        refreshTheme();
++    }
++
++    protected void refreshTheme() {
++        GradientDrawable gd = new GradientDrawable();
++        gd.setColor(getContext().getColor(mColorTheme.isDarkTheme() ?
++                R.color.colorDarkPrimary : mColorTheme.getBackgroundColor()));
++        gd.setCornerRadius(25);
++        Objects.requireNonNull(getWindow()).setBackgroundDrawable(gd);
++    }
++
++    protected abstract int getLayoutId();
++}

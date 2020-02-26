@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tubeeapp.gallerypro.theme.ui.TitleTextView
+    <com.tunm.gallerypro.theme.ui.TitleTextView
         android:id="@+id/bottom_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                     android:padding="@dimen/three_dp"
                     android:src="@mipmap/icon_dialog_file_white" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
+                <com.tunm.gallerypro.theme.ui.TextViewSecondary
                     android:id="@+id/bottom_dialog_name_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
                     android:text="File name"
                     android:textSize="12sp" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
+                <com.tunm.gallerypro.theme.ui.TextViewPrimary
                     android:id="@+id/bottom_dialog_name_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
                     android:padding="@dimen/three_dp"
                     android:src="@mipmap/icon_dialog_path_white" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
+                <com.tunm.gallerypro.theme.ui.TextViewSecondary
                     android:id="@+id/bottom_dialog_path_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                     android:textColor="@color/colorHighlight"
                     android:textSize="12sp" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
+                <com.tunm.gallerypro.theme.ui.TextViewPrimary
                     android:id="@+id/bottom_dialog_path_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
                     android:padding="@dimen/three_dp"
                     android:src="@mipmap/icon_dialog_memory_white" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
+                <com.tunm.gallerypro.theme.ui.TextViewSecondary
                     android:id="@+id/bottom_dialog_size_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
                     android:textColor="@color/colorHighlight"
                     android:textSize="12sp" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
+                <com.tunm.gallerypro.theme.ui.TextViewPrimary
                     android:id="@+id/bottom_dialog_size_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
                     android:padding="@dimen/three_dp"
                     android:src="@mipmap/icon_dialog_resolution_white" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
+                <com.tunm.gallerypro.theme.ui.TextViewSecondary
                     android:id="@+id/bottom_dialog_resolution_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                     android:textColor="@color/colorHighlight"
                     android:textSize="12sp" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
+                <com.tunm.gallerypro.theme.ui.TextViewPrimary
                     android:id="@+id/bottom_dialog_resolution_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -175,7 +175,7 @@
                     android:padding="@dimen/three_dp"
                     android:src="@mipmap/icon_dialog_date_white" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
+                <com.tunm.gallerypro.theme.ui.TextViewSecondary
                     android:id="@+id/bottom_dialog_date_taken_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
                     android:textColor="@color/colorHighlight"
                     android:textSize="12sp" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
+                <com.tunm.gallerypro.theme.ui.TextViewPrimary
                     android:id="@+id/bottom_dialog_date_taken_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -209,7 +209,7 @@
                     android:padding="@dimen/three_dp"
                     android:src="@mipmap/icon_dialog_date_white" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewSecondary
+                <com.tunm.gallerypro.theme.ui.TextViewSecondary
                     android:id="@+id/bottom_dialog_date_modified_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -218,7 +218,7 @@
                     android:textColor="@color/colorHighlight"
                     android:textSize="12sp" />
 
-                <com.tubeeapp.gallerypro.theme.ui.TextViewPrimary
+                <com.tunm.gallerypro.theme.ui.TextViewPrimary
                     android:id="@+id/bottom_dialog_date_modified_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
