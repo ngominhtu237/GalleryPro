@@ -218,11 +218,13 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
             CommonBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
             CommonBarColor.setNavigationBarColor(getActivity(), mAttachedActivity.getColor(R.color.colorDarkBackgroundHighlight));
             mLoadingLayout.setBackgroundColor(getResources().getColor(R.color.colorDarkBackground));
+            rootView.setBackgroundColor(getResources().getColor(R.color.colorDarkBackgroundHighlight));
         } else {
             mRecyclerView.setBackgroundColor(colorTheme.getBackgroundColor());
             CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
             CommonBarColor.setNavigationBarColor(getActivity(), mColorTheme.getPrimaryColor());
             mLoadingLayout.setBackgroundColor(getResources().getColor(R.color.colorBackground));
+            rootView.setBackgroundColor(getResources().getColor(R.color.colorBackground));
         }
     }
 

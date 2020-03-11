@@ -49,6 +49,8 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
 
     protected HomeFragment parentFragment;
 
+    private View rootView;
+
     public BaseListFragment() {
         super();
     }
@@ -72,11 +74,11 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        initRecycleView(view);
+        rootView = super.onCreateView(inflater, container, savedInstanceState);
+        initRecycleView(rootView);
         implementRecyclerViewClickListeners();
         ((DrawerLocker) mAttachedActivity).setDrawerEnabled(true);
-        return view;
+        return rootView;
     }
 
     protected abstract void implementRecyclerViewClickListeners();
@@ -95,10 +97,12 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
             mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
             CommonBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
             CommonBarColor.setNavigationBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
+            rootView.setBackgroundColor(getResources().getColor(R.color.colorDarkBackgroundHighlight));
         } else {
             mRecyclerView.setBackgroundColor(mColorTheme.getBackgroundColor());
             CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
             CommonBarColor.setNavigationBarColor(getActivity(), mColorTheme.getPrimaryColor());
+            rootView.setBackgroundColor(getResources().getColor(R.color.colorBackground));
         }
     }
 

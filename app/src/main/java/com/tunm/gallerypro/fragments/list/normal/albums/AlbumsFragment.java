@@ -178,7 +178,6 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
             @Override
             public boolean onScaleBegin(ScaleGestureDetector detector) {
                 if (mLayoutType == LayoutType.GRID) {
-//                    setEnableSwipeRefresh(false);
                     ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(false);
                     parentViewPager.setSwipeLocked(true);
                 }
@@ -195,7 +194,6 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                             animateRecyclerLayoutChange();
                         } else {
                             Toast.makeText(mAttachedActivity, "min column is: " + ChooseColumnDialog.MIN_COLUMN_ALBUM, Toast.LENGTH_SHORT).show();
-//                            setEnableSwipeRefresh(true);
                             ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(true);
                             parentViewPager.setSwipeLocked(false);
                         }
@@ -206,7 +204,6 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                             animateRecyclerLayoutChange();
                         } else {
                             Toast.makeText(mAttachedActivity, "max column is: " + ChooseColumnDialog.MAX_COLUMN_ALBUM, Toast.LENGTH_SHORT).show();
-//                            setEnableSwipeRefresh(true);
                             ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(false);
                             parentViewPager.setSwipeLocked(false);
                         }
@@ -244,7 +241,6 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
                 fadeIn.setInterpolator(new AccelerateInterpolator());
                 fadeIn.setDuration(400);
                 mRecyclerView.startAnimation(fadeIn);
-//                setEnableSwipeRefresh(true);
                 ((GridlayoutManagerFixed) mLayoutManager).setScrollEnabled(true);
                 parentViewPager.setSwipeLocked(false);
             }
