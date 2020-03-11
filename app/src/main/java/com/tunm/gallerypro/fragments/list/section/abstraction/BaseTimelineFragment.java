@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -214,10 +216,12 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         if(colorTheme.isDarkTheme()) {
             mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
             CommonBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
+            CommonBarColor.setNavigationBarColor(getActivity(), mAttachedActivity.getColor(R.color.colorDarkBackgroundHighlight));
             mLoadingLayout.setBackgroundColor(getResources().getColor(R.color.colorDarkBackground));
         } else {
             mRecyclerView.setBackgroundColor(colorTheme.getBackgroundColor());
             CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
+            CommonBarColor.setNavigationBarColor(getActivity(), mColorTheme.getPrimaryColor());
             mLoadingLayout.setBackgroundColor(getResources().getColor(R.color.colorBackground));
         }
     }
@@ -233,6 +237,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         ItemOffsetDecoration itemOffsetDecoration = new ItemOffsetDecoration(mAttachedActivity, R.dimen.timeline_item_spacing);
         mRecyclerView.addItemDecoration(itemOffsetDecoration);
         mLayoutManager = new GridlayoutManagerFixed(getContext(), columnNumber);
+        mLayoutManager.setItemPrefetchEnabled(false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
         mRecyclerView.setLayoutAnimation(animation);
@@ -423,7 +428,11 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 //    }
 
     public void setNullToActionMode() {
-        parentFragment.showAppBarLayout();
+        new Handler().postDelayed(() -> {
+            // Do something after 1s = 1000ms
+            parentFragment.showAppBarLayout();
+        }, 1000);
+
         parentViewPager.setSwipeLocked(false);
         if (mActionMode != null)
             mActionMode = null;
@@ -471,6 +480,8 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
         if (hasCheckedItems && mActionMode == null) {
             mActionMode = ((AppCompatActivity) Objects.requireNonNull(getActivity())).startSupportActionMode(actionMode);
+            parentFragment.hideAppBarLayout();
+            parentViewPager.setSwipeLocked(true);
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
             parentFragment.showAppBarLayout();
@@ -479,11 +490,6 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
         if (mActionMode != null) {
             mActionMode.setTitle(getAdapter().getSelectedCount() + " selected");
-        }
-        // hide tab bar
-        if (parentFragment != null && hasCheckedItems) {
-            parentFragment.hideAppBarLayout();
-            parentViewPager.setSwipeLocked(true);
         }
     }
 

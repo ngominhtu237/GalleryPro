@@ -135,6 +135,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         } else {
             mLayoutManager = new LinearLayoutManager(getContext());
         }
+        mLayoutManager.setItemPrefetchEnabled(false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_from_bottom);
         mRecyclerView.setLayoutAnimation(animation);
@@ -296,6 +297,8 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         if (hasCheckedItems && mActionMode == null) {
             toolbarActionModeBucket = new Toolbar_ActionMode_Bucket(this, getActivity(), albumsAdapter, albumsAdapter.getBuckets());
             mActionMode = ((AppCompatActivity) Objects.requireNonNull(getActivity())).startSupportActionMode(toolbarActionModeBucket);
+            parentFragment.hideAppBarLayout();
+            parentViewPager.setSwipeLocked(true);
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
             parentFragment.showAppBarLayout();
@@ -304,11 +307,6 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
 
         if (mActionMode != null) {
             mActionMode.setTitle(albumsAdapter.getSelectedCount() + " selected");
-        }
-        // hide tab bar
-        if (parentFragment != null && hasCheckedItems) {
-            parentFragment.hideAppBarLayout();
-            parentViewPager.setSwipeLocked(true);
         }
     }
 
@@ -490,11 +488,11 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
         if(buckets.size() > 0) {
             albumsAdapter.setDataList(buckets);
             albumsAdapter.changeSortingMode(getSortingMode());
-            mLoadingLayout.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
+            if(mLoadingLayout != null) mLoadingLayout.setVisibility(View.GONE);
+            if(mRecyclerView != null) mRecyclerView.setVisibility(View.VISIBLE);
         } else {
-            desertPlaceholder.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
+            if(desertPlaceholder != null) desertPlaceholder.setVisibility(View.VISIBLE);
+            if(mRecyclerView != null) mRecyclerView.setVisibility(View.GONE);
         }
     }
 

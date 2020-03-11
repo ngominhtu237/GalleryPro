@@ -364,4 +364,7 @@
     <color name="transparent_md_amber_500">#99FFC107</color>
     <color name="semi_transparent">#66000000</color>
     <color name="transparent">#00000000</color>
+
+    <!-- Viewer Transparent Bars -->
+    <color name="viewer_osd_background_color">#3B000000</color>
 </resources>

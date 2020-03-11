@@ -121,10 +121,10 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
             getAdapter().setMediaItems(mediaItems);
             getAdapter().changeSorting(getSortingMode(), getSortingOrder());
             if(mLoadingLayout != null) mLoadingLayout.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
+            if(mRecyclerView != null) mRecyclerView.setVisibility(View.VISIBLE);
         } else {
-            desertPlaceholder.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
+            if(desertPlaceholder != null) desertPlaceholder.setVisibility(View.VISIBLE);
+            if(mRecyclerView != null) mRecyclerView.setVisibility(View.GONE);
         }
     }
 

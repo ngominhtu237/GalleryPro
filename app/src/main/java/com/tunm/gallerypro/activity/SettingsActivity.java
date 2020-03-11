@@ -152,6 +152,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorBg));
             CommonBarColor.setStatusBarColor(this, colorBg);
+            CommonBarColor.setNavigationBarColor(this, colorBg);
 
             themeIc.setImageResource(R.mipmap.settings_theme_white_96);
             nightModeIc.setImageResource(R.mipmap.setting_nightmode_white_96);
@@ -165,6 +166,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(mColorTheme.getPrimaryColor()));
             CommonBarColor.setStatusBarColor(this, mColorTheme.getPrimaryColor());
+            CommonBarColor.setNavigationBarColor(this, mColorTheme.getPrimaryColor());
 
             themeIc.setImageResource(R.mipmap.settings_theme_black_96);
             nightModeIc.setImageResource(R.mipmap.setting_nightmode_black_96);

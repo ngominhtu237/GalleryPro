@@ -94,9 +94,11 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
         if(mColorTheme.isDarkTheme()) {
             mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
             CommonBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
+            CommonBarColor.setNavigationBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
         } else {
             mRecyclerView.setBackgroundColor(mColorTheme.getBackgroundColor());
             CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
+            CommonBarColor.setNavigationBarColor(getActivity(), mColorTheme.getPrimaryColor());
         }
     }
 

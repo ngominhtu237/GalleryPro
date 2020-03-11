@@ -37,6 +37,7 @@ public class CommonBarColor {
 
     public static void setNavigationBarColor(Activity activity, int color) {
         Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setNavigationBarColor(color);
     }
 

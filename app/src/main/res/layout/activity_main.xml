@@ -5,32 +5,31 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:background="@color/accent_yellow"
     tools:openDrawer="start">
 
     <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" />
 
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbar"
             android:visibility="visible" />
-
-    </FrameLayout>
+    </LinearLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:itemTextAppearance="@style/TahomaFont"
         app:headerLayout="@layout/nav_header_main"
+        app:itemTextAppearance="@style/TahomaFont"
         app:menu="@menu/main_drawer" />
-
 </android.support.v4.widget.DrawerLayout>

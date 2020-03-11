@@ -1,8 +1,11 @@
 package com.tunm.gallerypro.fragments.home;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.BinderThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -13,13 +16,21 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.Toolbar;
 
 import com.tunm.gallerypro.CustomModelClass;
 import com.tunm.gallerypro.R;
+import com.tunm.gallerypro.animation.ViewAnimation;
 import com.tunm.gallerypro.fragments.BaseFragment;
 import com.tunm.gallerypro.fragments.list.normal.albums.AlbumsFragment;
 import com.tunm.gallerypro.fragments.list.section.timeline.TimelineFragment;
 import com.tunm.gallerypro.fragments.list.section.video.VideoFragment;
+import com.tunm.gallerypro.theme.SystemUI;
+import com.tunm.gallerypro.utils.ViewSizeUtils;
 import com.tunm.gallerypro.view.LockableViewPager;
 
 import java.util.Objects;
@@ -40,6 +51,8 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.homeViewPager)
     LockableViewPager viewPager;
 
+    private View rootView;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -47,13 +60,18 @@ public class HomeFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        rootView = super.onCreateView(inflater, container, savedInstanceState);
         setupTabLayout();
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         requestUpdateTheme();
         CustomModelClass.getInstance().addThemeChangeObserver(this);
-        return view;
+        SystemUI.showNavigationBar(getActivity(), getView());
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rootView.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin + ViewSizeUtils.getStatusBarHeight(getActivity()), params.rightMargin, params.bottomMargin);
+        rootView.setLayoutParams(params);
+        return rootView;
     }
 
     private void setupTabLayout() {
@@ -77,23 +95,41 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void hideAppBarLayout() {
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        lp.height = 0;
-        appBarLayout.setLayoutParams(lp);
+        translateAppbar(rootView, -appBarLayout.getHeight(), 400);
     }
 
     public void showAppBarLayout() {
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        lp.height = getHeightActionBar();
-        appBarLayout.setLayoutParams(lp);
+        translateAppbar(rootView, appBarLayout.getHeight(), 400);
     }
 
-    private int getHeightActionBar() {
-        TypedValue tv = new TypedValue();
-        if (Objects.requireNonNull(getActivity()).getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            return TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
-        }
-        return 0;
+    public void translateAppbar(View view, int delta, int duration){
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                // fromXDelta
+                0,                // toXDelta
+                0,             // fromYDelta
+                delta);                // toYDelta
+        animate.setDuration(duration);
+        animate.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+                params.topMargin += delta;
+                view.setLayoutParams(params);
+                view.clearAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
     }
 
     @Override

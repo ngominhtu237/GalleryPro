@@ -10,7 +10,7 @@
 
     <application
         android:name="com.tunm.gallerypro.MyApp"
-        android:icon="@mipmap/cornieicons"
+        android:icon="@mipmap/gallerypro_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"

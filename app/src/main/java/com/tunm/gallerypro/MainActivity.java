@@ -44,16 +44,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private Menu menu;
 
     private static int lastClicked = -1;
-    private ColorTheme colorTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        colorTheme = new ColorTheme(this);
+        mColorTheme = new ColorTheme(this);
 
         setToolbarCustom();
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(colorTheme.getPrimaryColor());
+        toolbar.setBackgroundColor(mColorTheme.getPrimaryColor());
         setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);
@@ -226,9 +225,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             int colorBg = getColor(R.color.colorDarkBackgroundHighlight);
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorBg));
             CommonBarColor.setStatusBarColor(this, colorBg);
+            CommonBarColor.setNavigationBarColor(this, colorBg);
             navigationView.setBackground(new ColorDrawable(getColor(R.color.md_dark_cards)));
             navigationView.setItemTextColor(ColorStateList.valueOf(getColor(R.color.colorDarkAccent)));
             navigationView.setItemBackground(getDrawable(R.drawable.drawer_item_dark));
+            drawer.setBackground(new ColorDrawable(colorBg)); // prevent blink actionbar when back from detail view
             menu.findItem(R.id.nav_home).setIcon(R.mipmap.nav_home_dark);
             menu.findItem(R.id.nav_settings).setIcon(R.mipmap.nav_settings_dark);
             menu.findItem(R.id.nav_rate).setIcon(R.mipmap.nav_rate_dark);
@@ -236,9 +237,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(mColorTheme.getPrimaryColor()));
             CommonBarColor.setStatusBarColor(this, mColorTheme.getPrimaryColor());
+            CommonBarColor.setNavigationBarColor(this, mColorTheme.getPrimaryColor());
             navigationView.setBackground(new ColorDrawable(getColor(R.color.colorBackground)));
             navigationView.setItemTextColor(ColorStateList.valueOf(getColor(R.color.colorAccent)));
             navigationView.setItemBackground(getDrawable(R.drawable.drawer_item_light));
+            drawer.setBackground(new ColorDrawable(mColorTheme.getPrimaryColor()));
             menu.findItem(R.id.nav_home).setIcon(R.mipmap.nav_home);
             menu.findItem(R.id.nav_settings).setIcon(R.mipmap.nav_settings);
             menu.findItem(R.id.nav_rate).setIcon(R.mipmap.nav_rate);

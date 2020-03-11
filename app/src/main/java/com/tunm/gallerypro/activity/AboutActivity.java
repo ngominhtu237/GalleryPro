@@ -57,12 +57,14 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         int lightColor = getColor(R.color.accent_white);
         if(mColorTheme.isDarkTheme()) {
             CommonBarColor.setStatusBarColor(this, darkColor);
+            CommonBarColor.setNavigationBarColor(this, darkColor);
             rootView.setBackgroundColor(darkColor);
             emailIcon.setColor(lightColor);
             googlePlayIcon.setColor(lightColor);
             instagramIcon.setColor(lightColor);
         } else {
             CommonBarColor.setStatusBarColor(this, mColorTheme.getPrimaryColor());
+            CommonBarColor.setNavigationBarColor(this, mColorTheme.getPrimaryColor());
             rootView.setBackgroundColor(lightColor);
             emailIcon.setColor(darkColor);
             googlePlayIcon.setColor(darkColor);

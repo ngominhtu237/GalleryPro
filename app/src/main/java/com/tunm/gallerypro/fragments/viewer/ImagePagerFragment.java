@@ -1,13 +1,16 @@
 package com.tunm.gallerypro.fragments.viewer;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -42,7 +45,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static com.tunm.gallerypro.animation.ViewAnimation.slideDown;
+import static com.tunm.gallerypro.animation.ViewAnimation.slideUp;
 import static com.tunm.gallerypro.constant.SystemUI.FULL_SCREEN_UI_FLAG;
+import static com.tunm.gallerypro.theme.SystemUI.hideNavigationBar;
+import static com.tunm.gallerypro.theme.SystemUI.showNavigationBar;
 
 public class ImagePagerFragment extends BaseFragment {
 
@@ -62,6 +69,8 @@ public class ImagePagerFragment extends BaseFragment {
     private ArrayList<Integer> mDeletedItemPosition = new ArrayList<>();
     private DeletedItemCallback callback;
 
+    private boolean isFullScreen;
+
     public ImagePagerFragment() {
     }
 
@@ -77,16 +86,16 @@ public class ImagePagerFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = super.onCreateView(inflater, container, savedInstanceState);
+        toolbar = Objects.requireNonNull(getActivity()).findViewById(R.id.toolbar);
         if (getArguments() != null) {
             currentPosition = getArguments().getInt("currentPosition");
             isImage = getArguments().getBoolean("isImage");
         }
 
-        ((DrawerLocker) Objects.requireNonNull(getActivity())).setDrawerEnabled(false);
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setTitle(null);
 
-        setToolbar(false);
+        ((DrawerLocker) Objects.requireNonNull(getActivity())).setDrawerEnabled(false);
+        toolbar.setBackgroundColor(getActivity().getColor(R.color.viewer_osd_background_color));
+        toolbar.setTitle(null);
 
         mViewPager = rootView.findViewById(R.id.viewPager);
         mViewPager.setPageTransformer(true, new ParallaxPageTransformer());
@@ -106,7 +115,14 @@ public class ImagePagerFragment extends BaseFragment {
         showBottomView(currentPosition);
 
         refreshTheme();
+        showBars();
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        refreshTheme();
+        super.onResume();
     }
 
     private void showBottomView(int currentPos) {
@@ -152,80 +168,27 @@ public class ImagePagerFragment extends BaseFragment {
     public void onDestroy() {
         if(mColorTheme.isDarkTheme()) {
             int colorBg = Objects.requireNonNull(getActivity()).getColor(R.color.colorDarkBackgroundHighlight);
-            Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(getActivity().getColor(R.color.colorDarkBackgroundHighlight)));
+            toolbar.setBackgroundColor(getActivity().getColor(R.color.colorDarkBackgroundHighlight));
             CommonBarColor.setStatusBarColor(getActivity(), colorBg);
+            CommonBarColor.setNavigationBarColor(getActivity(), colorBg);
         } else {
-            Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(mColorTheme.getPrimaryColor()));
+            toolbar.setBackgroundColor(mColorTheme.getPrimaryColor());
             CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
+            CommonBarColor.setNavigationBarColor(getActivity(), mColorTheme.getPrimaryColor());
         }
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.isDarkTheme() ?
-                getActivity().getColor(R.color.colorDarkBackgroundHighlight): mColorTheme.getPrimaryColor());
-        setToolbar(false);
         super.onDestroy();
     }
 
-    private void setToolbar(boolean isMargin) {
-        toolbar = Objects.requireNonNull(getActivity()).findViewById(R.id.toolbar);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) toolbar.getLayoutParams();
-        params.setMargins(0, isMargin ? ViewSizeUtils.getStatusBarHeight(getActivity()) : 0, 0, 0);
-        toolbar.setLayoutParams(params);
-    }
-
     public void blo() {
-        if(!isFullScreen()) {
+        if(!isFullScreen) {
             slideDown(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(getActivity())) * 3 / 2, 500);
             slideDown(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(getActivity())), 500);
-            setSystemUiVisibility(getActivity().getWindow(), SystemUI.FULL_SCREEN_UI_WITH_HIDE_NAVIGATION_FLAG);
+            hideBars();
         } else {
             slideUp(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(getActivity())) * 3 / 2, 500);
             slideUp(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(getActivity())), 500);
-            setSystemUiVisibility(getActivity().getWindow(), FULL_SCREEN_UI_FLAG);
+            showBars();
         }
-    }
-
-    private void setSystemUiVisibility(Window window, int visibility) {
-        try {
-            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) != 0) {
-                window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-            } else {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-            }
-        } catch (Exception e) {
-            Log.e("SystemUI", "setSystemUiVisibility [" + visibility + "] failed e=" + e.getMessage());
-        }
-    }
-
-    public boolean isFullScreen() {
-        int flg = Objects.requireNonNull(getActivity()).getWindow().getAttributes().flags;
-        boolean flag = false;
-        if ((flg & WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) == WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) {
-            flag = true;
-        }
-        return flag;
-    }
-
-    // slide the rootView from its current position to below itself
-    public void slideDown(View view, int delta, int duration){
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,                 // fromYDelta
-                delta); // toYDelta
-        animate.setDuration(duration);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-    }
-
-    public void slideUp(View view, int delta, int duration){
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                delta,  // fromYDelta
-                0);                // toYDelta
-        animate.setDuration(duration);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
     }
 
     @Override
@@ -236,7 +199,7 @@ public class ImagePagerFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-        if(isFullScreen()) {
+        if(!isFullScreen) {
             slideUp(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(getActivity())) * 3 / 2, 0);
             slideUp(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(getActivity())), 0);
         }
@@ -321,6 +284,17 @@ public class ImagePagerFragment extends BaseFragment {
     }
 
     private void refreshTheme() {
-        CommonBarColor.setStatusBarColor(getActivity(), Objects.requireNonNull(getActivity()).getColor(R.color.accent_black));
+        CommonBarColor.setStatusBarColor(getActivity(), Objects.requireNonNull(getActivity()).getColor(R.color.viewer_osd_background_color));
+        CommonBarColor.setNavigationBarColor(getActivity(), Objects.requireNonNull(getActivity()).getColor(R.color.viewer_osd_background_color));
+    }
+
+    private void hideBars() {
+        hideNavigationBar(getActivity(), getView());
+        isFullScreen = true;
+    }
+
+    private void showBars() {
+        showNavigationBar(getActivity(), getView());
+        isFullScreen = false;
     }
 }

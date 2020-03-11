@@ -123,7 +123,7 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
             getAdapter().setMediaItems(mediaItems);
             getAdapter().changeSorting(getSortingMode(), getSortingOrder());
             if(mLoadingLayout != null) mLoadingLayout.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
+            if(mRecyclerView != null) mRecyclerView.setVisibility(View.VISIBLE);
         } else {
             desertPlaceholder.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);

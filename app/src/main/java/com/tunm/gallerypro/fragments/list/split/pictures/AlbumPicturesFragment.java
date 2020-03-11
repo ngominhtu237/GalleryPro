@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.tunm.gallerypro.DrawerLocker;
 import com.tunm.gallerypro.R;
@@ -31,6 +32,7 @@ import com.tunm.gallerypro.fragments.list.split.pictures.presenter.IMediaPresent
 import com.tunm.gallerypro.fragments.list.split.pictures.presenter.MediaPresenterImpl;
 import com.tunm.gallerypro.fragments.list.split.pictures.view.IMediaView;
 import com.tunm.gallerypro.fragments.viewer.ImagePagerFragment;
+import com.tunm.gallerypro.utils.ViewSizeUtils;
 import com.tunm.gallerypro.view.SquareImageView;
 import com.tunm.gallerypro.view.dialog.AlbumPictureDetailsDialog;
 import com.tunm.gallerypro.view.dialog.DeleteDialog;
@@ -80,6 +82,10 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
 
         // back from another fragment not call onCreate Fragment
         presenter.getMedias(mReceiveBucket);
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rootView.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin + ViewSizeUtils.getStatusBarHeight(getActivity()), params.rightMargin, params.bottomMargin);
+        rootView.setLayoutParams(params);
         return rootView;
     }
 
