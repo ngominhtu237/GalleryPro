@@ -121,6 +121,7 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
             getAdapter().setMediaItems(mediaItems);
             getAdapter().changeSorting(getSortingMode(), getSortingOrder());
             if(mLoadingLayout != null) mLoadingLayout.setVisibility(View.GONE);
+            desertPlaceholder.setVisibility(View.GONE);
             if(mRecyclerView != null) mRecyclerView.setVisibility(View.VISIBLE);
         } else {
             if(desertPlaceholder != null) desertPlaceholder.setVisibility(View.VISIBLE);
@@ -140,10 +141,8 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
         if (mActionMode != null) {
             onListItemSelect(position);
         } else {
-            ((TransitionSet) getExitTransition()).excludeTarget(view, true);
-
             ImagePagerFragment.mImageList = getAdapter().getMediaItems();
-            SquareImageView transitioningView = view.findViewById(R.id.ivTimelineThumbnail);
+//            SquareImageView transitioningView = view.findViewById(R.id.ivTimelineThumbnail);
             FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
             ImagePagerFragment pagerFragment = (ImagePagerFragment) fragmentManager.findFragmentByTag("ImagePagerFragment");
             if(pagerFragment == null) {
@@ -156,7 +155,7 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
             fragmentManager
                     .beginTransaction()
-                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
+//                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
                     .add(R.id.fragment_container, pagerFragment, ImagePagerFragment.class.getSimpleName())
                     .addToBackStack(null)
                     .commit();

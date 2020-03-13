@@ -485,6 +485,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
             albumsAdapter.setDataList(buckets);
             albumsAdapter.changeSortingMode(getSortingMode());
             if(mLoadingLayout != null) mLoadingLayout.setVisibility(View.GONE);
+            if(desertPlaceholder != null) desertPlaceholder.setVisibility(View.GONE);
             if(mRecyclerView != null) mRecyclerView.setVisibility(View.VISIBLE);
         } else {
             if(desertPlaceholder != null) desertPlaceholder.setVisibility(View.VISIBLE);

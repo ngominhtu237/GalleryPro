@@ -2,10 +2,14 @@ package com.tunm.gallerypro;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -22,12 +26,18 @@ import android.view.MenuItem;
 import com.tunm.gallerypro.activity.AboutActivity;
 import com.tunm.gallerypro.activity.SettingsActivity;
 import com.tunm.gallerypro.data.StatisticModel;
+import com.tunm.gallerypro.data.file.FileObserverService;
 import com.tunm.gallerypro.data.filter.MediaFilter;
 import com.tunm.gallerypro.data.provider.CPHelper;
+import com.tunm.gallerypro.data.provider.FileChangeListener;
+import com.tunm.gallerypro.data.utils.ServiceUtils;
 import com.tunm.gallerypro.fragments.home.HomeFragment;
 import com.tunm.gallerypro.setting.callback.ThemeChangeObserver;
 import com.tunm.gallerypro.theme.ColorTheme;
 import com.tunm.gallerypro.utils.CommonBarColor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.tunm.gallerypro.data.utils.DataUtils.readableFileSize;
 
@@ -44,11 +54,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private Menu menu;
 
     private static int lastClicked = -1;
+    private boolean isFileChange;
+    private List<FileChangeListener> mFileListeners = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mColorTheme = new ColorTheme(this);
+
+        Log.v("tunm1_time", "onCreate1: " + System.currentTimeMillis());
 
         setToolbarCustom();
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -99,7 +113,42 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         CustomModelClass.getInstance().addThemeChangeObserver(this);
         requestUpdateTheme();
+
+        startService(new Intent(this, FileObserverService.class));
+        registerReceiver(fromServiceReceiver, new IntentFilter(FileObserverService.UPDATE_ACTIVITY));
+
+        Log.v("tunm1_time", "onCreate2: " + System.currentTimeMillis());
     }
+
+    public void addFileChangeListener(FileChangeListener changeListener) {
+        mFileListeners.add(changeListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v("tunm1_time", "onResume: " + System.currentTimeMillis());
+        if(!ServiceUtils.isMyServiceRunning(this, FileObserverService.class)) {
+            Log.v("tunm2", "Service is stopped");
+        }
+        if(isFileChange) {
+            Log.v(TAG, "onResume");
+            new Handler().postDelayed(() -> {
+                for(FileChangeListener observer: mFileListeners) {
+                    observer.onChange();
+                }
+            }, 4000);
+        }
+        Log.v("tunm1_time", "onResume2: " + System.currentTimeMillis());
+    }
+
+    BroadcastReceiver fromServiceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            isFileChange = intent.getBooleanExtra("isFileObserver", false);
+            Log.v(TAG, isFileChange + "");
+        }
+    };
 
     @Override
     protected int getLayoutId() {

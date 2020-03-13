@@ -1,5 +1,5 @@
 package com.tunm.gallerypro.data.provider;
 
-public interface ProviderChangeListener {
+public interface FileChangeListener {
     void onChange();
 }

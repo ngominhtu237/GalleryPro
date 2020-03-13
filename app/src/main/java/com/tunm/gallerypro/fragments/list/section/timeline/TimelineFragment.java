@@ -123,6 +123,7 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
             getAdapter().setMediaItems(mediaItems);
             getAdapter().changeSorting(getSortingMode(), getSortingOrder());
             if(mLoadingLayout != null) mLoadingLayout.setVisibility(View.GONE);
+            desertPlaceholder.setVisibility(View.GONE);
             if(mRecyclerView != null) mRecyclerView.setVisibility(View.VISIBLE);
         } else {
             desertPlaceholder.setVisibility(View.VISIBLE);
@@ -192,7 +193,7 @@ public class TimelineFragment extends BaseTimelineFragment implements ITimelineV
     }
 
     @Override
-    public void  onChange() {
+    public void onChange() {
         Log.v("loadData", "update " + TAG);
         presenter.getMedias(MediaFilter.IMAGE);
         callBackListener.onCallBack();

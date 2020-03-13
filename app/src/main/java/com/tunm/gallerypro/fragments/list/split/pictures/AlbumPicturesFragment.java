@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -64,6 +65,12 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         if(bundle != null) {
             mReceiveBucket = bundle.getParcelable("album");
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v("tunm1", "onResime");
     }
 
     @Override

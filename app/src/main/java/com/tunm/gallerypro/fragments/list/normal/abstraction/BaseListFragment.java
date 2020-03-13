@@ -2,7 +2,6 @@ package com.tunm.gallerypro.fragments.list.normal.abstraction;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.view.ActionMode;
@@ -14,11 +13,11 @@ import android.view.ViewGroup;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 import com.tunm.gallerypro.DrawerLocker;
+import com.tunm.gallerypro.MainActivity;
 import com.tunm.gallerypro.R;
 import com.tunm.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.tunm.gallerypro.data.LayoutType;
-import com.tunm.gallerypro.data.provider.ContentProviderObserver;
-import com.tunm.gallerypro.data.provider.ProviderChangeListener;
+import com.tunm.gallerypro.data.provider.FileChangeListener;
 import com.tunm.gallerypro.data.sort.SortingMode;
 import com.tunm.gallerypro.data.sort.SortingOrder;
 import com.tunm.gallerypro.fragments.BaseFragment;
@@ -29,7 +28,7 @@ import com.tunm.gallerypro.view.ItemOffsetDecoration;
 
 import butterknife.BindView;
 
-abstract public class BaseListFragment extends BaseFragment implements ProviderChangeListener {
+abstract public class BaseListFragment extends BaseFragment implements FileChangeListener {
 
     @BindView(R.id.placeholder)
     protected DesertPlaceholder desertPlaceholder;
@@ -45,7 +44,7 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
     protected ActionMode mActionMode;
     protected Activity mAttachedActivity;
 
-    private ContentProviderObserver mProviderObserver;
+//    private ContentProviderObserver mProviderObserver;
 
     protected HomeFragment parentFragment;
 
@@ -61,13 +60,14 @@ abstract public class BaseListFragment extends BaseFragment implements ProviderC
         mAttachedActivity = getActivity();
         parentFragment = ((HomeFragment) this.getParentFragment());
 
-        mProviderObserver = new ContentProviderObserver();
-        mProviderObserver.setChangeListener(this);
-        mAttachedActivity.getContentResolver().
-                registerContentObserver(
-                        MediaStore.Files.getContentUri("external"),
-                        true,
-                        mProviderObserver);
+//        mProviderObserver = new ContentProviderObserver();
+//        mProviderObserver.addFileChangeListener(this);
+//        mAttachedActivity.getContentResolver().
+//                registerContentObserver(
+//                        MediaStore.Files.getContentUri("external"),
+//                        true,
+//                        mProviderObserver);
+        ((MainActivity) mAttachedActivity).addFileChangeListener(this);
         super.onCreate(savedInstanceState);
     }
 

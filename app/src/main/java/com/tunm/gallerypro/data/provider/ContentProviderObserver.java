@@ -7,13 +7,13 @@ import android.util.Log;
 
 public class ContentProviderObserver extends ContentObserver {
 
-    private ProviderChangeListener changeListener;
+    private FileChangeListener changeListener;
 
     public ContentProviderObserver() {
         super(new Handler());
     }
 
-    public void setChangeListener(ProviderChangeListener changeListener) {
+    public void setChangeListener(FileChangeListener changeListener) {
         this.changeListener = changeListener;
     }
 
@@ -25,7 +25,7 @@ public class ContentProviderObserver extends ContentObserver {
     @Override
     public void onChange(boolean selfChange, Uri uri) {
         super.onChange(selfChange, uri);
-        Log.v("ContentProviderObserver", "content provider change");
+        Log.v("ContentProviderObserver", "content provider change" + uri.toString());
         changeListener.onChange();
     }
 }

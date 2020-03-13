@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -33,14 +32,14 @@ import com.jetradar.desertplaceholder.DesertPlaceholder;
 import com.tunm.gallerypro.CallBackToActivityListener;
 import com.tunm.gallerypro.CustomModelClass;
 import com.tunm.gallerypro.DrawerLocker;
+import com.tunm.gallerypro.MainActivity;
 import com.tunm.gallerypro.R;
 import com.tunm.gallerypro.activity.AboutActivity;
 import com.tunm.gallerypro.activity.SettingsActivity;
 import com.tunm.gallerypro.customComponent.GridlayoutManagerFixed;
 import com.tunm.gallerypro.data.MediaHelper;
 import com.tunm.gallerypro.data.MediaItem;
-import com.tunm.gallerypro.data.provider.ContentProviderObserver;
-import com.tunm.gallerypro.data.provider.ProviderChangeListener;
+import com.tunm.gallerypro.data.provider.FileChangeListener;
 import com.tunm.gallerypro.data.sort.SortingMode;
 import com.tunm.gallerypro.data.sort.SortingOrder;
 import com.tunm.gallerypro.fragments.BaseFragment;
@@ -68,7 +67,7 @@ import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
 public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem,
-        ViewHolderListener, DeletedItemCallback, ProviderChangeListener, ColumnChangeObserver {
+        ViewHolderListener, DeletedItemCallback, FileChangeListener, ColumnChangeObserver {
     @BindView(R.id.timelineRecycleView)
     protected RecyclerView mRecyclerView;
 
@@ -96,7 +95,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     public static int currentPosition;
 
-    private ContentProviderObserver mProviderObserver;
+//    private ContentProviderObserver mProviderObserver;
     protected CallBackToActivityListener callBackListener;
     private ColorTheme colorTheme;
 
@@ -116,13 +115,14 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         presenter = createPresenter(model);
         actionMode = createActionMode();
         parentFragment = ((HomeFragment) this.getParentFragment());
-        mProviderObserver = new ContentProviderObserver();
-        mProviderObserver.setChangeListener(this);
-        mAttachedActivity.getContentResolver().
-                registerContentObserver(
-                        MediaStore.Files.getContentUri("external"),
-                        true,
-                        mProviderObserver);
+//        mProviderObserver = new ContentProviderObserver();
+//        mProviderObserver.addFileChangeListener(this);
+//        mAttachedActivity.getContentResolver().
+//                registerContentObserver(
+//                        MediaStore.Files.getContentUri("external"),
+//                        true,
+//                        mProviderObserver);
+        ((MainActivity) mAttachedActivity).addFileChangeListener(this);
         colorTheme = new ColorTheme(mAttachedActivity);
         CustomModelClass.getInstance().addColumnChangeObserver(this);
         super.onCreate(savedInstanceState);

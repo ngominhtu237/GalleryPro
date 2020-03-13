@@ -31,13 +31,13 @@ public class StorageHelper {
         return true;
     }
 
-    public static boolean isImageFile(String path) {
-        String mimeType = URLConnection.guessContentTypeFromName(path);
+    public static boolean isImageFile(String fname) {
+        String mimeType = URLConnection.guessContentTypeFromName(fname);
         return mimeType != null && mimeType.startsWith("image");
     }
 
-    public static boolean isVideoFile(String path) {
-        String mimeType = URLConnection.guessContentTypeFromName(path);
+    public static boolean isVideoFile(String fname) {
+        String mimeType = URLConnection.guessContentTypeFromName(fname);
         return mimeType != null && mimeType.startsWith("video");
     }
 
