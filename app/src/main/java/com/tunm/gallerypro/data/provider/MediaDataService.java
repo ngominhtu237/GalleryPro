@@ -89,6 +89,47 @@ public class MediaDataService {
     }
 
     @SuppressLint("StaticFieldLeak")
+    private class DeleteMediaTask extends AsyncTask<ArrayList<MediaItem>, Integer, Integer> {
+
+        ProgressDialogTheme dialog;
+        SpinKitViewTheme spinKit;
+        ArrayList<MediaItem> mDeletedItems;
+
+        @Override
+        protected void onPreExecute() {
+            setLockScreenOrientation(true);
+            mDeletedItems = new ArrayList<>();
+            dialog = new ProgressDialogTheme(mContext);
+            dialog.setCancelable(false);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            spinKit = dialog.findViewById(R.id.spin_delete_items);
+            dialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(ArrayList<MediaItem>... items) {
+            mDeletedItems = items[0];
+            for(int i=0; i<mDeletedItems.size(); i++) {
+                if(isCancelled()) break;
+                else {
+                    MediaHelper.deleteMedia(mContext, mDeletedItems.get(i).getPathMediaItem());
+                    mMedias.remove(mDeletedItems.get(i)); // no need
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            deleteMediaCallback.onResponse();
+            dialog.dismiss();
+            setLockScreenOrientation(false);
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
     private class DeleteTimelineDataTask extends AsyncTask<ArrayList<MediaItem>, Integer, Integer> {
 
         ProgressDialogTheme dialog;
@@ -169,47 +210,6 @@ public class MediaDataService {
         protected void onPostExecute(Void aVoid) {
             getMediaCallback.onResponse(mMedias);
             super.onPostExecute(aVoid);
-        }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class DeleteMediaTask extends AsyncTask<ArrayList<MediaItem>, Integer, Integer> {
-
-        ProgressDialogTheme dialog;
-        SpinKitViewTheme spinKit;
-        ArrayList<MediaItem> mDeletedItems;
-
-        @Override
-        protected void onPreExecute() {
-            setLockScreenOrientation(true);
-            mDeletedItems = new ArrayList<>();
-            dialog = new ProgressDialogTheme(mContext);
-            dialog.setCancelable(false);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            spinKit = dialog.findViewById(R.id.spin_delete_items);
-            dialog.show();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Integer doInBackground(ArrayList<MediaItem>... items) {
-            mDeletedItems = items[0];
-            for(int i=0; i<mDeletedItems.size(); i++) {
-                if(isCancelled()) break;
-                else {
-                    MediaHelper.deleteMedia(mContext, mDeletedItems.get(i).getPathMediaItem());
-                    mMedias.remove(mDeletedItems.get(i)); // no need
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
-            deleteMediaCallback.onResponse();
-            dialog.dismiss();
-            setLockScreenOrientation(false);
         }
     }
 

@@ -3,8 +3,6 @@ package com.tunm.gallerypro.fragments.list.section.video;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,16 +21,12 @@ import com.tunm.gallerypro.fragments.list.section.abstraction.BaseTimelineFragme
 import com.tunm.gallerypro.fragments.list.section.abstraction.actionmode.BaseActionMode;
 import com.tunm.gallerypro.fragments.list.section.abstraction.model.ITimelineRepository;
 import com.tunm.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
-import com.tunm.gallerypro.fragments.list.section.abstraction.view.ITimelineView;
-import com.tunm.gallerypro.fragments.viewer.ImagePagerFragment;
-import com.tunm.gallerypro.view.SquareImageView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class VideoFragment extends BaseTimelineFragment implements ITimelineView {
+public class VideoFragment extends BaseTimelineFragment {
     private static final String TAG = "VideoFragment";
 
     public VideoFragment() {
@@ -51,7 +45,7 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
     @Override
     protected ITimelineRepository createModel() {
-        return new VideoRepository(mAttachedActivity);
+        return new VideoRepository(mActivity);
     }
 
     @Override
@@ -67,7 +61,7 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
     @Override
     protected BaseTimelineAdapter createAdapter() {
-        return new VideoAdapter(this, mAttachedActivity, getSortingMode(), getSortingOrder());
+        return new VideoAdapter(this, mActivity, getSortingMode(), getSortingOrder());
     }
 
     @Override
@@ -104,7 +98,7 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        mAttachedActivity.getMenuInflater().inflate(R.menu.timeline_menu, menu);
+        mActivity.getMenuInflater().inflate(R.menu.timeline_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -116,50 +110,8 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     }
 
     @Override
-    public void onGetTimelineSuccess(ArrayList<MediaItem> mediaItems) {
-        if(mediaItems.size() > 0) {
-            getAdapter().setMediaItems(mediaItems);
-            getAdapter().changeSorting(getSortingMode(), getSortingOrder());
-            if(mLoadingLayout != null) mLoadingLayout.setVisibility(View.GONE);
-            desertPlaceholder.setVisibility(View.GONE);
-            if(mRecyclerView != null) mRecyclerView.setVisibility(View.VISIBLE);
-        } else {
-            if(desertPlaceholder != null) desertPlaceholder.setVisibility(View.VISIBLE);
-            if(mRecyclerView != null) mRecyclerView.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onDeleteTimelineSuccess() {
-        for(int i=0; i<getListDeletedPosition().size(); i++) {
-            getAdapter().removeMedia(getListDeletedPosition().get(i));
-        }
-    }
-
-    @Override
-    public void onClick(View view, int position) {
-        if (mActionMode != null) {
-            onListItemSelect(position);
-        } else {
-            ImagePagerFragment.mImageList = getAdapter().getMediaItems();
-//            SquareImageView transitioningView = view.findViewById(R.id.ivTimelineThumbnail);
-            FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-            ImagePagerFragment pagerFragment = (ImagePagerFragment) fragmentManager.findFragmentByTag("ImagePagerFragment");
-            if(pagerFragment == null) {
-                pagerFragment = new ImagePagerFragment();
-                Bundle args = new Bundle();
-                args.putInt("currentPosition", position);
-                args.putBoolean("isImage", false);
-                pagerFragment.setArguments(args);
-            }
-
-            fragmentManager
-                    .beginTransaction()
-//                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
-                    .add(R.id.fragment_container, pagerFragment, ImagePagerFragment.class.getSimpleName())
-                    .addToBackStack(null)
-                    .commit();
-        }
+    protected boolean isImage() {
+        return false;
     }
 
     @Override
@@ -181,8 +133,14 @@ public class VideoFragment extends BaseTimelineFragment implements ITimelineView
     }
 
     @Override
-    public void onChange() {
+    public void onFileChanged() {
         Log.v("loadData", "update " + TAG);
+        presenter.getMedias(MediaFilter.VIDEO);
+    }
+
+    @Override
+    public void onDataChanged() {
+        Log.v("DeleteMediaItemObserver", TAG + " onDataChanged");
         presenter.getMedias(MediaFilter.VIDEO);
     }
 }

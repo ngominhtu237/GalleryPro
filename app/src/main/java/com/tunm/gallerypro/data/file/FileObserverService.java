@@ -1,11 +1,20 @@
 package com.tunm.gallerypro.data.file;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.tunm.gallerypro.R;
 
 public class FileObserverService extends Service {
 
@@ -22,6 +31,40 @@ public class FileObserverService extends Service {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startMyOwnForeground();
+            Log.v(TAG, "startMyOwnForeground");
+        } else {
+            startForeground(1, new Notification());
+            Log.v(TAG, "startForeground");
+        }
+    }
+
+    private void startMyOwnForeground(){
+        String NOTIFICATION_CHANNEL_ID = "com.example.simpleapp";
+        String channelName = "My Background Service";
+        NotificationChannel chan;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+            chan.setLightColor(Color.BLUE);
+            chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            assert manager != null;
+            manager.createNotificationChannel(chan);
+        }
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setContentTitle("App is running in background")
+                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .build();
+        startForeground(2, notification);
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
@@ -33,7 +76,6 @@ public class FileObserverService extends Service {
         return START_STICKY;
     }
 
-    // 1) watch path for files changes using "RecursiveFileObserver"
     public void watchPathAndWriteFile() {
         // the following path depends on your Android device. On my system, it is: "/storage/emulated/0/"
         String path = Environment.getExternalStorageDirectory().getPath() + "/";
@@ -45,13 +87,8 @@ public class FileObserverService extends Service {
         });
         Log.v("tunm1_time", "startWatching: " + System.currentTimeMillis());
 
-        // start watching the path
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                observer.startWatching();
-            }
-        }).start();
+        // fix while screen when start App because service run in UIThread -> move to background thread
+        new Thread(() -> observer.startWatching()).start();
 
         Log.v("tunm1_time", "startWatchingDone: " + System.currentTimeMillis());
     }

@@ -1,7 +1,6 @@
 package com.tunm.gallerypro.fragments.list.section.abstraction;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,7 +8,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +30,8 @@ import android.widget.Toast;
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 import com.tunm.gallerypro.CallBackToActivityListener;
 import com.tunm.gallerypro.CustomModelClass;
+import com.tunm.gallerypro.DeleteMediaItemObserver;
+import com.tunm.gallerypro.DeleteMediaItemSubject;
 import com.tunm.gallerypro.DrawerLocker;
 import com.tunm.gallerypro.MainActivity;
 import com.tunm.gallerypro.R;
@@ -50,7 +51,9 @@ import com.tunm.gallerypro.fragments.home.HomeFragment;
 import com.tunm.gallerypro.fragments.list.section.abstraction.actionmode.BaseActionMode;
 import com.tunm.gallerypro.fragments.list.section.abstraction.model.ITimelineRepository;
 import com.tunm.gallerypro.fragments.list.section.abstraction.presenter.ITimelinePresenter;
+import com.tunm.gallerypro.fragments.list.section.abstraction.view.ITimelineView;
 import com.tunm.gallerypro.fragments.viewer.DeletedItemCallback;
+import com.tunm.gallerypro.fragments.viewer.ImagePagerFragment;
 import com.tunm.gallerypro.setting.callback.ColumnChangeObserver;
 import com.tunm.gallerypro.theme.ColorTheme;
 import com.tunm.gallerypro.utils.CommonBarColor;
@@ -67,7 +70,7 @@ import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
 public abstract class BaseTimelineFragment extends BaseFragment implements RecycleViewClickListener, ICheckedItem,
-        ViewHolderListener, DeletedItemCallback, FileChangeListener, ColumnChangeObserver {
+        ViewHolderListener, DeletedItemCallback, FileChangeListener, ColumnChangeObserver, ITimelineView, DeleteMediaItemObserver {
     @BindView(R.id.timelineRecycleView)
     protected RecyclerView mRecyclerView;
 
@@ -77,8 +80,6 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     @BindView(R.id.loading_layout)
     protected RelativeLayout mLoadingLayout;
 
-    protected Activity mAttachedActivity;
-
     protected GridlayoutManagerFixed mLayoutManager;
     protected ActionMode mActionMode;
     protected int columnNumber;
@@ -86,19 +87,14 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     private BaseTimelineAdapter adapter;
     protected ITimelinePresenter presenter;
     protected ITimelineRepository model;
-
     protected BaseActionMode actionMode;
-
     private ArrayList<Integer> mListDeletedPosition = new ArrayList<>();
 
     private HomeFragment parentFragment;
-
     public static int currentPosition;
 
-//    private ContentProviderObserver mProviderObserver;
     protected CallBackToActivityListener callBackListener;
     private ColorTheme colorTheme;
-
     private LockableViewPager parentViewPager;
 
     private boolean isZoomIn, isScroll;
@@ -110,29 +106,22 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        mAttachedActivity = getActivity();
         model = createModel();
         presenter = createPresenter(model);
         actionMode = createActionMode();
         parentFragment = ((HomeFragment) this.getParentFragment());
-//        mProviderObserver = new ContentProviderObserver();
-//        mProviderObserver.addFileChangeListener(this);
-//        mAttachedActivity.getContentResolver().
-//                registerContentObserver(
-//                        MediaStore.Files.getContentUri("external"),
-//                        true,
-//                        mProviderObserver);
-        ((MainActivity) mAttachedActivity).addFileChangeListener(this);
-        colorTheme = new ColorTheme(mAttachedActivity);
+        ((MainActivity) mActivity).addFileChangeListener(this);
+        colorTheme = new ColorTheme(mActivity);
         CustomModelClass.getInstance().addColumnChangeObserver(this);
+        DeleteMediaItemSubject.getInstance().registerObserver(this);
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getActivity() instanceof CallBackToActivityListener)
-            callBackListener = (CallBackToActivityListener) getActivity();
+        if (mActivity instanceof CallBackToActivityListener)
+            callBackListener = (CallBackToActivityListener) mActivity;
     }
 
     protected abstract BaseActionMode createActionMode();
@@ -145,7 +134,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(true);
+        ((DrawerLocker) mActivity).setDrawerEnabled(true);
 
         loadData();
         initRecycleView();
@@ -214,15 +203,15 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     private void refreshTheme() {
         if(colorTheme.isDarkTheme()) {
-            mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
-            CommonBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
-            CommonBarColor.setNavigationBarColor(getActivity(), mAttachedActivity.getColor(R.color.colorDarkBackgroundHighlight));
+            mRecyclerView.setBackgroundColor(mActivity.getColor(R.color.colorDarkBackground));
+            CommonBarColor.setStatusBarColor(mActivity, mActivity.getColor(R.color.colorDarkBackgroundHighlight));
+            CommonBarColor.setNavigationBarColor(mActivity, mActivity.getColor(R.color.colorDarkBackgroundHighlight));
             mLoadingLayout.setBackgroundColor(getResources().getColor(R.color.colorDarkBackground));
             rootView.setBackgroundColor(getResources().getColor(R.color.colorDarkBackgroundHighlight));
         } else {
             mRecyclerView.setBackgroundColor(colorTheme.getBackgroundColor());
-            CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
-            CommonBarColor.setNavigationBarColor(getActivity(), mColorTheme.getPrimaryColor());
+            CommonBarColor.setStatusBarColor(mActivity, mColorTheme.getPrimaryColor());
+            CommonBarColor.setNavigationBarColor(mActivity, mColorTheme.getPrimaryColor());
             mLoadingLayout.setBackgroundColor(getResources().getColor(R.color.colorBackground));
             rootView.setBackgroundColor(getResources().getColor(R.color.colorBackground));
         }
@@ -231,12 +220,12 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     @SuppressLint("ClickableViewAccessibility")
     private void initRecycleView() {
         mRecyclerView.setHasFixedSize(true);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            columnNumber = MediaHelper.getTimelineColumnPortrait(mAttachedActivity);
+        if (mActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            columnNumber = MediaHelper.getTimelineColumnPortrait(mActivity);
         } else {
-            columnNumber = MediaHelper.getTimelineColumnLandscape(mAttachedActivity);
+            columnNumber = MediaHelper.getTimelineColumnLandscape(mActivity);
         }
-        ItemOffsetDecoration itemOffsetDecoration = new ItemOffsetDecoration(mAttachedActivity, R.dimen.timeline_item_spacing);
+        ItemOffsetDecoration itemOffsetDecoration = new ItemOffsetDecoration(mActivity, R.dimen.timeline_item_spacing);
         mRecyclerView.addItemDecoration(itemOffsetDecoration);
         mLayoutManager = new GridlayoutManagerFixed(getContext(), columnNumber);
         mLayoutManager.setItemPrefetchEnabled(false);
@@ -271,7 +260,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-        ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(mAttachedActivity, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+        ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(mActivity, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
                 if(!isScroll) {
@@ -296,7 +285,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                         MediaHelper.setTimelineColumnPortrait(columnNumber);
                         animateRecyclerLayoutChange();
                     } else {
-                        Toast.makeText(mAttachedActivity, "min column is: " + ChooseColumnDialog.MIN_COLUMN_MEDIA, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "min column is: " + ChooseColumnDialog.MIN_COLUMN_MEDIA, Toast.LENGTH_SHORT).show();
                         mLayoutManager.setScrollEnabled(true);
                         parentViewPager.setSwipeLocked(false);
                     }
@@ -307,7 +296,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                         MediaHelper.setTimelineColumnPortrait(columnNumber);
                         animateRecyclerLayoutChange();
                     } else {
-                        Toast.makeText(mAttachedActivity, "max column is: " + ChooseColumnDialog.MAX_COLUMN_MEDIA, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "max column is: " + ChooseColumnDialog.MAX_COLUMN_MEDIA, Toast.LENGTH_SHORT).show();
                         mLayoutManager.setScrollEnabled(true);
                         parentViewPager.setSwipeLocked(false);
                     }
@@ -385,8 +374,32 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     @Override
     public void onClick(View view, int position) {
+        if (mActionMode != null) {
+            onListItemSelect(position);
+        } else {
+            ImagePagerFragment.mImageList = getAdapter().getMediaItems();
+//            SquareImageView transitioningView = view.findViewById(R.id.ivTimelineThumbnail);
+            FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+            ImagePagerFragment pagerFragment = (ImagePagerFragment) fragmentManager.findFragmentByTag("ImagePagerFragment");
+            if(pagerFragment == null) {
+                pagerFragment = new ImagePagerFragment();
+                Bundle args = new Bundle();
+                args.putInt("currentPosition", position);
+                args.putBoolean("isImage", isImage());
+                pagerFragment.setArguments(args);
+                pagerFragment.setDeleteCallback(this);
+            }
 
+            fragmentManager
+                    .beginTransaction()
+//                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
+                    .add(R.id.fragment_container, pagerFragment, ImagePagerFragment.class.getSimpleName())
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
+
+    protected abstract boolean isImage();
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -400,11 +413,11 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                 return true;
 
             case R.id.action_timeline_about:
-                startActivity(new Intent(mAttachedActivity, AboutActivity.class));
+                startActivity(new Intent(mActivity, AboutActivity.class));
                 return true;
 
             case R.id.action_timeline_setting:
-                startActivity(new Intent(mAttachedActivity, SettingsActivity.class));
+                startActivity(new Intent(mActivity, SettingsActivity.class));
                 return true;
 
             case R.id.action_timeline_delete:
@@ -441,9 +454,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     }
 
     private void showChoiceDialog(SortingMode sortingMode, SortingOrder sortingOrder) {
-//        AlertDialog.Builder mBuilder = new AlertDialog.Builder(mAttachedActivity);
-
-        SortDialogTimeline dialog = new SortDialogTimeline(mAttachedActivity);
+        SortDialogTimeline dialog = new SortDialogTimeline(mActivity);
         dialog.setTitle("Sort");
         dialog.setSortingMode(sortingMode);
         dialog.setSortingOrder(sortingOrder);
@@ -481,12 +492,11 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         boolean hasCheckedItems = adapter.getSelectedCount() > 0;
 
         if (hasCheckedItems && mActionMode == null) {
-            mActionMode = ((AppCompatActivity) Objects.requireNonNull(getActivity())).startSupportActionMode(actionMode);
+            mActionMode = Objects.requireNonNull(mActivity).startSupportActionMode(actionMode);
             parentFragment.hideAppBarLayout();
             parentViewPager.setSwipeLocked(true);
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
-            parentFragment.showAppBarLayout();
             parentViewPager.setSwipeLocked(false);
         }
 
@@ -514,7 +524,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
                 Log.d("deleted item position ", String.valueOf(getAdapter().getSelectedIds().keyAt(i)));
             }
         }
-        DeleteDialog dialog = new DeleteDialog(mAttachedActivity);
+        DeleteDialog dialog = new DeleteDialog(mActivity);
         dialog.setTitle("Delete");
         String s = mListDeletedPosition.size() == 1 ? "item" : "items";
         dialog.setMessage("Are you sure you want to delete " + mListDeletedPosition.size() + " " + s + "?");
@@ -535,21 +545,49 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
     @Override
     public void requestUpdateColumn() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            columnNumber = MediaHelper.getTimelineColumnPortrait(mAttachedActivity);
+        if (mActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            columnNumber = MediaHelper.getTimelineColumnPortrait(mActivity);
         } else {
-            columnNumber = MediaHelper.getTimelineColumnLandscape(mAttachedActivity);
+            columnNumber = MediaHelper.getTimelineColumnLandscape(mActivity);
         }
         setupColumn();
         Log.v("update column", "BaseTimelineFragment");
     }
 
     public void setupColumn() {
-        if (columnNumber != mLayoutManager.getSpanCount()) {
+        if (columnNumber != mLayoutManager.getSpanCount() && mRecyclerView != null) {
             mLayoutManager = new GridlayoutManagerFixed(getContext(), columnNumber);
             mLayoutManager.setSpanCount(columnNumber);
             setSpanSize();
             mRecyclerView.setLayoutManager(mLayoutManager);
         }
+    }
+
+    @Override
+    public void onGetTimelineSuccess(ArrayList<MediaItem> mediaItems) {
+        if(mediaItems.size() > 0) {
+            getAdapter().setMediaItems(mediaItems);
+            getAdapter().changeSorting(getSortingMode(), getSortingOrder());
+            if(mLoadingLayout != null) mLoadingLayout.setVisibility(View.GONE);
+            if(desertPlaceholder != null) desertPlaceholder.setVisibility(View.GONE);
+            if(mRecyclerView != null) mRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            if(desertPlaceholder != null) desertPlaceholder.setVisibility(View.VISIBLE);
+            if(mRecyclerView != null) mRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onDeleteTimelineSuccess() {
+        for(int i=0; i<getListDeletedPosition().size(); i++) {
+            getAdapter().removeMedia(getListDeletedPosition().get(i));
+        }
+        if(getAdapter().getMediaItems().size() == 0) {
+            if(mRecyclerView != null) mRecyclerView.setVisibility(View.GONE);
+            desertPlaceholder.setVisibility(View.VISIBLE);
+        }
+        DeleteMediaItemSubject.getInstance().unRegisterObserver(this);
+        DeleteMediaItemSubject.getInstance().notifyDataChange();
+        DeleteMediaItemSubject.getInstance().registerObserver(this);
     }
 }

@@ -6,9 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.tunm.gallerypro.DeleteMediaItemSubject;
 import com.tunm.gallerypro.DrawerLocker;
 import com.tunm.gallerypro.R;
 import com.tunm.gallerypro.customComponent.GridlayoutManagerFixed;
@@ -32,6 +31,7 @@ import com.tunm.gallerypro.fragments.list.split.pictures.model.MediaRepositoryIm
 import com.tunm.gallerypro.fragments.list.split.pictures.presenter.IMediaPresenter;
 import com.tunm.gallerypro.fragments.list.split.pictures.presenter.MediaPresenterImpl;
 import com.tunm.gallerypro.fragments.list.split.pictures.view.IMediaView;
+import com.tunm.gallerypro.fragments.viewer.DeletedItemCallback;
 import com.tunm.gallerypro.fragments.viewer.ImagePagerFragment;
 import com.tunm.gallerypro.utils.ViewSizeUtils;
 import com.tunm.gallerypro.view.SquareImageView;
@@ -43,12 +43,14 @@ import java.util.Objects;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
-public class AlbumPicturesFragment extends BaseListFragment implements IMediaView, RecycleViewClickListener, BaseListViewAdapter.CheckedItemInterface {
+public class AlbumPicturesFragment extends BaseListFragment implements IMediaView, RecycleViewClickListener,
+        BaseListViewAdapter.CheckedItemInterface, DeletedItemCallback {
+
+    private static final String TAG = "AlbumPicturesFragment";
 
     private AlbumPictureViewAdapter adapter;
     private Toolbar_ActionMode_Photo toolbarActionModePhoto;
-    private View rootView;
-    private SparseBooleanArray selectedMediaDelete;
+    private ArrayList<Integer> mListDeletedPosition = new ArrayList<>();
 
     private Bucket mReceiveBucket;
     private IMediaPresenter presenter;
@@ -59,7 +61,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new MediaPresenterImpl(this, new MediaRepositoryImpl(mAttachedActivity));
+        presenter = new MediaPresenterImpl(this, new MediaRepositoryImpl(mActivity));
 
         Bundle bundle = getArguments();
         if(bundle != null) {
@@ -70,13 +72,13 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
     @Override
     public void onResume() {
         super.onResume();
-        Log.v("tunm1", "onResime");
+        Log.v(TAG, "onResume");
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         if (mReceiveBucket != null) {
-            Objects.requireNonNull(((AppCompatActivity) mAttachedActivity).getSupportActionBar()).setTitle(mReceiveBucket.getName());
+            Objects.requireNonNull(mActivity.getSupportActionBar()).setTitle(mReceiveBucket.getName());
         }
         super.onActivityCreated(savedInstanceState);
     }
@@ -84,33 +86,34 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ((DrawerLocker) Objects.requireNonNull(getActivity())).setDrawerEnabled(false);
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ((DrawerLocker) Objects.requireNonNull(mActivity)).setDrawerEnabled(false);
 
         // back from another fragment not call onCreate Fragment
         presenter.getMedias(mReceiveBucket);
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rootView.getLayoutParams();
-        params.setMargins(params.leftMargin, params.topMargin + ViewSizeUtils.getStatusBarHeight(getActivity()), params.rightMargin, params.bottomMargin);
+        params.setMargins(params.leftMargin, params.topMargin + ViewSizeUtils.getStatusBarHeight(mActivity), params.rightMargin, params.bottomMargin);
         rootView.setLayoutParams(params);
         return rootView;
     }
 
     @SuppressLint("SetTextI18n")
     public void deleteMedias() {
-        selectedMediaDelete = adapter.getSelectedIds();
         ArrayList<MediaItem> mDeletedMedias = new ArrayList<>();
+        mListDeletedPosition.clear();
         // Loop all selected ids
-        for (int i = (selectedMediaDelete.size() - 1); i >= 0; i--) {
-            if (selectedMediaDelete.valueAt(i)) {
+        for (int i = (adapter.getSelectedIds().size() - 1); i >= 0; i--) {
+            if (adapter.getSelectedIds().valueAt(i)) {
                 //If current id is selected remove the item via key
-                mDeletedMedias.add(adapter.getMediaList().get(selectedMediaDelete.keyAt(i)));
+                mDeletedMedias.add(adapter.getMediaList().get(adapter.getSelectedIds().keyAt(i)));
+                mListDeletedPosition.add(adapter.getSelectedIds().keyAt(i));
             }
         }
-        DeleteDialog dialog = new DeleteDialog(mAttachedActivity);
+        DeleteDialog dialog = new DeleteDialog(mActivity);
         dialog.setTitle("Delete");
-        String s = selectedMediaDelete.size() == 1 ? "item" : "items";
-        dialog.setMessage("Are you sure you want to delete " + selectedMediaDelete.size() + " " + s + "?");
+        String s = mListDeletedPosition.size() == 1 ? "item" : "items";
+        dialog.setMessage("Are you sure you want to delete " + mListDeletedPosition.size() + " " + s + "?");
         dialog.setNegativeButton("Cancel", v -> dialog.dismiss());
         dialog.setPositiveButton("Delete", v -> {
             dialog.dismiss();
@@ -127,14 +130,13 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
 
         if (hasCheckedItems && mActionMode == null) {
             toolbarActionModePhoto = new Toolbar_ActionMode_Photo(this, getContext(), adapter.getMediaList(), adapter);
-            mActionMode = ((AppCompatActivity) Objects.requireNonNull(mAttachedActivity)).startSupportActionMode(toolbarActionModePhoto);
+            mActionMode = Objects.requireNonNull(mActivity).startSupportActionMode(toolbarActionModePhoto);
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
         }
 
         if (mActionMode != null) {
-            mActionMode.setTitle(String.valueOf(adapter
-                    .getSelectedCount()) + " selected");
+            mActionMode.setTitle(adapter.getSelectedCount() + " selected");
         }
     }
 
@@ -162,7 +164,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         } else {
             ImagePagerFragment.mImageList = adapter.getMediaList();
             SquareImageView transitioningView = view.findViewById(R.id.ivTimelineThumbnail);
-            FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+            FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
             ImagePagerFragment pagerFragment = (ImagePagerFragment) fragmentManager.findFragmentByTag("ImagePagerFragment");
             if(pagerFragment == null) {
                 pagerFragment = new ImagePagerFragment();
@@ -170,7 +172,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
                 args.putInt("currentPosition", position);
                 args.putBoolean("isImage", true);
                 pagerFragment.setArguments(args);
-                // pagerFragment.setDeleteCallback(this);
+                pagerFragment.setDeleteCallback(this);
             }
 
             fragmentManager
@@ -189,7 +191,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        mAttachedActivity.getMenuInflater().inflate(R.menu.album_pictures_menu, menu);
+        mActivity.getMenuInflater().inflate(R.menu.album_pictures_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -245,7 +247,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
                 return true;
 
             case R.id.album_details:
-                AlbumPictureDetailsDialog dialog = new AlbumPictureDetailsDialog(mAttachedActivity);
+                AlbumPictureDetailsDialog dialog = new AlbumPictureDetailsDialog(mActivity);
                 dialog.setCurrentAlbum(mReceiveBucket);
                 dialog.setMediaList(adapter.getMediaList());
                 dialog.show();
@@ -266,10 +268,6 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         }
     }
 
-    private void removeImage(int position) {
-        adapter.removeImage(position);
-    }
-
     @Override
     public void onGetMediaSuccess(ArrayList<MediaItem> medias) {
         adapter.setDataList(medias);
@@ -279,22 +277,36 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
     }
 
     @Override
-    public void onDeleteMediaSuccess() {
-        for(int i=selectedMediaDelete.size()-1; i>=0; i--) {
-            removeImage(selectedMediaDelete.keyAt(i));
-        }
-    }
-
-    @Override
-    public void onChange() {
+    public void onFileChanged() {
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+        FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(this);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onDeleteMediaSuccess() {
+        for(int i=0; i<mListDeletedPosition.size(); i++) {
+            adapter.removeImage(mListDeletedPosition.get(i));
+        }
+        DeleteMediaItemSubject.getInstance().notifyDataChange();
+    }
+
+    @Override
+    public void onDelete(ArrayList<Integer> pos, ArrayList<MediaItem> mediaItems) {
+        if(pos.size() > 0) {
+            mListDeletedPosition = pos;
+            presenter.deleteMedias(mediaItems);
+        }
+    }
+
+    @Override
+    public void onDataChanged() {
+        // nothing need to do here
     }
 }

@@ -61,7 +61,7 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new VideoPresenterImpl(this, new VideoRepositoryImpl(mAttachedActivity));
+        presenter = new VideoPresenterImpl(this, new VideoRepositoryImpl(mActivity));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
 
         if (hasCheckedItems && mActionMode == null) {
             toolbarActionModeVideo = new Toolbar_ActionMode_Video(this, getContext(), adapter.getMediaList(), adapter);
-            mActionMode = ((AppCompatActivity) Objects.requireNonNull(mAttachedActivity)).startSupportActionMode(toolbarActionModeVideo);
+            mActionMode = ((AppCompatActivity) Objects.requireNonNull(mActivity)).startSupportActionMode(toolbarActionModeVideo);
         } else if (!hasCheckedItems && mActionMode != null) {
             mActionMode.finish();
         }
@@ -148,7 +148,7 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        mAttachedActivity.getMenuInflater().inflate(R.menu.album_pictures_menu, menu);
+        mActivity.getMenuInflater().inflate(R.menu.album_pictures_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -209,7 +209,7 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
 
                 View view = getLayoutInflater().inflate(R.layout.fragment_bottom_sheet_split, null);
 
-                BottomSheetDialog dialog = new BottomSheetDialog(mAttachedActivity);
+                BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
                 dialog.setContentView(view);
 
                 sheetBehavior = BottomSheetBehavior.from((View) view.getParent());
@@ -266,6 +266,11 @@ public class VideosFragment extends BaseListFragment implements IVideoView, Recy
     }
 
     @Override
-    public void onChange() {
+    public void onFileChanged() {
+    }
+
+    @Override
+    public void onDataChanged() {
+
     }
 }

@@ -1,6 +1,5 @@
 package com.tunm.gallerypro.fragments.list.normal.abstraction;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jetradar.desertplaceholder.DesertPlaceholder;
+import com.tunm.gallerypro.DeleteMediaItemObserver;
 import com.tunm.gallerypro.DrawerLocker;
 import com.tunm.gallerypro.MainActivity;
 import com.tunm.gallerypro.R;
@@ -28,7 +28,7 @@ import com.tunm.gallerypro.view.ItemOffsetDecoration;
 
 import butterknife.BindView;
 
-abstract public class BaseListFragment extends BaseFragment implements FileChangeListener {
+abstract public class BaseListFragment extends BaseFragment implements FileChangeListener, DeleteMediaItemObserver {
 
     @BindView(R.id.placeholder)
     protected DesertPlaceholder desertPlaceholder;
@@ -42,7 +42,6 @@ abstract public class BaseListFragment extends BaseFragment implements FileChang
     protected LayoutType mLayoutType;
     protected int columnNumber;
     protected ActionMode mActionMode;
-    protected Activity mAttachedActivity;
 
 //    private ContentProviderObserver mProviderObserver;
 
@@ -57,17 +56,8 @@ abstract public class BaseListFragment extends BaseFragment implements FileChang
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        mAttachedActivity = getActivity();
         parentFragment = ((HomeFragment) this.getParentFragment());
-
-//        mProviderObserver = new ContentProviderObserver();
-//        mProviderObserver.addFileChangeListener(this);
-//        mAttachedActivity.getContentResolver().
-//                registerContentObserver(
-//                        MediaStore.Files.getContentUri("external"),
-//                        true,
-//                        mProviderObserver);
-        ((MainActivity) mAttachedActivity).addFileChangeListener(this);
+        ((MainActivity) mActivity).addFileChangeListener(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -77,7 +67,7 @@ abstract public class BaseListFragment extends BaseFragment implements FileChang
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         initRecycleView(rootView);
         implementRecyclerViewClickListeners();
-        ((DrawerLocker) mAttachedActivity).setDrawerEnabled(true);
+        ((DrawerLocker) mActivity).setDrawerEnabled(true);
         return rootView;
     }
 
@@ -94,14 +84,14 @@ abstract public class BaseListFragment extends BaseFragment implements FileChang
 
     protected void refreshTheme() {
         if(mColorTheme.isDarkTheme()) {
-            mRecyclerView.setBackgroundColor(mAttachedActivity.getColor(R.color.colorDarkBackground));
-            CommonBarColor.setStatusBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
-            CommonBarColor.setNavigationBarColor(getActivity(), getActivity().getColor(R.color.colorDarkBackgroundHighlight));
+            mRecyclerView.setBackgroundColor(mActivity.getColor(R.color.colorDarkBackground));
+            CommonBarColor.setStatusBarColor(mActivity, mActivity.getColor(R.color.colorDarkBackgroundHighlight));
+            CommonBarColor.setNavigationBarColor(mActivity, mActivity.getColor(R.color.colorDarkBackgroundHighlight));
             rootView.setBackgroundColor(getResources().getColor(R.color.colorDarkBackgroundHighlight));
         } else {
             mRecyclerView.setBackgroundColor(mColorTheme.getBackgroundColor());
-            CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
-            CommonBarColor.setNavigationBarColor(getActivity(), mColorTheme.getPrimaryColor());
+            CommonBarColor.setStatusBarColor(mActivity, mColorTheme.getPrimaryColor());
+            CommonBarColor.setNavigationBarColor(mActivity, mColorTheme.getPrimaryColor());
             rootView.setBackgroundColor(getResources().getColor(R.color.colorBackground));
         }
     }
@@ -120,7 +110,7 @@ abstract public class BaseListFragment extends BaseFragment implements FileChang
     protected void initRecycleView(View v) {
         mLayoutType = getLayoutType();
         mRecyclerView.setHasFixedSize(true);
-        itemOffsetDecoration = new ItemOffsetDecoration(mAttachedActivity, R.dimen.timeline_item_spacing);
+        itemOffsetDecoration = new ItemOffsetDecoration(mActivity, R.dimen.timeline_item_spacing);
         mRecyclerView.addItemDecoration(itemOffsetDecoration);
     }
 
@@ -146,7 +136,6 @@ abstract public class BaseListFragment extends BaseFragment implements FileChang
         super.onDestroyView();
     }
 
-    // override is optional
     protected LayoutType getLayoutType() {
         return null;
     }

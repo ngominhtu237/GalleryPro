@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -42,6 +43,8 @@ import java.util.List;
 import static com.tunm.gallerypro.data.utils.DataUtils.readableFileSize;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLocker, CallBackToActivityListener , ThemeChangeObserver {
+
+    public static final String PANORAMA_VIEWER = "com.sec.android.gallery3d.panorama360view";
 
     private static final String TAG = "MainActivity";
     public static final int ABOUT_REQUEST_CODE = 1;
@@ -114,7 +117,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         CustomModelClass.getInstance().addThemeChangeObserver(this);
         requestUpdateTheme();
 
-        startService(new Intent(this, FileObserverService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(this, FileObserverService.class));
+        } else {
+            startService(new Intent(this, FileObserverService.class));
+        }
         registerReceiver(fromServiceReceiver, new IntentFilter(FileObserverService.UPDATE_ACTIVITY));
 
         Log.v("tunm1_time", "onCreate2: " + System.currentTimeMillis());
@@ -135,7 +142,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             Log.v(TAG, "onResume");
             new Handler().postDelayed(() -> {
                 for(FileChangeListener observer: mFileListeners) {
-                    observer.onChange();
+                    observer.onFileChanged();
                 }
             }, 4000);
         }
@@ -256,6 +263,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(fromServiceReceiver);
+        Intent myService = new Intent(this, FileObserverService.class);
+        stopService(myService);
+        Log.v(TAG, "FileObserverService stop");
+        Log.v(TAG, "onDestroy");
     }
 
     @Override

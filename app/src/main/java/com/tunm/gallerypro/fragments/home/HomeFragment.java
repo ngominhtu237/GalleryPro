@@ -1,30 +1,22 @@
 package com.tunm.gallerypro.fragments.home;
 
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.BinderThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.Toolbar;
 
 import com.tunm.gallerypro.CustomModelClass;
 import com.tunm.gallerypro.R;
-import com.tunm.gallerypro.animation.ViewAnimation;
 import com.tunm.gallerypro.fragments.BaseFragment;
 import com.tunm.gallerypro.fragments.list.normal.albums.AlbumsFragment;
 import com.tunm.gallerypro.fragments.list.section.timeline.TimelineFragment;
@@ -32,8 +24,6 @@ import com.tunm.gallerypro.fragments.list.section.video.VideoFragment;
 import com.tunm.gallerypro.theme.SystemUI;
 import com.tunm.gallerypro.utils.ViewSizeUtils;
 import com.tunm.gallerypro.view.LockableViewPager;
-
-import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -66,10 +56,10 @@ public class HomeFragment extends BaseFragment {
         tabLayout.setupWithViewPager(viewPager);
         requestUpdateTheme();
         CustomModelClass.getInstance().addThemeChangeObserver(this);
-        SystemUI.showNavigationBar(getActivity(), getView());
+        SystemUI.showNavigationBar(mActivity, getView());
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rootView.getLayoutParams();
-        params.setMargins(params.leftMargin, params.topMargin + ViewSizeUtils.getStatusBarHeight(getActivity()), params.rightMargin, params.bottomMargin);
+        params.setMargins(params.leftMargin, params.topMargin + ViewSizeUtils.getStatusBarHeight(mActivity), params.rightMargin, params.bottomMargin + ViewSizeUtils.getNavigationBarHeight(mActivity));
         rootView.setLayoutParams(params);
         return rootView;
     }
@@ -95,11 +85,15 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void hideAppBarLayout() {
-        translateAppbar(rootView, -appBarLayout.getHeight(), 400);
+        if(appBarLayout != null) {
+            translateAppbar(rootView, -appBarLayout.getHeight(), 300);
+        }
     }
 
     public void showAppBarLayout() {
-        translateAppbar(rootView, appBarLayout.getHeight(), 400);
+        if(appBarLayout != null) {
+            translateAppbar(rootView, appBarLayout.getHeight(), 300);
+        }
     }
 
     public void translateAppbar(View view, int delta, int duration){
@@ -136,7 +130,7 @@ public class HomeFragment extends BaseFragment {
     public void requestUpdateTheme() {
         if(tabLayout != null) {
             if (mColorTheme.isDarkTheme()) {
-                int colorBg = getActivity().getColor(R.color.colorDarkBackgroundHighlight);
+                int colorBg = mActivity.getColor(R.color.colorDarkBackgroundHighlight);
                 tabLayout.setBackgroundColor(colorBg);
             } else {
                 tabLayout.setBackgroundColor(mColorTheme.getPrimaryColor());

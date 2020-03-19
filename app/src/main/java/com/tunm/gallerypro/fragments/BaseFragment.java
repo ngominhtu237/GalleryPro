@@ -1,9 +1,11 @@
 package com.tunm.gallerypro.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +18,20 @@ import butterknife.Unbinder;
 
 public abstract class BaseFragment extends Fragment implements ThemeChangeObserver {
     protected Unbinder unbinder;
-    //protected Activity mAttachedActivity;
     protected ColorTheme mColorTheme;
+    protected AppCompatActivity mActivity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof AppCompatActivity){
+            mActivity = (AppCompatActivity) context;
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        //mAttachedActivity = getActivity();
         super.onCreate(savedInstanceState);
         mColorTheme = new ColorTheme(getActivity());
     }

@@ -1,18 +1,13 @@
 package com.tunm.gallerypro.fragments.viewer;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,17 +16,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tunm.gallerypro.DrawerLocker;
 import com.tunm.gallerypro.R;
 import com.tunm.gallerypro.animation.ParallaxPageTransformer;
-import com.tunm.gallerypro.constant.SystemUI;
 import com.tunm.gallerypro.customComponent.ViewPagerFixed;
 import com.tunm.gallerypro.data.MediaItem;
 import com.tunm.gallerypro.fragments.BaseFragment;
@@ -47,12 +37,12 @@ import java.util.Objects;
 
 import static com.tunm.gallerypro.animation.ViewAnimation.slideDown;
 import static com.tunm.gallerypro.animation.ViewAnimation.slideUp;
-import static com.tunm.gallerypro.constant.SystemUI.FULL_SCREEN_UI_FLAG;
 import static com.tunm.gallerypro.theme.SystemUI.hideNavigationBar;
 import static com.tunm.gallerypro.theme.SystemUI.showNavigationBar;
 
 public class ImagePagerFragment extends BaseFragment {
 
+    private static final String TAG = "ImagePagerFragment";
     public static ArrayList<MediaItem> mImageList;
     private ViewPagerFixed mViewPager;
     private ImagePagerAdapter pagerAdapter;
@@ -86,15 +76,15 @@ public class ImagePagerFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = super.onCreateView(inflater, container, savedInstanceState);
-        toolbar = Objects.requireNonNull(getActivity()).findViewById(R.id.toolbar);
+        toolbar = Objects.requireNonNull(mActivity).findViewById(R.id.toolbar);
         if (getArguments() != null) {
             currentPosition = getArguments().getInt("currentPosition");
             isImage = getArguments().getBoolean("isImage");
         }
 
 
-        ((DrawerLocker) Objects.requireNonNull(getActivity())).setDrawerEnabled(false);
-        toolbar.setBackgroundColor(getActivity().getColor(R.color.viewer_osd_background_color));
+        ((DrawerLocker) Objects.requireNonNull(mActivity)).setDrawerEnabled(false);
+        toolbar.setBackgroundColor(mActivity.getColor(R.color.viewer_osd_background_color));
         toolbar.setTitle(null);
 
         mViewPager = rootView.findViewById(R.id.viewPager);
@@ -108,7 +98,7 @@ public class ImagePagerFragment extends BaseFragment {
         bottom = rootView.findViewById(R.id.bottom);
         tvDate = rootView.findViewById(R.id.tvDate);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tvDate.getLayoutParams();
-        params.setMargins(0,  0, 0, (ViewSizeUtils.getNavigationBarHeight(getActivity())) * 3 / 2);
+        params.setMargins(0,  0, 0, (ViewSizeUtils.getNavigationBarHeight(mActivity)) * 3 / 2);
         tvDate.setLayoutParams(params);
 
         setCurrentImage(currentPosition);
@@ -167,26 +157,27 @@ public class ImagePagerFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         if(mColorTheme.isDarkTheme()) {
-            int colorBg = Objects.requireNonNull(getActivity()).getColor(R.color.colorDarkBackgroundHighlight);
-            toolbar.setBackgroundColor(getActivity().getColor(R.color.colorDarkBackgroundHighlight));
-            CommonBarColor.setStatusBarColor(getActivity(), colorBg);
-            CommonBarColor.setNavigationBarColor(getActivity(), colorBg);
+            int colorBg = Objects.requireNonNull(mActivity).getColor(R.color.colorDarkBackgroundHighlight);
+            toolbar.setBackgroundColor(mActivity.getColor(R.color.colorDarkBackgroundHighlight));
+            CommonBarColor.setStatusBarColor(mActivity, colorBg);
+            CommonBarColor.setNavigationBarColor(mActivity, colorBg);
         } else {
             toolbar.setBackgroundColor(mColorTheme.getPrimaryColor());
-            CommonBarColor.setStatusBarColor(getActivity(), mColorTheme.getPrimaryColor());
-            CommonBarColor.setNavigationBarColor(getActivity(), mColorTheme.getPrimaryColor());
+            CommonBarColor.setStatusBarColor(mActivity, mColorTheme.getPrimaryColor());
+            CommonBarColor.setNavigationBarColor(mActivity, mColorTheme.getPrimaryColor());
         }
+        Log.v(TAG, "onDestroy");
         super.onDestroy();
     }
 
     public void blo() {
         if(!isFullScreen) {
-            slideDown(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(getActivity())) * 3 / 2, 500);
-            slideDown(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(getActivity())), 500);
+            slideDown(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(mActivity)) * 3 / 2, 500);
+            slideDown(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(mActivity)), 500);
             hideBars();
         } else {
-            slideUp(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(getActivity())) * 3 / 2, 500);
-            slideUp(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(getActivity())), 500);
+            slideUp(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(mActivity)) * 3 / 2, 500);
+            slideUp(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(mActivity)), 500);
             showBars();
         }
     }
@@ -198,14 +189,14 @@ public class ImagePagerFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-        if(!isFullScreen) {
-            slideUp(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(getActivity())) * 3 / 2, 0);
-            slideUp(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(getActivity())), 0);
-        }
+        toolbar.setTitle(R.string.app_name);
+        slideUp(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(mActivity)) * 3 / 2, 0);
+        slideUp(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(mActivity)), 0);
         if(callback != null) {
             callback.onDelete(mDeletedItemPosition, mListDeletedItem);
         }
+        showNavigationBar(mActivity, getView());
+        Log.v(TAG, "onDestroyView");
         super.onDestroyView();
     }
 
@@ -216,8 +207,8 @@ public class ImagePagerFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(isImage) getActivity().getMenuInflater().inflate(R.menu.image_pager_menu, menu);
-        else getActivity().getMenuInflater().inflate(R.menu.video_pager_menu, menu);
+        if(isImage) mActivity.getMenuInflater().inflate(R.menu.image_pager_menu, menu);
+        else mActivity.getMenuInflater().inflate(R.menu.video_pager_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -233,7 +224,7 @@ public class ImagePagerFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                DeleteDialog dialog = new DeleteDialog(getActivity());
+                DeleteDialog dialog = new DeleteDialog(mActivity);
                 dialog.setTitle("Delete");
                 dialog.setMessage("Are you sure you want to delete this item?");
                 dialog.setNegativeButton("Cancel", v -> dialog.dismiss());
@@ -276,7 +267,7 @@ public class ImagePagerFragment extends BaseFragment {
         mDeletedItemPosition.add(currentPosition);
 /*        mImageList.remove(currentPosition);
         pagerAdapter.notifyDataSetChanged();*/
-        Objects.requireNonNull(getActivity()).getSupportFragmentManager().popBackStack();
+        mActivity.getSupportFragmentManager().popBackStack();
     }
 
     public void setDeleteCallback(DeletedItemCallback callback) {
@@ -284,17 +275,17 @@ public class ImagePagerFragment extends BaseFragment {
     }
 
     private void refreshTheme() {
-        CommonBarColor.setStatusBarColor(getActivity(), Objects.requireNonNull(getActivity()).getColor(R.color.viewer_osd_background_color));
-        CommonBarColor.setNavigationBarColor(getActivity(), Objects.requireNonNull(getActivity()).getColor(R.color.viewer_osd_background_color));
+        CommonBarColor.setStatusBarColor(mActivity, Objects.requireNonNull(mActivity).getColor(R.color.viewer_osd_background_color));
+        CommonBarColor.setNavigationBarColor(mActivity, Objects.requireNonNull(mActivity).getColor(R.color.viewer_osd_background_color));
     }
 
     private void hideBars() {
-        hideNavigationBar(getActivity(), getView());
+        hideNavigationBar(mActivity, getView());
         isFullScreen = true;
     }
 
     private void showBars() {
-        showNavigationBar(getActivity(), getView());
+        showNavigationBar(mActivity, getView());
         isFullScreen = false;
     }
 }

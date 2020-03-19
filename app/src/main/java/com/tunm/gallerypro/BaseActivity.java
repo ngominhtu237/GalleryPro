@@ -1,12 +1,9 @@
 package com.tunm.gallerypro;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.tunm.gallerypro.data.file.FileObserverService;
 import com.tunm.gallerypro.setting.callback.ThemeChangeObserver;
 import com.tunm.gallerypro.theme.ColorTheme;
 

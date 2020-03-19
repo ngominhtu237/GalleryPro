@@ -26,6 +26,6 @@ public class ContentProviderObserver extends ContentObserver {
     public void onChange(boolean selfChange, Uri uri) {
         super.onChange(selfChange, uri);
         Log.v("ContentProviderObserver", "content provider change" + uri.toString());
-        changeListener.onChange();
+        changeListener.onFileChanged();
     }
 }
