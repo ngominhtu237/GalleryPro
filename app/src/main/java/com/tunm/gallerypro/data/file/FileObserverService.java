@@ -14,8 +14,6 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.tunm.gallerypro.R;
-
 public class FileObserverService extends Service {
 
     private static final String TAG = "FileObserverService";

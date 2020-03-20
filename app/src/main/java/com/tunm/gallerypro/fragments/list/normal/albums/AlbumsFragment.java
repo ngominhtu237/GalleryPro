@@ -514,9 +514,7 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     @Override
     public void onFileChanged() {
         Log.v("loadData", "update " + TAG);
-        if (!getUserVisibleHint()) {
-            loadData();
-        }
+        loadData();
     }
 
     @Override
@@ -614,8 +612,12 @@ public class AlbumsFragment extends BaseListFragment implements IAlbumsView, Rec
     @Override
     public void onDataChanged() {
         Log.v("DeleteMediaItemObserver", TAG + " onDataChanged");
-        if (!getUserVisibleHint()) {
-            loadData();
-        }
+        loadData();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        DeleteMediaItemSubject.getInstance().unRegisterObserver(this);
     }
 }

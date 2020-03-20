@@ -590,4 +590,10 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
         DeleteMediaItemSubject.getInstance().notifyDataChange();
         DeleteMediaItemSubject.getInstance().registerObserver(this);
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        DeleteMediaItemSubject.getInstance().unRegisterObserver(this);
+    }
 }

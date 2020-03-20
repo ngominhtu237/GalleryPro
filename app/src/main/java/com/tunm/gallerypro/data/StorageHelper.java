@@ -1,11 +1,11 @@
 package com.tunm.gallerypro.data;
 
 import android.content.Context;
-import android.media.MediaScannerConnection;
-
-import com.tunm.gallerypro.data.provider.CPHelper;
+import android.net.Uri;
+import android.provider.MediaStore;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URLConnection;
 
 public class StorageHelper {
@@ -25,7 +25,7 @@ public class StorageHelper {
         // Chỉ delete tệp media trong folder và sau khi delete tệp media kiểm tra nếu folder empty thì xóa
         if ((isImageFile(dir.getAbsolutePath()) || isVideoFile(dir.getAbsolutePath())) || (dir.isDirectory() && dir.list().length == 0)) {
             boolean isDeleted = dir.delete();
-            if (isDeleted) CPHelper.deleteFileFromMediaStore(context, dir);
+            if (isDeleted) deleteFileFromMediaStore(context, dir);
             return isDeleted;
         }
         return true;
@@ -42,12 +42,32 @@ public class StorageHelper {
     }
 
     public static boolean deleteMedia(Context context, final File file) {
-        boolean success = file.delete(); // Only delete in MyFile but in Gallery it's exists!!!
-        if (success) scanFile(context, new String[]{file.getPath()});
+        boolean success;
+        File f = new File(file.getPath());
+        if (success = ContentHelper.deleteFile(context, f)) {
+            deleteFileFromMediaStore(context, f);
+        }
         return success;
     }
 
-    private static void scanFile(Context context, String[] paths) {
-        MediaScannerConnection.scanFile(context, paths, null, null);
+    public static void deleteFileFromMediaStore(Context context, final File file) {
+        String canonicalPath;
+        try {
+            canonicalPath = file.getCanonicalPath();
+        } catch (IOException e) {
+            canonicalPath = file.getAbsolutePath();
+        }
+        final Uri uri = MediaStore.Files.getContentUri("external");
+        if (context != null) {
+            final int result = context.getContentResolver().delete(uri,
+                    MediaStore.Files.FileColumns.DATA + "=?", new String[]{canonicalPath});
+            if (result == 0) {
+                final String absolutePath = file.getAbsolutePath();
+                if (!absolutePath.equals(canonicalPath)) {
+                    context.getContentResolver().delete(uri,
+                            MediaStore.Files.FileColumns.DATA + "=?", new String[]{absolutePath});
+                }
+            }
+        }
     }
 }

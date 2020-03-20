@@ -22,7 +22,7 @@ import com.tunm.gallerypro.fragments.list.normal.albums.AlbumsFragment;
 import com.tunm.gallerypro.fragments.list.section.timeline.TimelineFragment;
 import com.tunm.gallerypro.fragments.list.section.video.VideoFragment;
 import com.tunm.gallerypro.theme.SystemUI;
-import com.tunm.gallerypro.utils.ViewSizeUtils;
+import com.tunm.gallerypro.utils.ViewUtils;
 import com.tunm.gallerypro.view.LockableViewPager;
 
 import butterknife.BindView;
@@ -59,7 +59,8 @@ public class HomeFragment extends BaseFragment {
         SystemUI.showNavigationBar(mActivity, getView());
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rootView.getLayoutParams();
-        params.setMargins(params.leftMargin, params.topMargin + ViewSizeUtils.getStatusBarHeight(mActivity), params.rightMargin, params.bottomMargin + ViewSizeUtils.getNavigationBarHeight(mActivity));
+        int marginBottom = ViewUtils.supportNavigationBar(mActivity) ? params.bottomMargin + ViewUtils.getNavigationBarHeight(mActivity) : params.bottomMargin;
+        params.setMargins(params.leftMargin, params.topMargin + ViewUtils.getStatusBarHeight(mActivity), params.rightMargin, marginBottom);
         rootView.setLayoutParams(params);
         return rootView;
     }

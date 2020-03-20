@@ -3,12 +3,16 @@ package com.tunm.gallerypro;
 import java.util.ArrayList;
 
 public class DeleteMediaItemSubject {
-    private static DeleteMediaItemSubject mInstance;
+    private static volatile DeleteMediaItemSubject mInstance;
     private ArrayList<DeleteMediaItemObserver> observers = new ArrayList<>();
 
     public static DeleteMediaItemSubject getInstance() {
-        if(mInstance == null) {
-            mInstance = new DeleteMediaItemSubject();
+        if (mInstance == null) {
+            synchronized (DeleteMediaItemSubject.class) {
+                if (mInstance == null) {
+                    mInstance = new DeleteMediaItemSubject();
+                }
+            }
         }
         return mInstance;
     }

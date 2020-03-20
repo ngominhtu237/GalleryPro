@@ -22,7 +22,6 @@ import com.tunm.gallerypro.utils.Convert;
 import com.tunm.gallerypro.utils.DateUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -105,27 +104,6 @@ public class CPHelper {
             }
         }
         return mAlbumsList;
-    }
-
-    public static void deleteFileFromMediaStore(Context context, final File file) {
-        String canonicalPath;
-        try {
-            canonicalPath = file.getCanonicalPath();
-        } catch (IOException e) {
-            canonicalPath = file.getAbsolutePath();
-        }
-        final Uri uri = MediaStore.Files.getContentUri("external");
-        if (context != null) {
-            final int result = context.getContentResolver().delete(uri,
-                    MediaStore.Files.FileColumns.DATA + "=?", new String[]{canonicalPath});
-            if (result == 0) {
-                final String absolutePath = file.getAbsolutePath();
-                if (!absolutePath.equals(canonicalPath)) {
-                    context.getContentResolver().delete(uri,
-                            MediaStore.Files.FileColumns.DATA + "=?", new String[]{absolutePath});
-                }
-            }
-        }
     }
 
     public static ArrayList<MediaItem> getMedias(Context context, String bucketId, String album_name) {

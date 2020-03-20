@@ -114,7 +114,6 @@ public class MediaDataService {
                 if(isCancelled()) break;
                 else {
                     MediaHelper.deleteMedia(mContext, mDeletedItems.get(i).getPathMediaItem());
-                    mMedias.remove(mDeletedItems.get(i)); // no need
                 }
             }
             return null;

@@ -33,7 +33,7 @@ import com.tunm.gallerypro.fragments.list.split.pictures.presenter.MediaPresente
 import com.tunm.gallerypro.fragments.list.split.pictures.view.IMediaView;
 import com.tunm.gallerypro.fragments.viewer.DeletedItemCallback;
 import com.tunm.gallerypro.fragments.viewer.ImagePagerFragment;
-import com.tunm.gallerypro.utils.ViewSizeUtils;
+import com.tunm.gallerypro.utils.ViewUtils;
 import com.tunm.gallerypro.view.SquareImageView;
 import com.tunm.gallerypro.view.dialog.AlbumPictureDetailsDialog;
 import com.tunm.gallerypro.view.dialog.DeleteDialog;
@@ -93,7 +93,7 @@ public class AlbumPicturesFragment extends BaseListFragment implements IMediaVie
         presenter.getMedias(mReceiveBucket);
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rootView.getLayoutParams();
-        params.setMargins(params.leftMargin, params.topMargin + ViewSizeUtils.getStatusBarHeight(mActivity), params.rightMargin, params.bottomMargin);
+        params.setMargins(params.leftMargin, params.topMargin + ViewUtils.getStatusBarHeight(mActivity), params.rightMargin, params.bottomMargin);
         rootView.setLayoutParams(params);
         return rootView;
     }

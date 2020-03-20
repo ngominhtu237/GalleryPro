@@ -27,7 +27,7 @@ import com.tunm.gallerypro.data.MediaItem;
 import com.tunm.gallerypro.fragments.BaseFragment;
 import com.tunm.gallerypro.utils.CommonBarColor;
 import com.tunm.gallerypro.utils.Convert;
-import com.tunm.gallerypro.utils.ViewSizeUtils;
+import com.tunm.gallerypro.utils.ViewUtils;
 import com.tunm.gallerypro.view.dialog.DeleteDialog;
 import com.tunm.gallerypro.view.dialog.FragmentBottomSheetDialog;
 
@@ -98,7 +98,7 @@ public class ImagePagerFragment extends BaseFragment {
         bottom = rootView.findViewById(R.id.bottom);
         tvDate = rootView.findViewById(R.id.tvDate);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tvDate.getLayoutParams();
-        params.setMargins(0,  0, 0, (ViewSizeUtils.getNavigationBarHeight(mActivity)) * 3 / 2);
+        params.setMargins(0,  0, 0, (ViewUtils.getNavigationBarHeight(mActivity)) * 3 / 2);
         tvDate.setLayoutParams(params);
 
         setCurrentImage(currentPosition);
@@ -172,12 +172,12 @@ public class ImagePagerFragment extends BaseFragment {
 
     public void blo() {
         if(!isFullScreen) {
-            slideDown(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(mActivity)) * 3 / 2, 500);
-            slideDown(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(mActivity)), 500);
+            slideDown(bottom, bottom.getHeight() + (ViewUtils.getNavigationBarHeight(mActivity)) * 3 / 2, 500);
+            slideDown(toolbar, -(toolbar.getHeight() + ViewUtils.getStatusBarHeight(mActivity)), 500);
             hideBars();
         } else {
-            slideUp(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(mActivity)) * 3 / 2, 500);
-            slideUp(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(mActivity)), 500);
+            slideUp(bottom, bottom.getHeight() + (ViewUtils.getNavigationBarHeight(mActivity)) * 3 / 2, 500);
+            slideUp(toolbar, -(toolbar.getHeight() + ViewUtils.getStatusBarHeight(mActivity)), 500);
             showBars();
         }
     }
@@ -190,8 +190,8 @@ public class ImagePagerFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         toolbar.setTitle(R.string.app_name);
-        slideUp(bottom, bottom.getHeight() + (ViewSizeUtils.getNavigationBarHeight(mActivity)) * 3 / 2, 0);
-        slideUp(toolbar, -(toolbar.getHeight() + ViewSizeUtils.getStatusBarHeight(mActivity)), 0);
+        slideUp(bottom, bottom.getHeight() + (ViewUtils.getNavigationBarHeight(mActivity)) * 3 / 2, 0);
+        slideUp(toolbar, -(toolbar.getHeight() + ViewUtils.getStatusBarHeight(mActivity)), 0);
         if(callback != null) {
             callback.onDelete(mDeletedItemPosition, mListDeletedItem);
         }
