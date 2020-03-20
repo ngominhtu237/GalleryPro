@@ -325,9 +325,10 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                mLayoutManager.setSpanCount(columnNumber);
-                setSpanSize();
+                mLayoutManager = new GridlayoutManagerFixed(getContext(), columnNumber);
                 mLayoutManager.requestLayout();
+                setSpanSize();
+                mRecyclerView.setLayoutManager(mLayoutManager);
                 adapter.notifyDataSetChanged();
 
                 Animation fadeIn = new AlphaAnimation(0, 1);
@@ -557,7 +558,7 @@ public abstract class BaseTimelineFragment extends BaseFragment implements Recyc
     public void setupColumn() {
         if (columnNumber != mLayoutManager.getSpanCount() && mRecyclerView != null) {
             mLayoutManager = new GridlayoutManagerFixed(getContext(), columnNumber);
-            mLayoutManager.setSpanCount(columnNumber);
+            mLayoutManager.requestLayout();
             setSpanSize();
             mRecyclerView.setLayoutManager(mLayoutManager);
         }
