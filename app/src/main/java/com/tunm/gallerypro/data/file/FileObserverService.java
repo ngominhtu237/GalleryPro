@@ -41,8 +41,8 @@ public class FileObserverService extends Service {
     }
 
     private void startMyOwnForeground(){
-        String NOTIFICATION_CHANNEL_ID = "com.example.simpleapp";
-        String channelName = "My Background Service";
+        String NOTIFICATION_CHANNEL_ID = "com.tunm.gallerypro";
+        String channelName = "Gallery Pro Service";
         NotificationChannel chan;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);

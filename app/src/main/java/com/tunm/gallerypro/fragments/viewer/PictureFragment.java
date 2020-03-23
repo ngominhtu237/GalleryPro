@@ -38,6 +38,8 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
     private SpinKitViewTheme spinKitView;
     private ViewPagerFixed viewPager;
 
+    private SubsamplingScaleImageView scaleImageView;
+
     public static PictureFragment newInstance(MediaItem mediaItem) {
         PictureFragment fragment = new PictureFragment();
         Bundle argument = new Bundle();
@@ -53,7 +55,7 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
         ((DrawerLocker) Objects.requireNonNull(getActivity())).setDrawerEnabled(false);
         View v =  inflater.inflate(R.layout.picture_fragment, container, false);
         PhotoView photoView = v.findViewById(R.id.ivPhotoView);
-        SubsamplingScaleImageView scaleImageView = v.findViewById(R.id.ivSubSamplingView);
+        scaleImageView = v.findViewById(R.id.ivSubSamplingView);
         ImageView ivPlay = v.findViewById(R.id.ivPlayIcon);
         spinKitView = v.findViewById(R.id.spinKit);
 
@@ -182,8 +184,8 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
     }
 
     @Override
-    public void onScaleChanged(float scale, int i) {
-        viewPager.setSwipeLocked(scale > 0.6f);
+    public void onScaleChanged(float scale, int origin) {
+        viewPager.setSwipeLocked(scale > scaleImageView.getMinScale());
     }
 
     @Override
