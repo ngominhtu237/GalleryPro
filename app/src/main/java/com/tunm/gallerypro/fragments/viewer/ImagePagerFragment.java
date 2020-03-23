@@ -150,7 +150,7 @@ public class ImagePagerFragment extends BaseFragment {
 
         @Override
         public void onPageScrollStateChanged(int state) {
-            Log.v("ViewPager: onPageScrolled", String.valueOf(state));
+            Log.v("ViewPager: onPageScrollStateChanged", String.valueOf(state));
         }
     };
 
@@ -246,10 +246,8 @@ public class ImagePagerFragment extends BaseFragment {
 
             case R.id.action_details:
                 FragmentBottomSheetDialog fragment = new FragmentBottomSheetDialog();
-                if (getFragmentManager() != null) {
-                    fragment.setMediaItem(mImageList.get(currentPosition));
-                    fragment.show(getFragmentManager(), fragment.getTag());
-                }
+                fragment.setMediaItem(mImageList.get(currentPosition));
+                fragment.show(mActivity.getSupportFragmentManager(), fragment.getTag());
                 return true;
             case R.id.action_set_picture_as:
                 Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);

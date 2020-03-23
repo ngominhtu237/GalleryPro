@@ -3,6 +3,7 @@ package com.tunm.gallerypro.fragments.viewer;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,15 +26,17 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.tunm.gallerypro.DrawerLocker;
 import com.tunm.gallerypro.R;
+import com.tunm.gallerypro.customComponent.ViewPagerFixed;
 import com.tunm.gallerypro.data.MediaItem;
 import com.tunm.gallerypro.theme.ui.SpinKitViewTheme;
 
 import java.util.Objects;
 
-public class PictureFragment extends Fragment implements SubsamplingScaleImageView.OnImageEventListener, View.OnClickListener {
+public class PictureFragment extends Fragment implements SubsamplingScaleImageView.OnImageEventListener, View.OnClickListener, SubsamplingScaleImageView.OnStateChangedListener {
 
     private static final String KEY_IMAGE_OBJ = "com.ss.key.imageObj";
     private SpinKitViewTheme spinKitView;
+    private ViewPagerFixed viewPager;
 
     public static PictureFragment newInstance(MediaItem mediaItem) {
         PictureFragment fragment = new PictureFragment();
@@ -54,7 +57,10 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
         ImageView ivPlay = v.findViewById(R.id.ivPlayIcon);
         spinKitView = v.findViewById(R.id.spinKit);
 
+        viewPager = (ViewPagerFixed) container;
+
         scaleImageView.setOnImageEventListener(this);
+        scaleImageView.setOnStateChangedListener(this);
         scaleImageView.setOnClickListener(this);
 
         MediaItem item = null;
@@ -173,5 +179,15 @@ public class PictureFragment extends Fragment implements SubsamplingScaleImageVi
                     }
                     break;
             }
+    }
+
+    @Override
+    public void onScaleChanged(float scale, int i) {
+        viewPager.setSwipeLocked(scale > 0.6f);
+    }
+
+    @Override
+    public void onCenterChanged(PointF pointF, int i) {
+
     }
 }
