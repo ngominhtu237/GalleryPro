@@ -17,12 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        android:largeHeap="true"
         tools:replace="android:icon">
         <service
             android:name=".data.file.FileObserverService"
             android:enabled="true"
             android:exported="true"
-            android:stopWithTask="true"></service>
+            android:stopWithTask="true" />
 
         <activity android:name=".activity.SettingsActivity" />
         <activity
